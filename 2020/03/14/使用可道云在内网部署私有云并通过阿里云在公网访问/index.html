@@ -1,1 +1,651 @@
-null
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/main-icon.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"leonezz.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面为了充分利用服务器资源（单纯为了折腾），我决定在内网电脑上部署一个私有云服务，并通过内网穿透经由阿里云让它可以在外网访问。 完成这一部署，需要：内网机器（电脑，nas，高级的路由器或者树莓派+硬盘）一台，具有公网IP的服务器一台，域名一个。 可道云部署内网私有云盘 可道云采用windows操作界面，具有专业在线编辑器，支持Office的在线预览和编辑，可多人协同编辑作业，文档历史版本回溯；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用可道云在内网部署私有云并通过阿里云在公网访问">
+<meta property="og:url" content="http://leonezz.github.io/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/index.html">
+<meta property="og:site_name" content="zhuwenq">
+<meta property="og:description" content="写在前面为了充分利用服务器资源（单纯为了折腾），我决定在内网电脑上部署一个私有云服务，并通过内网穿透经由阿里云让它可以在外网访问。 完成这一部署，需要：内网机器（电脑，nas，高级的路由器或者树莓派+硬盘）一台，具有公网IP的服务器一台，域名一个。 可道云部署内网私有云盘 可道云采用windows操作界面，具有专业在线编辑器，支持Office的在线预览和编辑，可多人协同编辑作业，文档历史版本回溯；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://leonezz.github.io/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
+<meta property="og:image" content="http://leonezz.github.io/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png">
+<meta property="article:published_time" content="2020-03-14T08:20:13.000Z">
+<meta property="article:modified_time" content="2020-03-17T14:42:02.279Z">
+<meta property="article:author" content="zhuwenq">
+<meta property="article:tag" content="阿里云">
+<meta property="article:tag" content="frp">
+<meta property="article:tag" content="私有云">
+<meta property="article:tag" content="内网穿透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://leonezz.github.io/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
+
+<link rel="canonical" href="http://leonezz.github.io/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用可道云在内网部署私有云并通过阿里云在公网访问 | zhuwenq</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhuwenq</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">zhuwenq's blog.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/main-icon.jpeg" alt="zhuwenq">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">14</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用可道云在内网部署私有云并通过阿里云在公网访问
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-14 16:20:13" itemprop="dateCreated datePublished" datetime="2020-03-14T16:20:13+08:00">2020-03-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 22:42:02" itemprop="dateModified" datetime="2020-03-17T22:42:02+08:00">2020-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/" itemprop="url" rel="index"><span itemprop="name">阿里云</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/%E7%A7%81%E6%9C%89%E4%BA%91/" itemprop="url" rel="index"><span itemprop="name">私有云</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/%E7%A7%81%E6%9C%89%E4%BA%91/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" itemprop="url" rel="index"><span itemprop="name">内网穿透</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>为了充分利用服务器资源（单纯为了折腾），我决定在内网电脑上部署一个私有云服务，并通过内网穿透经由阿里云让它可以在外网访问。</p>
+<p>完成这一部署，需要：内网机器（电脑，nas，高级的路由器或者树莓派+硬盘）一台，具有公网IP的服务器一台，域名一个。</p>
+<h1 id="可道云部署内网私有云盘"><a href="#可道云部署内网私有云盘" class="headerlink" title="可道云部署内网私有云盘"></a>可道云部署内网私有云盘</h1><blockquote>
+<p>可道云采用windows操作界面，具有专业在线编辑器，支持Office的在线预览和编辑，可多人协同编辑作业，文档历史版本回溯；更有Photoshop、Ai、AutoCAD等专业文档的在线预览，很适合办公用户。作为网盘使用，具有一键分享文件，支持生成外链；扫描二维码，手机即可快速查看；可设定到期时间、提取密码、下载权限，满足更多场景需求，轻松将文件分享给客户、同事查看。还有很多插件可供选择。</p>
+</blockquote>
+<p>虽然市面上有很多款私有云软件，但是<a href="https://kodcloud.com/">可道云</a>的功能比较全面，部署也较为简单，<del>再加上我 <strong>rather poor</strong> 的英语水平</del>，我选择了可道云做私有云的网站。</p>
+<h2 id="安装可道云"><a href="#安装可道云" class="headerlink" title="安装可道云"></a>安装可道云</h2><p>我的内网机器运行的是windows 10操作系统，首先要配置<code>php</code>环境，可以使用<code>Xampp</code>这一自带环境的网页服务器下载安装，下载地址在<a href="https://www.apachefriends.org/zh_cn/download.html">这里</a>。</p>
+<ol>
+<li><p>下载安装<code>Xampp</code>。</p>
+</li>
+<li><p>启动<code>Xampp</code>服务:</p>
+<p>点击<code>Apache</code>的<code>start</code>按钮</p>
+<p>点击<code>MySQL</code>的<code>start</code>按钮</p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png" alt=""></p>
+</li>
+<li><p>安装可道云：</p>
+<p>在可道云<a href="https://kodcloud.com/download/">下载页面</a>下载源码</p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png" alt=""></p>
+<p>点击<code>Xampp Control Panel</code>的<code>Explorer</code>按键，找到<code>htdocs</code>文件夹，清空里面的内容。</p>
+<p>把下载的可道云源码解压到<code>htdocs</code>文件夹，这里是私有云网站的根目录。</p>
+<p>一切正常的话，浏览器访问<a href="http://127.0.0.1/">http://127.0.0.1/</a> 就可以在内网使用了（或者点击<code>Apache-&gt;admin</code>）。</p>
+</li>
+</ol>
+<h1 id="使用frp添加一个http服务使得私有云可在外网访问"><a href="#使用frp添加一个http服务使得私有云可在外网访问" class="headerlink" title="使用frp添加一个http服务使得私有云可在外网访问"></a>使用frp添加一个http服务使得私有云可在外网访问</h1><h2 id="frp内网穿透"><a href="#frp内网穿透" class="headerlink" title="frp内网穿透"></a>frp内网穿透</h2><p><a href="https://zhuwenq.icu/2020/03/13/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/">详见这篇博客</a>。</p>
+<h2 id="添加一个http代理"><a href="#添加一个http代理" class="headerlink" title="添加一个http代理"></a>添加一个http代理</h2><p>按照上一步部署好内网穿透后，打开<code>dashboard</code>应该只有一个tcp连接，而为了访问我们部署在内网机器上的私有云（本质是一个网站），我们需要一个http代理。</p>
+<h3 id="首先进入服务器修改服务端配置"><a href="#首先进入服务器修改服务端配置" class="headerlink" title="首先进入服务器修改服务端配置"></a>首先进入服务器修改服务端配置</h3><ol>
+<li><p>进入服务端的frp文件夹，使用命令<code>vim ./frps.ini</code>打开文件frps.ini，添加<code>vhost_http_port = 7070</code>，把http访问端口设置为7070（可以是以开放的端口）。</p>
+ <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># frps.ini</span></span><br><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">bind_port</span> = <span class="number">7000</span></span><br><span class="line"><span class="attr">vhost_http_port</span> = <span class="number">7070</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后启动frps：</p>
+<p> <code>./frps -c ./frps.ini</code></p>
+<p> 如果此时报错端口7000被占用，应该先关闭占用端口的进程。</p>
+</li>
+</ol>
+<h3 id="修改客户端配置"><a href="#修改客户端配置" class="headerlink" title="修改客户端配置"></a>修改客户端配置</h3><ol>
+<li><p>进入客户端机器的frp文件夹，打开frpc.ini，添加：</p>
+ <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># frpc.ini</span></span><br><span class="line"><span class="section">[web]</span></span><br><span class="line"><span class="attr">type</span> = http</span><br><span class="line"><span class="attr">local_port</span> = <span class="number">80</span> <span class="comment">#Xampp网站的监听端口</span></span><br><span class="line"><span class="attr">custom_domains</span> = www.yourdomain.com <span class="comment">#你的域名</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动fprc</p>
+<p> <code>./frpc -c ./frpc.ini</code></p>
+</li>
+</ol>
+<p>此时打开dashboard，应该能看到有一个http代理。</p>
+<h3 id="配置域名DNS解析"><a href="#配置域名DNS解析" class="headerlink" title="配置域名DNS解析"></a>配置域名DNS解析</h3><p>到阿里云域名解析页面添加一个解析记录，记录值填你的服务器IP地址。添加完成后，一切正常的话，在任何一台接入互联网的设备中访问：<a href="http://yourdomain:7070">http://yourdomain:7070</a> 就可以访问私有云网站了。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>碍于我的阿里云服务器只有1m的宽带，私有云的下载速度只有100多k每秒，<del>还不如百度云盘</del>。但是这一问题在充钱后肯定能得到妥善解决:)。</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><ol>
+<li><a href="http://bbs.kodcloud.com/d/15">可道云windows安装指南</a></li>
+<li><a href="https://github.com/fatedier/frp/blob/master/README_zh.md#%E9%80%9A%E8%BF%87-ssh-%E8%AE%BF%E9%97%AE%E5%85%AC%E5%8F%B8%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8">frp中文文档</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee ☕️.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="zhuwenq 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="zhuwenq 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag"># 阿里云</a>
+              <a href="/tags/frp/" rel="tag"># frp</a>
+              <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/" rel="tag"># 私有云</a>
+              <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag"># 内网穿透</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/13/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/" rel="prev" title="使用frp和阿里云ECS实现内网穿透和远程桌面连接内网机器">
+      <i class="fa fa-chevron-left"></i> 使用frp和阿里云ECS实现内网穿透和远程桌面连接内网机器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/14/frp%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1/" rel="next" title="frp停止服务">
+      frp停止服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可道云部署内网私有云盘"><span class="nav-number">2.</span> <span class="nav-text">可道云部署内网私有云盘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装可道云"><span class="nav-number">2.1.</span> <span class="nav-text">安装可道云</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用frp添加一个http服务使得私有云可在外网访问"><span class="nav-number">3.</span> <span class="nav-text">使用frp添加一个http服务使得私有云可在外网访问</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#frp内网穿透"><span class="nav-number">3.1.</span> <span class="nav-text">frp内网穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加一个http代理"><span class="nav-number">3.2.</span> <span class="nav-text">添加一个http代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先进入服务器修改服务端配置"><span class="nav-number">3.2.1.</span> <span class="nav-text">首先进入服务器修改服务端配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改客户端配置"><span class="nav-number">3.2.2.</span> <span class="nav-text">修改客户端配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置域名DNS解析"><span class="nav-number">3.2.3.</span> <span class="nav-text">配置域名DNS解析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">reference</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhuwenq</p>
+  <div class="site-description" itemprop="description">Remain passionate.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Leonezz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Leonezz" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Leonez@nuaa.edu.cn" title="E-Mail → mailto:Leonez@nuaa.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://home.zhuwenq.icu:7010/" title="HomePage → http:&#x2F;&#x2F;home.zhuwenq.icu:7010" rel="noopener" target="_blank"><i class="fa fa-fw fa-"></i>HomePage</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhuwenq</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyC9MNQaiIBSwKd9f41MpgL3cQvLlYNGun0',
+      projectId: 'blog-cd763'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

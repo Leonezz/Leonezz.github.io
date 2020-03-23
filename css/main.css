@@ -426,11 +426,33 @@ td {
   transition-delay: 0s;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
-  background: #fff;
-  border: 0;
-  font-size: 0.8125em;
+  color: #fff;
+  font-size: 14px;
   right: 0;
-  top: 0;
+  top: 2px;
+}
+.highlight-container {
+  background: #21252b;
+  border-radius: 5px;
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.4);
+  padding-top: 30px;
+}
+.highlight-container::before {
+  background: #fc625d;
+  border-radius: 50%;
+  box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+  content: ' ';
+  height: 12px;
+  left: 12px;
+  margin-top: -20px;
+  position: absolute;
+  width: 12px;
+}
+.highlight-container .highlight {
+  border-radius: 0 0 5px 5px;
+}
+.highlight-container .highlight .table-container {
+  border-radius: 0 0 5px 5px;
 }
 .highlight,
 pre {
@@ -1153,30 +1175,6 @@ pre .javascript .function {
 .use-motion .menu-item {
   opacity: 0;
 }
-.book-mark-link {
-  border-bottom: none;
-  display: inline-block;
-  position: fixed;
-  right: 30px;
-  top: -10px;
-  transition: 0.3s;
-}
-@media (max-width: 991px) {
-  .book-mark-link {
-    display: none;
-  }
-}
-.book-mark-link::before {
-  color: #222;
-  content: '\f02e';
-  font-family: 'FontAwesome';
-  font-size: 32px;
-  line-height: 1;
-}
-.book-mark-link:hover,
-.book-mark-link-fixed {
-  top: -2px;
-}
 .sidebar {
   background: #222;
   bottom: 0;
@@ -1244,7 +1242,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #a8c653;
+  background: #ff70ec;
   border-radius: 50%;
   content: ' ';
   display: inline-block;

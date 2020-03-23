@@ -1,1 +1,629 @@
-null
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/main-icon.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"leonezz.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="由于疫情原因迟迟不能开学，在家里也完全不想准备考研的事。胡乱翻网页时，想到了早就想学习的技术：electron 。又了解到将 electron  和 vue 结合使用的框架 electron-vue 。在学习一门新技术时，我向来主张先构思一个有趣的应用，然后着手学习应用所需的知识，并且学习的同时制作应用。因此，我在本地新建了应用 aao 。旨在为学校的教务处网站开发一款移动软件。 首先在项目文件夹">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录生成electron-vue新应用的艰难险阻">
+<meta property="og:url" content="http://leonezz.github.io/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/index.html">
+<meta property="og:site_name" content="zhuwenq">
+<meta property="og:description" content="由于疫情原因迟迟不能开学，在家里也完全不想准备考研的事。胡乱翻网页时，想到了早就想学习的技术：electron 。又了解到将 electron  和 vue 结合使用的框架 electron-vue 。在学习一门新技术时，我向来主张先构思一个有趣的应用，然后着手学习应用所需的知识，并且学习的同时制作应用。因此，我在本地新建了应用 aao 。旨在为学校的教务处网站开发一款移动软件。 首先在项目文件夹">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://leonezz.github.io/2020/03/04/images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png">
+<meta property="og:image" content="http://leonezz.github.io/2020/03/04/images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png">
+<meta property="og:image" content="http://leonezz.github.io/2020/03/04/images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png">
+<meta property="article:published_time" content="2020-03-03T17:27:26.000Z">
+<meta property="article:modified_time" content="2020-03-17T14:45:11.793Z">
+<meta property="article:author" content="zhuwenq">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="electron">
+<meta property="article:tag" content="electron-vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://leonezz.github.io/2020/03/04/images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png">
+
+<link rel="canonical" href="http://leonezz.github.io/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>记录生成electron-vue新应用的艰难险阻 | zhuwenq</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhuwenq</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">zhuwenq's blog.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/main-icon.jpeg" alt="zhuwenq">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">14</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记录生成electron-vue新应用的艰难险阻
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-04 01:27:26" itemprop="dateCreated datePublished" datetime="2020-03-04T01:27:26+08:00">2020-03-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 22:45:11" itemprop="dateModified" datetime="2020-03-17T22:45:11+08:00">2020-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/electron-vue/" itemprop="url" rel="index"><span itemprop="name">electron-vue</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于疫情原因迟迟不能开学，在家里也完全不想准备考研的事。胡乱翻网页时，想到了早就想学习的技术：<em>electron</em> 。又了解到将 <em>electron</em>  和 <em>vue</em> 结合使用的框架 <em>electron-vue</em> 。在学习一门新技术时，我向来主张先构思一个有趣的应用，然后着手学习应用所需的知识，并且学习的同时制作应用。因此，我在本地新建了应用 <em>aao</em> 。旨在为学校的教务处网站开发一款移动软件。</p>
+<h2 id="首先在项目文件夹新建项目-aao"><a href="#首先在项目文件夹新建项目-aao" class="headerlink" title="首先在项目文件夹新建项目 aao"></a>首先在项目文件夹新建项目 <em>aao</em></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g vue-cli  <span class="comment"># 安装vue-cli脚手架，已经安装的可以跳过\</span></span><br><span class="line">$ vue init simulatedgreg/electron aao   <span class="comment">#初始化项目，由于不懂相关知识，我选择了全部的模块\</span></span><br><span class="line">$ <span class="built_in">cd</span> aao <span class="comment">#进入项目文件夹\</span></span><br><span class="line">$ npm install <span class="comment">#安装依赖项，也可使用 yarn</span></span><br></pre></td></tr></table></figure>
+
+<p>到这一步，项目理应已经配置完成了。</p>
+<h2 id="以开发模式运行"><a href="#以开发模式运行" class="headerlink" title="以开发模式运行"></a>以开发模式运行</h2><p>命令是：</p>
+<p><code>$ npm run dev   #问题就处在这里</code></p>
+<p>当我满心欢喜的希望出现默认的界面时，问题出现了。</p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt=""><br><em>(图为期望的界面)</em></p>
+<h3 id="问题一：Webpack-ReferenceError-process-is-not-defined"><a href="#问题一：Webpack-ReferenceError-process-is-not-defined" class="headerlink" title="问题一：Webpack ReferenceError: process is not defined"></a>问题一：<em>Webpack ReferenceError: process is not defined</em></h3><p>这个问题首先出现，由于对相关知识的匮乏，我尚未参透问题出现的原因。不过通过万能的Google，我找到了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/871">issue</a>。</p>
+<p>通过它找到了解决的方案（暂不了解原理）：</p>
+<p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
+<p><code>new HtmlWebpackPlugin({...})</code></p>
+<p>改为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'index.html'</span>,</span><br><span class="line">      template: path.resolve(__dirname, <span class="string">'../src/index.ejs'</span>),</span><br><span class="line">      templateParameters(compilation, assets, options) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          compilation: compilation,</span><br><span class="line">          webpack: compilation.getStats().toJson(),</span><br><span class="line">          webpackConfig: compilation.options,</span><br><span class="line">          htmlWebpackPlugin: &#123;</span><br><span class="line">            files: assets,</span><br><span class="line">            options: options</span><br><span class="line">          &#125;,</span><br><span class="line">          process,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;,</span><br><span class="line">      minify: &#123;</span><br><span class="line">        collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">        removeComments: <span class="literal">true</span></span><br><span class="line">      &#125;,</span><br><span class="line">      nodeModules: <span class="literal">false</span></span><br><span class="line">    &#125;),</span><br></pre></td></tr></table></figure>
+
+<p>这样一改，这个问题果然不再出现了，但是还是得不到想要的结果。</p>
+<p>在找到这个方案之前，我读了几十篇博客，试了好多种方法。甚至删掉目录从头配置了好几遍，浪费了我大量的时间。</p>
+<h3 id="问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><a href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39" class="headerlink" title="问题二：Uncaught Error: Cannot find module &#39;axios&#39;"></a>问题二：<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></h3><p>执行完命令<code>npm run dev</code>之后，出现了一个白屏的界面：</p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt=""></p>
+<p>打开开发者工具：</p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt=""></p>
+<p>发现错误<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></p>
+<p>明明在执行<code>npm install</code>安装依赖项的时候安装了<code>axios</code>模块，为何这里却报错说找不到模块？</p>
+<p>多方查询之后，我找到了跟我问题一样的<a href="https://github.com/SimulatedGREG/electron-vue/issues/940">issue</a>,这里面提出的解决方案无非是重新安装<code>axios</code>，虽然预感不会有用，我还是侥幸心理试了一遍，果不其然，问题没有解决。</p>
+<p>又使用奇怪的关键词组合google了一下，幸运地点进了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/430">issue</a>，按照@MiYogurt提供地方案尝试了一下：</p>
+<p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>] <span class="comment">//看起来像是在引入模块</span></span><br></pre></td></tr></table></figure>
+
+<p>改为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>] <span class="comment">//添加了axios</span></span><br></pre></td></tr></table></figure>
+<p>重新启动开发板应用，调试面板上报错的模块换了一个：<code>Uncaught Error: Cannot find module &#39;vuex&#39;</code>。这时我想起了当时在执行命令<code>vue init simulatedgreg/electron-vue aao</code>的时候，选择安装了以下几个模块<code>&#39;vue&#39;,&#39;axios&#39;,&#39;vue-router&#39;,&#39;vuex&#39;,&#39;vuex-electron&#39;,&#39;vue-electron&#39;</code>，所以我将<code>whiteListedModules</code>改成（实际上我是加一个运行一次，报错一次再加一个改的。脑子被折腾坏了. ）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>,<span class="string">'vue-router'</span>,<span class="string">'vuex'</span>,<span class="string">'vuex-electron'</span>,<span class="string">'vue-electron'</span>] <span class="comment">//添加全部模块</span></span><br></pre></td></tr></table></figure>
+
+<p>这样再运行，果然得到了期望的界面。可以继续开发（收工睡觉）了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一切都是因为懂的太少，前端技术这一块更是一无所知。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee ☕️.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="zhuwenq 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="zhuwenq 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/electron/" rel="tag"># electron</a>
+              <a href="/tags/electron-vue/" rel="tag"># electron-vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/05/%E6%96%B0%E5%BB%BAvue%E9%A1%B9%E7%9B%AE%E5%AE%89%E8%A3%85electron-builder%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" rel="next" title="新建vue项目安装electron-builder遇到的问题和解决方法">
+      新建vue项目安装electron-builder遇到的问题和解决方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先在项目文件夹新建项目-aao"><span class="nav-number">1.</span> <span class="nav-text">首先在项目文件夹新建项目 aao</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#以开发模式运行"><span class="nav-number">2.</span> <span class="nav-text">以开发模式运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一：Webpack-ReferenceError-process-is-not-defined"><span class="nav-number">2.1.</span> <span class="nav-text">问题一：Webpack ReferenceError: process is not defined</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><span class="nav-number">2.2.</span> <span class="nav-text">问题二：Uncaught Error: Cannot find module &#39;axios&#39;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhuwenq</p>
+  <div class="site-description" itemprop="description">Remain passionate.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Leonezz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Leonezz" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Leonez@nuaa.edu.cn" title="E-Mail → mailto:Leonez@nuaa.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://home.zhuwenq.icu:7010/" title="HomePage → http:&#x2F;&#x2F;home.zhuwenq.icu:7010" rel="noopener" target="_blank"><i class="fa fa-fw fa-"></i>HomePage</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhuwenq</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyC9MNQaiIBSwKd9f41MpgL3cQvLlYNGun0',
+      projectId: 'blog-cd763'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

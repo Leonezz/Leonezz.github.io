@@ -1,1 +1,625 @@
-null
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/main-icon.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"leonezz.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面队列(Queue)也是线性表中的一种重要数据结构，队列中的元素只能在队列的头部(front)出队(delete)，只能在队列的尾部(rear)入队(add)。因此它是一种先入先出(First In First Out)的数据结构。 队列操作集一个队列应有以下操作集： 12345Queue *createQueue();                     &#x2F;&#x2F;生成队列int isFul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构--队列">
+<meta property="og:url" content="http://leonezz.github.io/2020/03/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="zhuwenq">
+<meta property="og:description" content="写在前面队列(Queue)也是线性表中的一种重要数据结构，队列中的元素只能在队列的头部(front)出队(delete)，只能在队列的尾部(rear)入队(add)。因此它是一种先入先出(First In First Out)的数据结构。 队列操作集一个队列应有以下操作集： 12345Queue *createQueue();                     &#x2F;&#x2F;生成队列int isFul">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-21T12:08:20.000Z">
+<meta property="article:modified_time" content="2020-03-21T13:41:28.738Z">
+<meta property="article:author" content="zhuwenq">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="队列">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://leonezz.github.io/2020/03/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构--队列 | zhuwenq</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhuwenq</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">zhuwenq's blog.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/main-icon.jpeg" alt="zhuwenq">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">14</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构--队列
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-21 20:08:20 / 修改时间：21:41:28" itemprop="dateCreated datePublished" datetime="2020-03-21T20:08:20+08:00">2020-03-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>队列<code>(Queue)</code>也是线性表中的一种重要数据结构，队列中的元素只能在队列的头部<code>(front)</code>出队<code>(delete)</code>，只能在队列的尾部<code>(rear)</code>入队<code>(add)</code>。因此它是一种先入先出<code>(First In First Out)</code>的数据结构。</p>
+<h1 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h1><h2 id="操作集"><a href="#操作集" class="headerlink" title="操作集"></a>操作集</h2><p>一个队列应有以下操作集：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Queue *<span class="title">createQueue</span><span class="params">()</span></span>;                     <span class="comment">//生成队列</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(Queue *<span class="built_in">queue</span>)</span></span>;                 <span class="comment">//查询队列是否为满队列</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(Queue *<span class="built_in">queue</span>, ElementType item)</span></span>; <span class="comment">//入队</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Queue *<span class="built_in">queue</span>)</span></span>;                <span class="comment">//查询队列是否为空</span></span><br><span class="line"><span class="function">ElementType <span class="title">delete</span> <span class="params">(Queue *<span class="built_in">queue</span>)</span></span>;        <span class="comment">//出队</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="链式结构"><a href="#链式结构" class="headerlink" title="链式结构"></a>链式结构</h3><p>链式结构的队列由两个节点域组成，它们分别是<code>front</code>和<code>rear</code>节点，指向链表头和链表尾。</p>
+<h4 id="0-原型"><a href="#0-原型" class="headerlink" title="0. 原型"></a>0. 原型</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">queueNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    QueueNode *next;</span><br><span class="line">&#125; QueueNode;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">queue_list_based</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    QueueNode *front;   <span class="comment">//指向头节点</span></span><br><span class="line">    QueueNode *rear;    <span class="comment">//指向尾节点</span></span><br><span class="line">&#125; Queue;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-生成空队列"><a href="#1-生成空队列" class="headerlink" title="1. 生成空队列"></a>1. 生成空队列</h4><p>生成一个<code>Queue</code>结构体，并把它的<code>front</code>和<code>rear</code>节点赋值为<code>NULL</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Queue *<span class="title">createQueue</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Queue *<span class="built_in">queue</span> = (Queue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Queue));</span><br><span class="line">    <span class="built_in">queue</span>-&gt;front = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;rear = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-查询是否为满队列"><a href="#2-查询是否为满队列" class="headerlink" title="2. 查询是否为满队列"></a>2. 查询是否为满队列</h4><p>链式实现的队列不存在满队列</p>
+<h4 id="3-查询是否为空队列"><a href="#3-查询是否为空队列" class="headerlink" title="3. 查询是否为空队列"></a>3. 查询是否为空队列</h4><p>当且仅当链式实现的队列为空队列时，它的头节点<code>front</code>为<code>NULL</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Queue *<span class="built_in">queue</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>-&gt;front == <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-入队"><a href="#4-入队" class="headerlink" title="4. 入队"></a>4. 入队</h4><p>入队时，若队列不为空把尾节点的<code>next</code>节点赋值为要入队的节点，然后把尾节点移动到新插入的节点，否则，把头节点赋值为新插入的节点。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(Queue *<span class="built_in">queue</span>, ElementType item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QueueNode *node = (QueueNode *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(QueueNode));</span><br><span class="line">    node-&gt;data = item;</span><br><span class="line">    node-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;front = node;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;rear = node;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;rear-&gt;next = node;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;rear = node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-出队"><a href="#5-出队" class="headerlink" title="5. 出队"></a>5. 出队</h4><p>出队时，若队列不为空，先把头节点保存下来，然后把头节点后移，最后删除并返回原头节点。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ElementType <span class="title">delete</span> <span class="params">(Queue *<span class="built_in">queue</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">//Error!queue is Empty</span></span><br><span class="line">    &#125;</span><br><span class="line">    QueueNode *frontNode = <span class="built_in">queue</span>-&gt;front;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">queue</span>-&gt;front == <span class="built_in">queue</span>-&gt;rear)</span><br><span class="line">    &#123; <span class="comment">//if queue has just one element,make it empty.</span></span><br><span class="line">        <span class="built_in">queue</span>-&gt;front = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;rear = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">queue</span>-&gt;front = <span class="built_in">queue</span>-&gt;front-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    ElementType frontNodeValue = frontNode-&gt;data;</span><br><span class="line">    <span class="built_in">free</span>(frontNode);</span><br><span class="line">    <span class="keyword">return</span> frontNodeValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="顺序结构"><a href="#顺序结构" class="headerlink" title="顺序结构"></a>顺序结构</h3><h4 id="0-原型-1"><a href="#0-原型-1" class="headerlink" title="0. 原型"></a>0. 原型</h4><p>顺序结构的队列使用一个数组存放数据，它的内部维护两个整形变量<code>front</code>和<code>rear</code>分别指示队列头部和尾部节点的位置。</p>
+<p>由于队列的入队和出队的操作将改变队列元素在内部数组中的起始和终止位置，因此顺序结构的队列常常是一个循环队列，即内部数组循环使用，数组下标对数组长度取模，这样可以提高空间的利用效率。</p>
+<p>容易知道，当队列的<code>front</code>和<code>rear</code>值相同时，队列是空的，同时，当队列处于满的状态时，<code>front</code>和<code>rear</code>也是相同的，这种情况将使我们无法分辨队列的满空状态。</p>
+<p>这种情况的出现是必然的，比如对于一个长度为<code>10</code>的队列，它的内部可以有<code>0,1,2,3...10</code>个元素，即<code>11</code>个状态，我们使用头尾差值即<code>front - rear</code>的值表征这<code>11</code>中状态。然而<code>front - rear</code>只有<code>10</code>种可能的结果，无法表征<code>11</code>种状态。</p>
+<p>这种矛盾的解决方案十分简单，我们可以在队列的内部增加一个<code>counter</code>计数器来记录队列内部的元素个数。或者我们可以让头节点<code>front</code>指向队列中第一个元素的前一位置，这样，队列内部实际只能储存数组长度减一个元素，头尾节点便不会因为队列满而相遇了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">queue_array_based</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType *data;</span><br><span class="line">    <span class="keyword">int</span> front;</span><br><span class="line">    <span class="keyword">int</span> rear;</span><br><span class="line">&#125;Queue;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-生成队列"><a href="#1-生成队列" class="headerlink" title="1. 生成队列"></a>1. 生成队列</h4><p>生成最大长度为<code>maxSize - 1</code>的队列，并把<code>front,rear</code>赋值为<code>0</code>，标志为空队列。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Queue *<span class="title">createQueue</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Queue *<span class="built_in">queue</span> = (Queue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Queue));</span><br><span class="line">    <span class="built_in">queue</span>-&gt;data = (ElementType *)<span class="built_in">malloc</span>(maxSize * <span class="keyword">sizeof</span>(ElementType));</span><br><span class="line">    <span class="built_in">queue</span>-&gt;front = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;rear = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-查询队列是否为满队列"><a href="#2-查询队列是否为满队列" class="headerlink" title="2. 查询队列是否为满队列"></a>2. 查询队列是否为满队列</h4><p>当且仅当队列满时，<code>rear</code>和<code>front</code>必定是相邻位置，且<code>rear</code>在<code>front</code>后面，因此，通过判断<code>front + 1</code>与数组长度的余与<code>rear</code>比较，可以获知队列是否已满。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(Queue *<span class="built_in">queue</span>, <span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ((<span class="built_in">queue</span>-&gt;front + <span class="number">1</span>) % maxSize) == (<span class="built_in">queue</span>-&gt;rear);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-查询队列是否为空"><a href="#3-查询队列是否为空" class="headerlink" title="3. 查询队列是否为空"></a>3. 查询队列是否为空</h4><p>当且仅当队列空时，<code>front</code>和<code>rear</code>的值相等。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Queue *<span class="built_in">queue</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>-&gt;front == <span class="built_in">queue</span>-&gt;rear;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-入队-1"><a href="#4-入队-1" class="headerlink" title="4. 入队"></a>4. 入队</h4><p>入队时，若队列未满，<code>rear</code>的值变为<code>rear + 1</code>对数组长度的取余，然后把入对的元素放在<code>rear</code>的位置。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(Queue *<span class="built_in">queue</span>, ElementType item, <span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isFull(<span class="built_in">queue</span>, maxSize))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//Error!queue is Full.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;rear = (<span class="built_in">queue</span>-&gt;rear + <span class="number">1</span>) % maxSize;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;data[<span class="built_in">queue</span>-&gt;rear] = item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-出队-1"><a href="#5-出队-1" class="headerlink" title="5. 出队"></a>5. 出队</h4><p>出队时，若队列非空，将<code>front</code>移到<code>front + 1</code>对数组长度取余的位置，然后返回<code>front</code>位置的元素。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ElementType <span class="title">delete</span> <span class="params">(Queue *<span class="built_in">queue</span>, <span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">//Error!queue is Empty.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;front = (<span class="built_in">queue</span>-&gt;front + <span class="number">1</span>) % maxSize;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>-&gt;data[<span class="built_in">queue</span>-&gt;front];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>略。。。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee ☕️.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="zhuwenq 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="zhuwenq 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E9%98%9F%E5%88%97/" rel="tag"># 队列</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E6%A0%88/" rel="prev" title="数据结构--堆栈">
+      <i class="fa fa-chevron-left"></i> 数据结构--堆栈
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/" rel="next" title="数据结构--树和树的表示">
+      数据结构--树和树的表示 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#队列"><span class="nav-number">2.</span> <span class="nav-text">队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#操作集"><span class="nav-number">2.1.</span> <span class="nav-text">操作集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链式结构"><span class="nav-number">2.2.1.</span> <span class="nav-text">链式结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0-原型"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">0. 原型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-生成空队列"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">1. 生成空队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-查询是否为满队列"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">2. 查询是否为满队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-查询是否为空队列"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">3. 查询是否为空队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-入队"><span class="nav-number">2.2.1.5.</span> <span class="nav-text">4. 入队</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-出队"><span class="nav-number">2.2.1.6.</span> <span class="nav-text">5. 出队</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序结构"><span class="nav-number">2.2.2.</span> <span class="nav-text">顺序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#0-原型-1"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">0. 原型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-生成队列"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">1. 生成队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-查询队列是否为满队列"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">2. 查询队列是否为满队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-查询队列是否为空"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">3. 查询队列是否为空</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-入队-1"><span class="nav-number">2.2.2.5.</span> <span class="nav-text">4. 入队</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-出队-1"><span class="nav-number">2.2.2.6.</span> <span class="nav-text">5. 出队</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhuwenq</p>
+  <div class="site-description" itemprop="description">Remain passionate.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Leonezz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Leonezz" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Leonez@nuaa.edu.cn" title="E-Mail → mailto:Leonez@nuaa.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://home.zhuwenq.icu:7010/" title="HomePage → http:&#x2F;&#x2F;home.zhuwenq.icu:7010" rel="noopener" target="_blank"><i class="fa fa-fw fa-"></i>HomePage</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhuwenq</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyC9MNQaiIBSwKd9f41MpgL3cQvLlYNGun0',
+      projectId: 'blog-cd763'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
