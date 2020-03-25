@@ -67,3 +67,29 @@ ElementType delete (Queue *queue)
     free(frontNode);
     return frontNodeValue;
 }
+
+typedef struct treeNode
+{
+    ElementType data;
+    BinaryTree *left;
+    BinaryTree *right;
+} BinaryTree;
+
+void visit(BinaryTree *tree); //访问节点
+
+void levelOrderTraversal(BinaryTree *tree)
+{
+    if (tree == NULL)
+        return; //Error!empty tree
+    Queue *queue = createQueue();
+    add(queue, tree); //add root to queue
+    while (!isEmpty(queue))
+    { //when queue is empty,traversal done
+        BinaryTree *t = delete (queue);
+        visit(t);
+        if (t->left)
+            add(queue, t->left);
+        if (t->right)
+            add(queue, t->right);
+    }
+}
