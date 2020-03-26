@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">17</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">18</span></a>
 
   </li>
   </ul>
@@ -165,6 +165,129 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" class="post-title-link" itemprop="url">数据结构--二叉搜索树</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-26 15:49:52 / 修改时间：17:22:52" itemprop="dateCreated datePublished" datetime="2020-03-26T15:49:52+08:00">2020-03-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>前面介绍树的博文<a href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">树和树的表示</a>提到了一种序列搜索算法–二分查找<code>(Binary Search)</code>算法，并且提到了其搜索过程实际上是一种树状结构。二分查找法是一种对静态数据的查找算法，它的搜索对象是一个长度一定的序列（需要在算法的入参中指定搜索的起始位置）。对于动态的序列，经常需要对其进行插入和删除的操作。如果事先把数据组织成树状的结构，它的动态插入删除查找等操作将十分便利。并且对于一个较为平衡的二叉树而言,各项操作也有很好的效率</p>
+<h1 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h1><p>二叉搜索树<code>(Binary Search Tree)</code>又称为二叉查找树。二叉搜索树本质上是一颗二叉树，在非空时它具有以下性质：</p>
+<ol>
+<li>左子树的所有键值<code>key</code>小于根节点键值</li>
+<li>右子树的所有键值<code>key</code>大于根节点键值</li>
+<li>左子树和右子树也是二叉搜索树<br>（每个节点的键值是唯一的）</li>
+</ol>
+<h2 id="特别操作"><a href="#特别操作" class="headerlink" title="特别操作"></a>特别操作</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从二叉搜索树中找出键值为key的节点地址</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最小键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最大键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMax</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//向二叉搜索树插入键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//从二叉搜索树删除键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ul>
+<li><p><code>find</code><br>查找的操作较为简单<br>若树为空，返回<code>NULL</code><br>若树非空，将<code>key</code>与根节点的<code>key</code>进行比较：</p>
+<ul>
+<li>若大于根节点的<code>key</code>，说明待查找节点在根节点的右侧，在右子树中继续查找</li>
+<li>若小于根节点的<code>key</code>，说明待查找节点在根节点的左侧，在左子树中继续查找</li>
+<li>若等于根节点的<code>key</code>，说明待查找节点已找到，直接返回跟节点<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">find</span>(tree-&gt;right, key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">find</span>(tree-&gt;left, key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> tree;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+上述尾递归实现效率不高而且有爆栈的风险，下面是将尾递归展开为循环的实现。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//循环实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (key &gt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;right;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>findMin</code><br>观察二叉查找树的结构特点，容易知道其最小的元素一定在树的最左侧。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp-&gt;left)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = temp-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(tree-&gt;left) <span class="keyword">return</span> findMin(tree-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>findMax</code><br>同理，最大元素一定在二叉搜索树的最右侧。</p>
+</li>
+<li><p><code>insert</code><br>插入操作较为复杂，先找到要插入的位置，然后构造节点将节点插入合适的位置。<br>首先看简单的递归实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tree = (BinarySearchTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BinarySearchTree));</span><br><span class="line">        tree-&gt;key = key;</span><br><span class="line">        tree-&gt;left = tree-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">return</span> tree;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">        <span class="keyword">return</span> insert(tree-&gt;right, key);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">        <span class="keyword">return</span> insert(tree-&gt;left, key);</span><br><span class="line">    <span class="comment">//else key==tree-&gt;key; do nothing</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>循环实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//循环实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (key &gt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;right;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">//if equals,I dont know what's right,lets just rewrite it.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//when break out while loop,temp must be NULL</span></span><br><span class="line">    temp = (BinarySearchTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BinarySearchTree));</span><br><span class="line">    temp-&gt;key = key;</span><br><span class="line">    temp-&gt;left = temp-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>delete</code><br>删除操作是最为复杂的，因为被删除的节点处在不同位置时，操作的行为也是不同的。首先找到要删除的节点</p>
+<ol>
+<li><p>若删除的节点是叶节点，可以直接将其置为<code>NULL</code></p>
+</li>
+<li><p>若删除的节点有一个子节点，可以使用该子节点代替被删除的节点</p>
+</li>
+<li><p>若删除的节点有两个子节点，则有两种选择：</p>
+<ol>
+<li>使用被删除节点的左子树的最大值节点代替被删除节点</li>
+<li>使用被删除节点的右子树的最小值节点代替被删除节点</li>
+</ol>
+<p>然后还需要删除左子树/右子树中那个拿去代替被删除节点的节点，过程较为复杂，删除子树节点的操作需要递归完成<del>（其他的实现不会😁）</del></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType *key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinarySearchTree *target = <span class="built_in">find</span>(tree, key);</span><br><span class="line">    <span class="keyword">if</span> (target == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (target-&gt;left &amp;&amp; target-&gt;right)</span><br><span class="line">    &#123;                                              <span class="comment">//both left child and right child are valid</span></span><br><span class="line">        KeyType <span class="built_in">min</span> = findMin(target-&gt;right)-&gt;key; <span class="comment">//or findMax(target-&gt;left)</span></span><br><span class="line">        target-&gt;key = <span class="built_in">min</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">delete</span> (target-&gt;right, <span class="built_in">min</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinarySearchTree *temp = target; <span class="comment">//copy target address,it need to be freed</span></span><br><span class="line">        <span class="keyword">if</span> (target-&gt;left != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only left child</span></span><br><span class="line">            target = target-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (target-&gt;right != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only right child</span></span><br><span class="line">            target = target-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//else no child,just free the node will be fine</span></span><br><span class="line">        <span class="built_in">free</span>(temp);</span><br><span class="line">        <span class="keyword">return</span> tree;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ul>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>删除操作还需要进一步理解</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1286,115 +1409,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhuwenq">
-      <meta itemprop="description" content="Remain passionate.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhuwenq">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/" class="post-title-link" itemprop="url">使用ssh进行git push</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-15 22:28:58" itemprop="dateCreated datePublished" datetime="2020-03-15T22:28:58+08:00">2020-03-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-17 22:40:55" itemprop="dateModified" datetime="2020-03-17T22:40:55+08:00">2020-03-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ssh-git/" itemprop="url" rel="index"><span itemprop="name">ssh git</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="firestore-visitors-count"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>使用github管理项目时，git push 操作有时需要输入用户名和密码，使用ssh可以实现免密推送。</p>
-<p>ssh是一种用于计算机加密登录的网络协议，他非常安全，即使通信被截获密码也不会泄露。因此常用在服务器的远程登陆上。</p>
-<h1 id="在本地生成ssh密钥"><a href="#在本地生成ssh密钥" class="headerlink" title="在本地生成ssh密钥"></a>在本地生成ssh密钥</h1><p>要登陆远程服务器，常用的方式有<code>ssh username@hostname -p portnumber</code>。这样登录是需要输入远程机器的用户密码的。为了省去这一步烦人的操作，我们可以在本地生成一个ssh密钥（公钥和私钥），然后把公钥部署到要登陆的服务端机器。这样，登陆时ssh就知道这个ssh连接来自一台被验证了的安全的设备。</p>
-<h2 id="生成一般ssh密钥（用于远程登陆）"><a href="#生成一般ssh密钥（用于远程登陆）" class="headerlink" title="生成一般ssh密钥（用于远程登陆）"></a>生成一般ssh密钥（用于远程登陆）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/1.png" alt=""></p>
-<p>输入要生成的密钥路径和文件名便可生成密钥文件，私钥<code>yourkeyfilename</code>和公钥<code>yourkeyfilename.pub</code>（最好放在<code>username/.ssh</code>文件夹下）。生成完成后，使用命令<code>scp -P 端口号 本地公钥文件地址 用户名@远程地址:.ssh/authorized_keys</code> 把公钥复制到远程服务器的<code>home/.ssh/authorized_keys</code>文件即可。</p>
-<p>值得注意的是，如果没有采用ssh密钥的默认命名（<code>id_rsa和id_rsa.pub</code>），而是使用了自定义的命名，这样直接<code>ssh username@host</code>是无法工作的。这是因为ssh会默认寻找名为<code>id_rsa</code>的私钥文件与远程机器上的公钥文件进行比对，为了让ssh明白我们已经给私钥文件重新起了名字，还需要配置一个config文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">Host host</span><br><span class="line">HostName hostname</span><br><span class="line">User username</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的私钥路径</span><br></pre></td></tr></table></figure>
-
-<p>这样ssh在建立指向host的连接验证公私钥配对时，就知道去你设定的私钥路径寻找私钥文件了。</p>
-<p>如果登录仍不成功，可能是远程服务器上的<code>~/.ssh/</code>文件夹和<code>~/.ssh/authorized_keys</code>文件的权限问题导致的。使用命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod ~/.ssh 700    <span class="comment">#只有文件拥有者（创建文件的用户）具有读写，执行的权限</span></span><br><span class="line">chmod ~/.ssh/authorized_keys 600    <span class="comment">#只有文件拥有者具有读写权限</span></span><br></pre></td></tr></table></figure>
-
-<p>给文件赋予正确的权限</p>
-<h2 id="生成用于git的ssh密钥"><a href="#生成用于git的ssh密钥" class="headerlink" title="生成用于git的ssh密钥"></a>生成用于git的ssh密钥</h2><p>首先使用命令<code>git config --global user.name = &quot;your github user name&quot;&amp;&amp;git config --global user.email = &quot;you github email&quot;</code>设置git用户名和邮箱。</p>
-<p><code>ssh-keygen -C &quot;you email address&quot;</code>生成密钥，过程与上面的相同。生成完成之后编辑<code>config</code>文件，添加以下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">## Github</span><br><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的git ssh私钥路径</span><br></pre></td></tr></table></figure>
-
-<p>然后使用文本编辑器打开刚刚生成的公钥文件，复制全部内容。打开github的<a href="https://github.com/settings/keys">ssh key配置页面</a></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/3.png" alt=""></p>
-<p>点击<code>new SSH key</code>按键：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/4.png" alt=""></p>
-<p>起个标题之后把复制的公钥内容粘贴在key里，点击<code>Add SSH key</code>完事。</p>
-<p>完成之后，打开命令行输入<code>ssh github.com</code>：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/2.png" alt=""></p>
-<p>这里由于我们在<code>config</code>的<code>User</code>字段设置了git，因此我们甚至不用输入<code>ssh git@github.com</code>就可以连接成功。</p>
-<h2 id="ssh链接"><a href="#ssh链接" class="headerlink" title="ssh链接"></a>ssh链接</h2><p>一般在<code>git clone</code>别人的仓库时，用的都是https链接：<code>git clone https://github.com/username/reponame.git</code>。为了使用ssh进行<code>git push</code>，本地的仓库必须是ssh链接。</p>
-<p>可以在<code>git clone</code>时就选择ssh链接：<code>git clone git@github.com:username/reponame.git</code>，或者把本地仓库的<code>.git/config</code>文件中<code>[remote &quot;origin&quot;]</code>代码段中的<code>url</code>字段修改为<code>git@github.com:username/reponame.git</code>。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p><del>似乎也没方便哪去</del></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1465,7 +1479,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

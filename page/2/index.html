@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">17</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">18</span></a>
 
   </li>
   </ul>
@@ -165,6 +165,115 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://leonezz.github.io/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/" class="post-title-link" itemprop="url">使用ssh进行git push</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-15 22:28:58" itemprop="dateCreated datePublished" datetime="2020-03-15T22:28:58+08:00">2020-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 22:40:55" itemprop="dateModified" datetime="2020-03-17T22:40:55+08:00">2020-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ssh-git/" itemprop="url" rel="index"><span itemprop="name">ssh git</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>使用github管理项目时，git push 操作有时需要输入用户名和密码，使用ssh可以实现免密推送。</p>
+<p>ssh是一种用于计算机加密登录的网络协议，他非常安全，即使通信被截获密码也不会泄露。因此常用在服务器的远程登陆上。</p>
+<h1 id="在本地生成ssh密钥"><a href="#在本地生成ssh密钥" class="headerlink" title="在本地生成ssh密钥"></a>在本地生成ssh密钥</h1><p>要登陆远程服务器，常用的方式有<code>ssh username@hostname -p portnumber</code>。这样登录是需要输入远程机器的用户密码的。为了省去这一步烦人的操作，我们可以在本地生成一个ssh密钥（公钥和私钥），然后把公钥部署到要登陆的服务端机器。这样，登陆时ssh就知道这个ssh连接来自一台被验证了的安全的设备。</p>
+<h2 id="生成一般ssh密钥（用于远程登陆）"><a href="#生成一般ssh密钥（用于远程登陆）" class="headerlink" title="生成一般ssh密钥（用于远程登陆）"></a>生成一般ssh密钥（用于远程登陆）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/1.png" alt=""></p>
+<p>输入要生成的密钥路径和文件名便可生成密钥文件，私钥<code>yourkeyfilename</code>和公钥<code>yourkeyfilename.pub</code>（最好放在<code>username/.ssh</code>文件夹下）。生成完成后，使用命令<code>scp -P 端口号 本地公钥文件地址 用户名@远程地址:.ssh/authorized_keys</code> 把公钥复制到远程服务器的<code>home/.ssh/authorized_keys</code>文件即可。</p>
+<p>值得注意的是，如果没有采用ssh密钥的默认命名（<code>id_rsa和id_rsa.pub</code>），而是使用了自定义的命名，这样直接<code>ssh username@host</code>是无法工作的。这是因为ssh会默认寻找名为<code>id_rsa</code>的私钥文件与远程机器上的公钥文件进行比对，为了让ssh明白我们已经给私钥文件重新起了名字，还需要配置一个config文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">Host host</span><br><span class="line">HostName hostname</span><br><span class="line">User username</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的私钥路径</span><br></pre></td></tr></table></figure>
+
+<p>这样ssh在建立指向host的连接验证公私钥配对时，就知道去你设定的私钥路径寻找私钥文件了。</p>
+<p>如果登录仍不成功，可能是远程服务器上的<code>~/.ssh/</code>文件夹和<code>~/.ssh/authorized_keys</code>文件的权限问题导致的。使用命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod ~/.ssh 700    <span class="comment">#只有文件拥有者（创建文件的用户）具有读写，执行的权限</span></span><br><span class="line">chmod ~/.ssh/authorized_keys 600    <span class="comment">#只有文件拥有者具有读写权限</span></span><br></pre></td></tr></table></figure>
+
+<p>给文件赋予正确的权限</p>
+<h2 id="生成用于git的ssh密钥"><a href="#生成用于git的ssh密钥" class="headerlink" title="生成用于git的ssh密钥"></a>生成用于git的ssh密钥</h2><p>首先使用命令<code>git config --global user.name = &quot;your github user name&quot;&amp;&amp;git config --global user.email = &quot;you github email&quot;</code>设置git用户名和邮箱。</p>
+<p><code>ssh-keygen -C &quot;you email address&quot;</code>生成密钥，过程与上面的相同。生成完成之后编辑<code>config</code>文件，添加以下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">## Github</span><br><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的git ssh私钥路径</span><br></pre></td></tr></table></figure>
+
+<p>然后使用文本编辑器打开刚刚生成的公钥文件，复制全部内容。打开github的<a href="https://github.com/settings/keys">ssh key配置页面</a></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/3.png" alt=""></p>
+<p>点击<code>new SSH key</code>按键：</p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/4.png" alt=""></p>
+<p>起个标题之后把复制的公钥内容粘贴在key里，点击<code>Add SSH key</code>完事。</p>
+<p>完成之后，打开命令行输入<code>ssh github.com</code>：</p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/2.png" alt=""></p>
+<p>这里由于我们在<code>config</code>的<code>User</code>字段设置了git，因此我们甚至不用输入<code>ssh git@github.com</code>就可以连接成功。</p>
+<h2 id="ssh链接"><a href="#ssh链接" class="headerlink" title="ssh链接"></a>ssh链接</h2><p>一般在<code>git clone</code>别人的仓库时，用的都是https链接：<code>git clone https://github.com/username/reponame.git</code>。为了使用ssh进行<code>git push</code>，本地的仓库必须是ssh链接。</p>
+<p>可以在<code>git clone</code>时就选择ssh链接：<code>git clone git@github.com:username/reponame.git</code>，或者把本地仓库的<code>.git/config</code>文件中<code>[remote &quot;origin&quot;]</code>代码段中的<code>url</code>字段修改为<code>git@github.com:username/reponame.git</code>。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p><del>似乎也没方便哪去</del></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1011,7 +1120,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
