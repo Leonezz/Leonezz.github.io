@@ -256,7 +256,7 @@
 <h2 id="以开发模式运行"><a href="#以开发模式运行" class="headerlink" title="以开发模式运行"></a>以开发模式运行</h2><p>命令是：</p>
 <p><code>$ npm run dev   #问题就处在这里</code></p>
 <p>当我满心欢喜的希望出现默认的界面时，问题出现了。</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt=""><br><em>(图为期望的界面)</em></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt><br><em>(图为期望的界面)</em></p>
 <h3 id="问题一：Webpack-ReferenceError-process-is-not-defined"><a href="#问题一：Webpack-ReferenceError-process-is-not-defined" class="headerlink" title="问题一：Webpack ReferenceError: process is not defined"></a>问题一：<em>Webpack ReferenceError: process is not defined</em></h3><p>这个问题首先出现，由于对相关知识的匮乏，我尚未参透问题出现的原因。不过通过万能的Google，我找到了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/871">issue</a>。</p>
 <p>通过它找到了解决的方案（暂不了解原理）：</p>
 <p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
@@ -267,9 +267,9 @@
 <p>这样一改，这个问题果然不再出现了，但是还是得不到想要的结果。</p>
 <p>在找到这个方案之前，我读了几十篇博客，试了好多种方法。甚至删掉目录从头配置了好几遍，浪费了我大量的时间。</p>
 <h3 id="问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><a href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39" class="headerlink" title="问题二：Uncaught Error: Cannot find module &#39;axios&#39;"></a>问题二：<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></h3><p>执行完命令<code>npm run dev</code>之后，出现了一个白屏的界面：</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt=""></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt></p>
 <p>打开开发者工具：</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt=""></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt></p>
 <p>发现错误<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></p>
 <p>明明在执行<code>npm install</code>安装依赖项的时候安装了<code>axios</code>模块，为何这里却报错说找不到模块？</p>
 <p>多方查询之后，我找到了跟我问题一样的<a href="https://github.com/SimulatedGREG/electron-vue/issues/940">issue</a>,这里面提出的解决方案无非是重新安装<code>axios</code>，虽然预感不会有用，我还是侥幸心理试了一遍，果不其然，问题没有解决。</p>

@@ -270,27 +270,27 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_addr &#x3D; 0.0.0.0</span><br><span class="line">bind_port &#x3D; 7000</span><br><span class="line"></span><br><span class="line">dashboard_user &#x3D; xxxxx #监控的用户名</span><br><span class="line">dashboard_pwd &#x3D; xxxxxx #监控的密码</span><br><span class="line">dashboard_port &#x3D; 7500</span><br></pre></td></tr></table></figure>
 <p>其中，<code>dashboard</code>是你可以在浏览器中访问监控frp运行状态的配置。</p>
 <p>修改完成后，运行<code>frp/frps -c frp/frps.ini</code>启动服务。出现下图说明启动成功。</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/1.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/1.png" alt></p>
 <p>此时应该去<a href="https://account.alibabacloud.com/login/login.htm?&utm_content=se_1002670506&gclid=Cj0KCQjw3qzzBRDnARIsAECmryp33cjv9L_MgK9oXcU4or_RdD3EteR6wrxYHptDqySMHB8ovhBg-84aAh2eEALw_wcB">阿里云控制台</a>打开服务器的7000-7500端口，否则会访问失败(我就在这里踩坑了半天:)</p>
 <p>具体的打开方法是：</p>
 <p>进入控制台的实例详情页面</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/2.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/2.png" alt></p>
 <p>点击<code>本实例安全组&gt;配置规则</code></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/3.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/3.png" alt></p>
 <p>点击右上角的<code>添加安全组规则</code></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/4.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/4.png" alt></p>
 <p>按照下图填写即可：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/5.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/5.png" alt></p>
 <p>设置完成后，打开浏览器访问<code>http://你的服务器公网IP:7500</code>，出现下图界面说明frp dashboard启动成功。</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/6.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/6.png" alt></p>
 <h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><p>首先在<a href="https://github.com/fatedier/frp/releases/">release页面</a>下载对应的版本，解压到你准备被访问的内网机器上。</p>
 <p>打开<code>frp/frpc.ini</code>做如下修改：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr &#x3D; xx.xx.xx.xx #服务器的ip地址</span><br><span class="line">server_port &#x3D; 7000</span><br><span class="line"></span><br><span class="line">[ssh]</span><br><span class="line">type &#x3D; tcp</span><br><span class="line">local_ip &#x3D; 127.0.0.1</span><br><span class="line">local_port &#x3D; 3389   #windows远程桌面默认端口</span><br><span class="line">remote_port &#x3D; 7001  #前文我们开放了服务器的7000-7500端口，因此这里使用7001。</span><br></pre></td></tr></table></figure>
 <p>修改完成后，在frp文件夹打开命令行运行命令<code>frpc -c frpc.ini</code>启动客户端。（注意运行此命令的命令行应该常驻，否则frp进程会随之关闭）</p>
 <p>出现如下输出说明启动和连接成功</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/7.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/7.png" alt></p>
 <p>现在可以使用windows原生的远程桌面连接你的内网机器了！</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/8.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/8.png" alt></p>
 <p>其中计算机字段填写你的服务器IP，端口是客户端配置中的<code>remote_port</code>字段。</p>
 <p>注意连接的用户名和密码是你的内网机器上登录的用户名和密码。</p>
 <h2 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h2><p>为了防止内网机器意外关闭导致无法连接，可以使用<a href="https://link.zhihu.com/?target=https%3A//github.com/kohsuke/winsw">WINSW</a>把frp设置成开机自启动。</p>

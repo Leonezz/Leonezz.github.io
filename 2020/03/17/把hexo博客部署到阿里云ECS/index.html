@@ -255,7 +255,7 @@
 <ol>
 <li><p>首先在<code>/etc/nginx/</code>文件夹下新建文件夹<code>vhost</code>：<code>cd /etc/nginx &amp;&amp; mkdir vhost</code>，然后在<code>vhost</code>文件夹下新建文件<code>blog.conf</code>，最后编辑<code>blog.conf</code>：</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/nginx/vhost/blog.conf</span></span><br><span class="line">server&#123;</span><br><span class="line">    listen 7010;     <span class="comment">#没有备案的网站无法访问80端口</span></span><br><span class="line">    root /home/www/blog;<span class="comment">#这里是网站的根目录，目前还没有建立</span></span><br><span class="line">    server_name youdomain;<span class="comment">#这里是你的域名，也可以填服务器公网IP</span></span><br><span class="line">    location /&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>打开<code>/etc/nginx/nginx.conf</code>文件，把刚刚新建的<code>blog.conf</code>文件<code>include</code>进去：<br><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png" alt=""><br> 如图添加<code>include /etc/nginx/vhost/*.conf;</code>，把文件夹<code>vhost</code>下所有的<code>.conf</code>文件都包含进配置文件。这样，如果以后建立其他网站，直接在<code>vhost</code>文件夹中添加<code>.conf</code>文件就行了。</p>
+<li><p>打开<code>/etc/nginx/nginx.conf</code>文件，把刚刚新建的<code>blog.conf</code>文件<code>include</code>进去：<br><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png" alt><br> 如图添加<code>include /etc/nginx/vhost/*.conf;</code>，把文件夹<code>vhost</code>下所有的<code>.conf</code>文件都包含进配置文件。这样，如果以后建立其他网站，直接在<code>vhost</code>文件夹中添加<code>.conf</code>文件就行了。</p>
 </li>
 </ol>
 <h2 id="建立网站目录"><a href="#建立网站目录" class="headerlink" title="建立网站目录"></a>建立网站目录</h2><p>刚刚在<code>/etc/nginx/nginx.conf</code>文件中添加的<code>root /home/www/blog;</code>语句，实际上是把网站的根目录声明为<code>/home/www/blog</code>。首先建立该文件夹：</p>
@@ -274,7 +274,7 @@
 <ol start="2">
 <li><p>配置git用户权限：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 740 /etc/sudoers  <span class="comment">#提权</span></span><br><span class="line">vi /etc/sudoers         <span class="comment">#打开sudoers文件</span></span><br></pre></td></tr></table></figure>
-<p><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png" alt=""><br>如图添加<code>git    ALL=(ALL)   ALL</code>。<code>:wq</code>保存退出后，<code>chmod 400 /etc/sudoers</code>把文件<code>sudoers</code>的权限改回原样。</p>
+<p><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png" alt><br>如图添加<code>git    ALL=(ALL)   ALL</code>。<code>:wq</code>保存退出后，<code>chmod 400 /etc/sudoers</code>把文件<code>sudoers</code>的权限改回原样。</p>
 <p>然后需要设置git用户的密码：<code>sudo passwd git</code>。</p>
 </li>
 <li><p>切换到git用户，配置ssh</p>

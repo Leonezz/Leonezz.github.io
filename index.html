@@ -236,7 +236,7 @@
 <h2 id="平衡二叉树的高度"><a href="#平衡二叉树的高度" class="headerlink" title="平衡二叉树的高度"></a>平衡二叉树的高度</h2><p>设$n_h$为高度为$h$的平衡二叉树最小节点数，则对于该二叉树的任一节点，其左右子树的高度分别为$h-1$和$h-2$，其节点数分别为$n_{h-1}$和$n_{h-2}$，则该二叉树的节点总数为$n_h = n_{h-1}+n_{h-2}+1$。该递推公式推广到该二叉树的任一子树都成立，因此，高度为<code>h</code>的平衡二叉树节点数满足<strong>类斐波那契数列的递推公式</strong>。<br>设斐波那契数列的第<code>h</code>项值为$F_h = F_{h-1}+F_{h-2}$，则$n_h=F_h-1$。<br>又因为$F_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h$，<br>所以：$n_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h-1$<br>所以，对于节点数为<code>n</code>的平衡二叉树，它的高度是$\log_2 n$数量级的，搜索的最坏时间复杂度是<code>O(log n)</code></p>
 <p>由此可见，平衡二叉树是性能很高的二叉搜索树。</p>
 <h2 id="平衡二叉树的自平衡"><a href="#平衡二叉树的自平衡" class="headerlink" title="平衡二叉树的自平衡"></a>平衡二叉树的自平衡</h2><p>由于平衡二叉树也是一颗二叉搜索树，它在节点插入时仍需满足二叉搜索树左小右大的规则。这种情况下难免会破坏原有的平衡（平衡因子会改变）。如：</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/1.png" alt=""></p>
+<p><img src="/.io//1.png" alt></p>
 <p>对这颗树而言，它是平衡的，除最倒数第二层节点外其他节点的平衡因数都是<code>0</code>。此时如果要插入元素<code>8</code>，根据二叉搜索树的插入规则，节点将被插入到节点<code>7</code>的右子节点位置，不会破坏树的平衡。<br>如果被插入的元素是<code>79</code>，则会被插入到节点<code>78</code>的右子节点位置，此时节点<code>71</code>的平衡因数将变为<code>-2</code>，节点<code>50</code>的平衡因数也会变为<code>-2</code>，平衡性被破坏。<br>我们称平衡性被破坏的节点为<strong>发现者</strong>，破坏平衡性的节点为<strong>破坏者</strong>。根据<strong>破坏者</strong>与<strong>发现者</strong>的相对位置，把破坏平衡的插入分为4种情况：</p>
 <ol>
 <li><code>RR插入</code>–破坏者位于发现者的<strong>右子树</strong>的<strong>右边</strong></li>
@@ -245,39 +245,39 @@
 <li><code>LR插入</code>–破坏者位于发现者的<strong>左子树</strong>的<strong>右边</strong></li>
 </ol>
 <p>对这四种情况分别进行处理，把被破坏的平衡树重新构造成平衡二叉树，就是平衡二叉树的自平衡。四种处理方式分别为：<code>RR旋转</code>，<code>LL旋转</code>，<code>RL旋转</code>，<code>LR旋转</code>，旋转的结果需要满足二叉查找树的规则。</p>
-<h3 id="RR旋转"><a href="#RR旋转" class="headerlink" title="RR旋转"></a><code>RR旋转</code></h3><p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/2.png" alt=""></p>
+<h3 id="RR旋转"><a href="#RR旋转" class="headerlink" title="RR旋转"></a><code>RR旋转</code></h3><p><img src="/.io//2.png" alt></p>
 <p>如图所示的平衡二叉树，假设插入元素<code>80</code></p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/3.png" alt=""></p>
+<p><img src="/.io//3.png" alt></p>
 <p>此时发现者是<code>50</code>，破坏者是<code>80</code>。<br>根据二叉搜索树的性质不难知道，发现者<code>50</code>的右子树所有节点均大于<code>50</code>。因此，可以用<code>50</code>的右子节点替换<code>50</code>的位置，同时把<code>50</code>右子节点<code>78</code>的左子树（一定小于78）挂在<code>50</code>的右子节点处（一定大于50），最后把<code>50</code>这一节点连同它的子树挂在节点<code>78</code>的左子节点位置。</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/4.png" alt=""></p>
+<p><img src="/.io//4.png" alt></p>
 <p>过程可以简述为：使用发现者<code>F</code>的右子节点<code>r</code>代替发现者，然后把发现者<code>F</code>挂到<code>r</code>的左子节点处，同时把<code>r</code>的左子节点（可以为空）重新挂在<code>F</code>的右子节点处。新插入的节点保持不动。最后返回占据原<code>F</code>节点位置的节点（应该为<code>r</code>）。（有顺口溜内味了）</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注意：此函数不应单独使用，它应该配合插入操作使用</span></span><br><span class="line"><span class="comment">//      因为单单将finder的子树旋转是不够的，还需要把返回的节点挂载到原树上</span></span><br><span class="line"><span class="function">AVLTree *<span class="title">singleRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;                                    <span class="comment">//tree is the finder</span></span><br><span class="line">    AVLTree *replacer = tree-&gt;right; <span class="comment">//right child of finder</span></span><br><span class="line">    tree-&gt;right = replacer-&gt;left;    <span class="comment">//right child's left child to finder's right child</span></span><br><span class="line">    replacer-&gt;left = tree;           <span class="comment">//finder to right child's left child</span></span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="LL旋转"><a href="#LL旋转" class="headerlink" title="LL旋转"></a><code>LL旋转</code></h3><p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/5.png" alt=""></p>
+<h3 id="LL旋转"><a href="#LL旋转" class="headerlink" title="LL旋转"></a><code>LL旋转</code></h3><p><img src="/.io//5.png" alt></p>
 <p>类似的，假设上图所示的平衡二叉树要插入元素<code>2</code></p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/6.png" alt=""></p>
+<p><img src="/.io//6.png" alt></p>
 <p>则新插入的元素位于最左侧节点<code>1</code>的右子节点位置。此时发现者是<code>6</code>，破坏者是<code>1</code>，破坏者位于发现者的左子树的左子树的右子节点处（注意：虽然位于右子节点，但仍然是发现者的左子树的左子树上）,因此是<code>LL插入</code>。</p>
 <p>与<code>RR插入</code>类似，发现者的左子树所有节点都小于发现者，因此可以用发现者的左子节点代替发现者的位置，然后把发现者挂在其左子节点的右子节点处（发现者一定大于它的左子节点），同时把发现者的左子节点的右子树挂在发现者的左子节点位置。</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/7.png" alt=""></p>
+<p><img src="/.io//7.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">singleLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree *replacer = tree-&gt;left;</span><br><span class="line">    tree-&gt;left = replacer-&gt;right;</span><br><span class="line">    replacer-&gt;right = tree;</span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="RL旋转"><a href="#RL旋转" class="headerlink" title="RL旋转"></a><code>RL旋转</code></h3><p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/10.png" alt=""></p>
+<h3 id="RL旋转"><a href="#RL旋转" class="headerlink" title="RL旋转"></a><code>RL旋转</code></h3><p><img src="/.io//10.png" alt></p>
 <p>如上平衡二叉树，插入元素<code>49</code></p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/11.png" alt=""></p>
+<p><img src="/.io//11.png" alt></p>
 <p><code>49</code>插入到节点<code>47</code>的右子节点处，此时发现者是<code>46</code>，破坏者是<code>49</code>。破坏者位于发现者的右子树的左子树上，因此是<code>RL插入</code>。</p>
 <p>此时，发现者<code>F</code>必有一个右子节点<code>R</code>，节点<code>R</code>必有一个左子节点<code>L</code>。<br>所谓<code>RL旋转</code>就是先对节点<code>R</code>做右旋，</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/12.png" alt=""></p>
+<p><img src="/.io//12.png" alt></p>
 <p>然后对节点<code>F</code>做左旋。</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/13.png" alt=""></p>
+<p><img src="/.io//13.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">rightLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;right = singleRightRotation(tree-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> singleLeftRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="LR旋转"><a href="#LR旋转" class="headerlink" title="LR旋转"></a><code>LR旋转</code></h3><p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/14.png" alt=""></p>
+<h3 id="LR旋转"><a href="#LR旋转" class="headerlink" title="LR旋转"></a><code>LR旋转</code></h3><p><img src="/.io//14.png" alt></p>
 <p>上图所示树插入元素<code>25</code></p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/15.png" alt=""></p>
+<p><img src="/.io//15.png" alt></p>
 <p>发现者是<code>30</code>，破坏者是<code>25</code>。先对节点<code>20</code>做左旋</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/16.png" alt=""></p>
+<p><img src="/.io//16.png" alt></p>
 <p>再对节点<code>30</code>做右旋</p>
-<p><img src="./%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/17.png" alt=""></p>
+<p><img src="/.io//17.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">leftRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;left = singleLeftRotation(tree-&gt;left);</span><br><span class="line">    <span class="keyword">return</span> singleRightRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h3><p>在上述四种旋转的基础上，可以实现新的具有自平衡特点的插入操作。插入之后判断其父节点的平衡因子，如果平衡被破坏，使用对应的旋转操作恢复平衡。</p>
@@ -488,7 +488,7 @@
 <h1 id="把Windows-Terminal快捷方式添加到右键菜单"><a href="#把Windows-Terminal快捷方式添加到右键菜单" class="headerlink" title="把Windows Terminal快捷方式添加到右键菜单"></a>把<code>Windows Terminal</code>快捷方式添加到右键菜单</h1><p>可以通过添加注册表的方式实现。</p>
 <ol>
 <li><p>首先，检查常量<code>%USERPROFILE%</code>和<code>%LOCALAPPDATA%</code>的值，可以通过在命令行输入<code>echo %USERPROFILE%</code>和<code>echo %LOCALAPPDATA%</code>来检查。如果没有报错的话说明正常。(正常不会有问题)</p>
-<p> <img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/1.png" alt=""></p>
+<p> <img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/1.png" alt></p>
 </li>
 <li><p>在命令行输入命令 <code>mkdir &quot;%USERPROFILE%\AppData\Local\terminal&quot;</code>创建文件夹，然后找个好看的图标(<code>ico</code>)文件放进去，它将出现在右键菜单的头部作为图标。如果找不到好康的，也可以到<a href="https://github.com/microsoft/terminal/blob/master/res/terminal.ico">这里</a>下载<code>Windows Terminal</code>默认的图标。</p>
 </li>
@@ -503,12 +503,12 @@
 <p> 其中第一个<code>@</code>处是将要出现在右键菜单的提示语<br> 它的下一句是图标的路径<br> 最后一句是<code>Windows Terminal</code>的程序路径，他需要是绝对路径，因此请把<code>{your user name}</code>换成你的<code>Windows</code>用户名。</p>
 <p> 双击运行，添加注册表。</p>
 </li>
-<li><p>在任意文件夹点击右键，可以发现<code>Open Terminal here</code>已经出现在右键菜单。<br> <img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/2.png" alt=""></p>
+<li><p>在任意文件夹点击右键，可以发现<code>Open Terminal here</code>已经出现在右键菜单。<br> <img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/2.png" alt></p>
 </li>
-<li><p>点击该右键菜单，如果<code>cmd</code>当前目录仍然是<code>C:/Users/{your user name}</code>，请打开<code>Windows Terminal</code>的配置文件<code>profile.json</code>，把第一个<code>CMD</code>的<code>startingDirectory</code>字段删除。<br><img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/3.png" alt=""></p>
+<li><p>点击该右键菜单，如果<code>cmd</code>当前目录仍然是<code>C:/Users/{your user name}</code>，请打开<code>Windows Terminal</code>的配置文件<code>profile.json</code>，把第一个<code>CMD</code>的<code>startingDirectory</code>字段删除。<br><img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/3.png" alt></p>
 </li>
 </ol>
-<h1 id="Windows-Terminal的图标路径"><a href="#Windows-Terminal的图标路径" class="headerlink" title="Windows Terminal的图标路径"></a><code>Windows Terminal</code>的图标路径</h1><p><img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/4.png" alt=""></p>
+<h1 id="Windows-Terminal的图标路径"><a href="#Windows-Terminal的图标路径" class="headerlink" title="Windows Terminal的图标路径"></a><code>Windows Terminal</code>的图标路径</h1><p><img src="../images/%E6%8A%8AWindows&#32;Terminal&#32;%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/4.png" alt></p>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>以后有关<code>Windows Termianl</code>的相关备忘也会发布在这片文章。</p>
 
       
@@ -627,7 +627,7 @@
 </ol>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>二叉树十分复杂且重要，二叉树的遍历又是二叉树重要的基础操作之一，理解并掌握上述遍历方法十分必要。</p>
 <h2 id="由两种遍历唯一地确定一颗二叉树"><a href="#由两种遍历唯一地确定一颗二叉树" class="headerlink" title="由两种遍历唯一地确定一颗二叉树"></a>由两种遍历唯一地确定一颗二叉树</h2><p>设前序遍历为<code>Pre</code>，中序遍历为<code>In</code>，后序遍历为<code>Post</code>。则在已知<code>In &amp; Pre</code>或者<code>In &amp; Post</code>的情况下可以唯一低确定一颗二叉树。<br>分析：<br>一个先序遍历序列由<strong>根节点–左子树节点–右子树节点</strong>组成<br>一个中序遍历序列由<strong>左子树节点–根节点–右子树节点</strong>组成<br>一个后序遍历序列由<strong>左子树节点–右子树节点–根节点</strong>组成<br>例如已知<code>Pre &amp; In</code>:</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/1.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/1.png" alt></p>
 <p>由先序序列的第一个元素可以知道根节点，利用根节点在中序序列中查询其位置，可以得知左子树的长度。然后在先序序列中的根节点后方截取该长度，即得二叉树的左子树序列。<br>左子树序列的首元素是左子树的根节点…如此迭代到叶节点便确定了左子树的构造，右子树同理。</p>
 <p>如果只已知<code>Pre &amp; Post</code>则无法确定左子树序列或者右子树序列的长度，无法确定二叉树。</p>
 
@@ -706,9 +706,9 @@
       
           <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>二叉树是一个有穷的节点集合，这个集合可以为空。若集合不为空，则集合是由根节点<code>root</code>和被称为左子树和右子树的两颗不相交的二叉树组成。</p>
 <h2 id="特殊二叉树"><a href="#特殊二叉树" class="headerlink" title="特殊二叉树"></a>特殊二叉树</h2><ul>
-<li><p>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt=""></p>
+<li><p>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt></p>
 </li>
-<li><p>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt=""></p>
+<li><p>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt></p>
 </li>
 <li><p>完全二叉树<code>(Complete Binary Tree)</code><br>有n个节点的二叉树，对树中节点按从上到下，从左到右的顺序进行编号。与满二叉树相比，相同位置处的节点编号相同。</p>
 <p>即：完全二叉树相当于满二叉树少了最下层叶子节点的右侧若干节点。</p>
@@ -720,7 +720,7 @@
 <li><p>深度为<code>k</code>的二叉树最大节点总数为$2^k-1$</p>
 </li>
 <li><p>对于任何非空二叉树<code>T</code>，若$n_0$表示叶节点的个数，$n_2$是度为2的非叶节点的个数，那么两者满足关系$n_0 = n_2 + 1$</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/3.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/3.png" alt></p>
 <p>  证明：对于总结点数为<code>n</code>的二叉树，其边总数为<code>n-1</code>。总的节点数<code>n</code>由度为<code>0,1,2</code>的节点组成，即$n-1 = n_0+n_1+n_2-1$。</p>
 <p>  同时，对于二叉树的节点，其度数即为其对总边数的贡献值，即：度为<code>i</code>的节点将贡献<code>i</code>条边。所以边数<code>n-1</code>满足$n-1=0<em>n_0+1</em>n_1+2*n_2$。</p>
 <p>  所以$n - 1 = n_0+n_1+n_2-1=0<em>n_0+1</em>n_1+2*n_2$，即：$n_0 = n_2 + 1$。</p>
@@ -735,7 +735,7 @@
 <h2 id="储存结构"><a href="#储存结构" class="headerlink" title="储存结构"></a>储存结构</h2><h3 id="顺序结构"><a href="#顺序结构" class="headerlink" title="顺序结构"></a>顺序结构</h3><ul>
 <li>对于完全二叉树，对其按从上到下，从左到右的顺序进行编号：</li>
 </ul>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/4.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/4.png" alt></p>
 <p>如图不难看出，父节点的编号为<code>i</code>时，其左子节点的编号为<code>2i</code>，其右子节点的编号为<code>2i+1</code>，父节点的编号是子节点编号除以2的向下取整。</p>
 <p>对于这样的二叉树，我们可以定义一个长度合适的数组来储存数的数据，由于其节点编号的规律性，树的遍历等操作不会困难。</p>
 <table>
@@ -768,7 +768,7 @@
 </tbody></table>
 <ul>
 <li><p>对于一般二叉树，也可以用这样的方式储存。不过首先需要把非完全二叉树用空节点变为完全二叉树：</p>
-<p>  <img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/5.png" alt=""></p>
+<p>  <img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/5.png" alt></p>
 </li>
 </ul>
 <p>用数组储存为：</p>
@@ -810,7 +810,7 @@
 </tbody></table>
 <p>可见，数组结构的二叉树会造成一定的空间浪费。</p>
 <h3 id="链式结构"><a href="#链式结构" class="headerlink" title="链式结构"></a>链式结构</h3><p>将节点设计成如图样式，内部储存节点数据和指向左右子节点的指针。</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/6.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/6.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">binaryTree</span>&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    BinaryTree* left;</span><br><span class="line">    BinaryTree* right;</span><br><span class="line">&#125;BinaryTree;</span><br></pre></td></tr></table></figure>
       
     </div>
@@ -902,7 +902,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(ElementType *<span class="built_in">list</span>, <span class="keyword">int</span> listLength, ElementType target)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = listLength - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">list</span>[mid] == target)</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">list</span>[mid] &gt; target)</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">//means not frond!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>二分查找算法之所以能获得较高的时间效率，原因之一就是它的搜索过程实际上是一颗搜索树。例如序列<code>[1,2,3,4,5,6,7,8,9,10,11]</code>，按照二分法建立树状结构如下：</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png" alt></p>
 <p>则对于任何一个元素的搜索次数都将不超过树的深度<code>4</code>。而对于一颗有<code>n</code>个节点的树（长度为<code>n</code>的序列），其搜索树的深度为$\log_2 n + 1$，因此二分搜索的最坏时间复杂度是$O(\log_2 n)$</p>
 <h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>树是由<code>n</code>个元素构成的有穷集合。当<code>n = 0</code>时，称为空树。对于任何一颗非空树，它具有以下性质：</p>
 <ul>
@@ -924,14 +924,14 @@
 <li>树的深度<code>Depth</code>：树中所有节点的最大层次称为树的深度</li>
 </ol>
 <h2 id="树的表示"><a href="#树的表示" class="headerlink" title="树的表示"></a>树的表示</h2><p>对于下图所示的树：</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/2.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/2.png" alt></p>
 <p>可以用链表表示节点：</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/3.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/3.png" alt></p>
 <p>问题：节点规格不统一，有的节点度为1，有的节点度为3。为了统一而采用树的度作为节点中需要保存的子节点个数过于浪费空间，可采用<strong>儿子-兄弟表示法</strong></p>
 <p>如图所示采用每个节点中保存一个子节点和相邻的兄弟节点的结构：</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/4.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/4.png" alt></p>
 <p>节点结构如下图：</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/5.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E6%A0%91%E4%B8%8E%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/5.png" alt></p>
 <p>这样的结构保证了节点的统一也保证了空间的利用效率，由于每个节点结构上连接其他两个节点，也成为<code>二叉树</code>。</p>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>二叉树是一般树的基础结构，同时也是树结构研究中的核心和主要内容，学习树这一数据结构的最重点内容就是理解二叉树的结构和操作。</p>
 
@@ -1186,7 +1186,7 @@
 </li>
 <li>若表达式中的对象读取完毕，挨个弹出栈内所有运算符。</li>
 </ol>
-<p>这样就把一个中缀表达式转换为了后缀表达式，看这个例子：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E5%A0%86%E6%A0%88/1.png" alt=""></p>
+<p>这样就把一个中缀表达式转换为了后缀表达式，看这个例子：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E5%A0%86%E6%A0%88/1.png" alt></p>
 <h2 id="计算后缀表达式"><a href="#计算后缀表达式" class="headerlink" title="计算后缀表达式"></a>计算后缀表达式</h2><p>首先建立堆栈用于储存计算结果，然后顺序读取后缀表达式每个对象，并按如下法则处理：</p>
 <ol>
 <li>如果对象是运算数，压栈</li>
@@ -1389,7 +1389,7 @@
 <ol>
 <li><p>首先在<code>/etc/nginx/</code>文件夹下新建文件夹<code>vhost</code>：<code>cd /etc/nginx &amp;&amp; mkdir vhost</code>，然后在<code>vhost</code>文件夹下新建文件<code>blog.conf</code>，最后编辑<code>blog.conf</code>：</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/nginx/vhost/blog.conf</span></span><br><span class="line">server&#123;</span><br><span class="line">    listen 7010;     <span class="comment">#没有备案的网站无法访问80端口</span></span><br><span class="line">    root /home/www/blog;<span class="comment">#这里是网站的根目录，目前还没有建立</span></span><br><span class="line">    server_name youdomain;<span class="comment">#这里是你的域名，也可以填服务器公网IP</span></span><br><span class="line">    location /&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>打开<code>/etc/nginx/nginx.conf</code>文件，把刚刚新建的<code>blog.conf</code>文件<code>include</code>进去：<br><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png" alt=""><br> 如图添加<code>include /etc/nginx/vhost/*.conf;</code>，把文件夹<code>vhost</code>下所有的<code>.conf</code>文件都包含进配置文件。这样，如果以后建立其他网站，直接在<code>vhost</code>文件夹中添加<code>.conf</code>文件就行了。</p>
+<li><p>打开<code>/etc/nginx/nginx.conf</code>文件，把刚刚新建的<code>blog.conf</code>文件<code>include</code>进去：<br><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png" alt><br> 如图添加<code>include /etc/nginx/vhost/*.conf;</code>，把文件夹<code>vhost</code>下所有的<code>.conf</code>文件都包含进配置文件。这样，如果以后建立其他网站，直接在<code>vhost</code>文件夹中添加<code>.conf</code>文件就行了。</p>
 </li>
 </ol>
 <h2 id="建立网站目录"><a href="#建立网站目录" class="headerlink" title="建立网站目录"></a>建立网站目录</h2><p>刚刚在<code>/etc/nginx/nginx.conf</code>文件中添加的<code>root /home/www/blog;</code>语句，实际上是把网站的根目录声明为<code>/home/www/blog</code>。首先建立该文件夹：</p>
@@ -1408,7 +1408,7 @@
 <ol start="2">
 <li><p>配置git用户权限：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 740 /etc/sudoers  <span class="comment">#提权</span></span><br><span class="line">vi /etc/sudoers         <span class="comment">#打开sudoers文件</span></span><br></pre></td></tr></table></figure>
-<p><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png" alt=""><br>如图添加<code>git    ALL=(ALL)   ALL</code>。<code>:wq</code>保存退出后，<code>chmod 400 /etc/sudoers</code>把文件<code>sudoers</code>的权限改回原样。</p>
+<p><img src="../images/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png" alt><br>如图添加<code>git    ALL=(ALL)   ALL</code>。<code>:wq</code>保存退出后，<code>chmod 400 /etc/sudoers</code>把文件<code>sudoers</code>的权限改回原样。</p>
 <p>然后需要设置git用户的密码：<code>sudo passwd git</code>。</p>
 </li>
 <li><p>切换到git用户，配置ssh</p>

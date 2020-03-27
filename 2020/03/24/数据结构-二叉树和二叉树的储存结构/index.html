@@ -244,9 +244,9 @@
       
         <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>二叉树是一个有穷的节点集合，这个集合可以为空。若集合不为空，则集合是由根节点<code>root</code>和被称为左子树和右子树的两颗不相交的二叉树组成。</p>
 <h2 id="特殊二叉树"><a href="#特殊二叉树" class="headerlink" title="特殊二叉树"></a>特殊二叉树</h2><ul>
-<li><p>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt=""></p>
+<li><p>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt></p>
 </li>
-<li><p>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt=""></p>
+<li><p>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt></p>
 </li>
 <li><p>完全二叉树<code>(Complete Binary Tree)</code><br>有n个节点的二叉树，对树中节点按从上到下，从左到右的顺序进行编号。与满二叉树相比，相同位置处的节点编号相同。</p>
 <p>即：完全二叉树相当于满二叉树少了最下层叶子节点的右侧若干节点。</p>
@@ -258,7 +258,7 @@
 <li><p>深度为<code>k</code>的二叉树最大节点总数为$2^k-1$</p>
 </li>
 <li><p>对于任何非空二叉树<code>T</code>，若$n_0$表示叶节点的个数，$n_2$是度为2的非叶节点的个数，那么两者满足关系$n_0 = n_2 + 1$</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/3.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/3.png" alt></p>
 <p>  证明：对于总结点数为<code>n</code>的二叉树，其边总数为<code>n-1</code>。总的节点数<code>n</code>由度为<code>0,1,2</code>的节点组成，即$n-1 = n_0+n_1+n_2-1$。</p>
 <p>  同时，对于二叉树的节点，其度数即为其对总边数的贡献值，即：度为<code>i</code>的节点将贡献<code>i</code>条边。所以边数<code>n-1</code>满足$n-1=0<em>n_0+1</em>n_1+2*n_2$。</p>
 <p>  所以$n - 1 = n_0+n_1+n_2-1=0<em>n_0+1</em>n_1+2*n_2$，即：$n_0 = n_2 + 1$。</p>
@@ -273,7 +273,7 @@
 <h2 id="储存结构"><a href="#储存结构" class="headerlink" title="储存结构"></a>储存结构</h2><h3 id="顺序结构"><a href="#顺序结构" class="headerlink" title="顺序结构"></a>顺序结构</h3><ul>
 <li>对于完全二叉树，对其按从上到下，从左到右的顺序进行编号：</li>
 </ul>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/4.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/4.png" alt></p>
 <p>如图不难看出，父节点的编号为<code>i</code>时，其左子节点的编号为<code>2i</code>，其右子节点的编号为<code>2i+1</code>，父节点的编号是子节点编号除以2的向下取整。</p>
 <p>对于这样的二叉树，我们可以定义一个长度合适的数组来储存数的数据，由于其节点编号的规律性，树的遍历等操作不会困难。</p>
 <table>
@@ -306,7 +306,7 @@
 </tbody></table>
 <ul>
 <li><p>对于一般二叉树，也可以用这样的方式储存。不过首先需要把非完全二叉树用空节点变为完全二叉树：</p>
-<p>  <img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/5.png" alt=""></p>
+<p>  <img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/5.png" alt></p>
 </li>
 </ul>
 <p>用数组储存为：</p>
@@ -348,7 +348,7 @@
 </tbody></table>
 <p>可见，数组结构的二叉树会造成一定的空间浪费。</p>
 <h3 id="链式结构"><a href="#链式结构" class="headerlink" title="链式结构"></a>链式结构</h3><p>将节点设计成如图样式，内部储存节点数据和指向左右子节点的指针。</p>
-<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/6.png" alt=""></p>
+<p><img src="../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/6.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">binaryTree</span>&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    BinaryTree* left;</span><br><span class="line">    BinaryTree* right;</span><br><span class="line">&#125;BinaryTree;</span><br></pre></td></tr></table></figure>
     </div>
 

@@ -246,7 +246,7 @@
 <p>搜索<code>CentOS 8 开启图形界面</code>找到这个命令:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dnf groupinstall <span class="string">"workstation"</span></span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">dnf groupinstall <span class="string">"Server with GUI"</span></span><br></pre></td></tr></table></figure>
 <p>安装图形界面。看看这个size，足足有2.1G</p>
-<p><img src="../images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt=""></p>
+<p><img src="../images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt></p>
 <p>安装完成后，使用命令：<code>systemctl set-default graphical</code>启用图形界面</p>
 <h1 id="安装xdrp"><a href="#安装xdrp" class="headerlink" title="安装xdrp"></a>安装xdrp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install  epel* -y   <span class="comment">#配置源</span></span><br><span class="line">yum --enablerepo=epel -y install xrdp   <span class="comment">#安装xdrp</span></span><br><span class="line">systemctl start xrdp    <span class="comment">#启动xdrp</span></span><br><span class="line">systemctl <span class="built_in">enable</span> xrdp   <span class="comment">#设置xdrp开启自启</span></span><br></pre></td></tr></table></figure>
 

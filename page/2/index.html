@@ -234,7 +234,7 @@
 <p>搜索<code>CentOS 8 开启图形界面</code>找到这个命令:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dnf groupinstall <span class="string">"workstation"</span></span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">dnf groupinstall <span class="string">"Server with GUI"</span></span><br></pre></td></tr></table></figure>
 <p>安装图形界面。看看这个size，足足有2.1G</p>
-<p><img src="../images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt=""></p>
+<p><img src="../images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt></p>
 <p>安装完成后，使用命令：<code>systemctl set-default graphical</code>启用图形界面</p>
 <h1 id="安装xdrp"><a href="#安装xdrp" class="headerlink" title="安装xdrp"></a>安装xdrp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install  epel* -y   <span class="comment">#配置源</span></span><br><span class="line">yum --enablerepo=epel -y install xrdp   <span class="comment">#安装xdrp</span></span><br><span class="line">systemctl start xrdp    <span class="comment">#启动xdrp</span></span><br><span class="line">systemctl <span class="built_in">enable</span> xrdp   <span class="comment">#设置xdrp开启自启</span></span><br></pre></td></tr></table></figure>
 
@@ -323,7 +323,7 @@
 <p>ssh是一种用于计算机加密登录的网络协议，他非常安全，即使通信被截获密码也不会泄露。因此常用在服务器的远程登陆上。</p>
 <h1 id="在本地生成ssh密钥"><a href="#在本地生成ssh密钥" class="headerlink" title="在本地生成ssh密钥"></a>在本地生成ssh密钥</h1><p>要登陆远程服务器，常用的方式有<code>ssh username@hostname -p portnumber</code>。这样登录是需要输入远程机器的用户密码的。为了省去这一步烦人的操作，我们可以在本地生成一个ssh密钥（公钥和私钥），然后把公钥部署到要登陆的服务端机器。这样，登陆时ssh就知道这个ssh连接来自一台被验证了的安全的设备。</p>
 <h2 id="生成一般ssh密钥（用于远程登陆）"><a href="#生成一般ssh密钥（用于远程登陆）" class="headerlink" title="生成一般ssh密钥（用于远程登陆）"></a>生成一般ssh密钥（用于远程登陆）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/1.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/1.png" alt></p>
 <p>输入要生成的密钥路径和文件名便可生成密钥文件，私钥<code>yourkeyfilename</code>和公钥<code>yourkeyfilename.pub</code>（最好放在<code>username/.ssh</code>文件夹下）。生成完成后，使用命令<code>scp -P 端口号 本地公钥文件地址 用户名@远程地址:.ssh/authorized_keys</code> 把公钥复制到远程服务器的<code>home/.ssh/authorized_keys</code>文件即可。</p>
 <p>值得注意的是，如果没有采用ssh密钥的默认命名（<code>id_rsa和id_rsa.pub</code>），而是使用了自定义的命名，这样直接<code>ssh username@host</code>是无法工作的。这是因为ssh会默认寻找名为<code>id_rsa</code>的私钥文件与远程机器上的公钥文件进行比对，为了让ssh明白我们已经给私钥文件重新起了名字，还需要配置一个config文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">Host host</span><br><span class="line">HostName hostname</span><br><span class="line">User username</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的私钥路径</span><br></pre></td></tr></table></figure>
@@ -338,12 +338,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">## Github</span><br><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的git ssh私钥路径</span><br></pre></td></tr></table></figure>
 
 <p>然后使用文本编辑器打开刚刚生成的公钥文件，复制全部内容。打开github的<a href="https://github.com/settings/keys">ssh key配置页面</a></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/3.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/3.png" alt></p>
 <p>点击<code>new SSH key</code>按键：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/4.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/4.png" alt></p>
 <p>起个标题之后把复制的公钥内容粘贴在key里，点击<code>Add SSH key</code>完事。</p>
 <p>完成之后，打开命令行输入<code>ssh github.com</code>：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/2.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/2.png" alt></p>
 <p>这里由于我们在<code>config</code>的<code>User</code>字段设置了git，因此我们甚至不用输入<code>ssh git@github.com</code>就可以连接成功。</p>
 <h2 id="ssh链接"><a href="#ssh链接" class="headerlink" title="ssh链接"></a>ssh链接</h2><p>一般在<code>git clone</code>别人的仓库时，用的都是https链接：<code>git clone https://github.com/username/reponame.git</code>。为了使用ssh进行<code>git push</code>，本地的仓库必须是ssh链接。</p>
 <p>可以在<code>git clone</code>时就选择ssh链接：<code>git clone git@github.com:username/reponame.git</code>，或者把本地仓库的<code>.git/config</code>文件中<code>[remote &quot;origin&quot;]</code>代码段中的<code>url</code>字段修改为<code>git@github.com:username/reponame.git</code>。</p>
@@ -525,11 +525,11 @@
 <li><p>启动<code>Xampp</code>服务:</p>
 <p>点击<code>Apache</code>的<code>start</code>按钮</p>
 <p>点击<code>MySQL</code>的<code>start</code>按钮</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png" alt></p>
 </li>
 <li><p>安装可道云：</p>
 <p>在可道云<a href="https://kodcloud.com/download/">下载页面</a>下载源码</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png" alt></p>
 <p>点击<code>Xampp Control Panel</code>的<code>Explorer</code>按键，找到<code>htdocs</code>文件夹，清空里面的内容。</p>
 <p>把下载的可道云源码解压到<code>htdocs</code>文件夹，这里是私有云网站的根目录。</p>
 <p>一切正常的话，浏览器访问<a href="http://127.0.0.1/">http://127.0.0.1/</a> 就可以在内网使用了（或者点击<code>Apache-&gt;admin</code>）。</p>
@@ -661,27 +661,27 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_addr &#x3D; 0.0.0.0</span><br><span class="line">bind_port &#x3D; 7000</span><br><span class="line"></span><br><span class="line">dashboard_user &#x3D; xxxxx #监控的用户名</span><br><span class="line">dashboard_pwd &#x3D; xxxxxx #监控的密码</span><br><span class="line">dashboard_port &#x3D; 7500</span><br></pre></td></tr></table></figure>
 <p>其中，<code>dashboard</code>是你可以在浏览器中访问监控frp运行状态的配置。</p>
 <p>修改完成后，运行<code>frp/frps -c frp/frps.ini</code>启动服务。出现下图说明启动成功。</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/1.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/1.png" alt></p>
 <p>此时应该去<a href="https://account.alibabacloud.com/login/login.htm?&utm_content=se_1002670506&gclid=Cj0KCQjw3qzzBRDnARIsAECmryp33cjv9L_MgK9oXcU4or_RdD3EteR6wrxYHptDqySMHB8ovhBg-84aAh2eEALw_wcB">阿里云控制台</a>打开服务器的7000-7500端口，否则会访问失败(我就在这里踩坑了半天:)</p>
 <p>具体的打开方法是：</p>
 <p>进入控制台的实例详情页面</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/2.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/2.png" alt></p>
 <p>点击<code>本实例安全组&gt;配置规则</code></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/3.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/3.png" alt></p>
 <p>点击右上角的<code>添加安全组规则</code></p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/4.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/4.png" alt></p>
 <p>按照下图填写即可：</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/5.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/5.png" alt></p>
 <p>设置完成后，打开浏览器访问<code>http://你的服务器公网IP:7500</code>，出现下图界面说明frp dashboard启动成功。</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/6.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/6.png" alt></p>
 <h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><p>首先在<a href="https://github.com/fatedier/frp/releases/">release页面</a>下载对应的版本，解压到你准备被访问的内网机器上。</p>
 <p>打开<code>frp/frpc.ini</code>做如下修改：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr &#x3D; xx.xx.xx.xx #服务器的ip地址</span><br><span class="line">server_port &#x3D; 7000</span><br><span class="line"></span><br><span class="line">[ssh]</span><br><span class="line">type &#x3D; tcp</span><br><span class="line">local_ip &#x3D; 127.0.0.1</span><br><span class="line">local_port &#x3D; 3389   #windows远程桌面默认端口</span><br><span class="line">remote_port &#x3D; 7001  #前文我们开放了服务器的7000-7500端口，因此这里使用7001。</span><br></pre></td></tr></table></figure>
 <p>修改完成后，在frp文件夹打开命令行运行命令<code>frpc -c frpc.ini</code>启动客户端。（注意运行此命令的命令行应该常驻，否则frp进程会随之关闭）</p>
 <p>出现如下输出说明启动和连接成功</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/7.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/7.png" alt></p>
 <p>现在可以使用windows原生的远程桌面连接你的内网机器了！</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/8.png" alt=""></p>
+<p><img src="../images/%E4%BD%BF%E7%94%A8frp%E5%92%8C%E9%98%BF%E9%87%8C%E4%BA%91ECS%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%92%8C%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8/8.png" alt></p>
 <p>其中计算机字段填写你的服务器IP，端口是客户端配置中的<code>remote_port</code>字段。</p>
 <p>注意连接的用户名和密码是你的内网机器上登录的用户名和密码。</p>
 <h2 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h2><p>为了防止内网机器意外关闭导致无法连接，可以使用<a href="https://link.zhihu.com/?target=https%3A//github.com/kohsuke/winsw">WINSW</a>把frp设置成开机自启动。</p>
@@ -954,7 +954,7 @@
 <h2 id="以开发模式运行"><a href="#以开发模式运行" class="headerlink" title="以开发模式运行"></a>以开发模式运行</h2><p>命令是：</p>
 <p><code>$ npm run dev   #问题就处在这里</code></p>
 <p>当我满心欢喜的希望出现默认的界面时，问题出现了。</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt=""><br><em>(图为期望的界面)</em></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt><br><em>(图为期望的界面)</em></p>
 <h3 id="问题一：Webpack-ReferenceError-process-is-not-defined"><a href="#问题一：Webpack-ReferenceError-process-is-not-defined" class="headerlink" title="问题一：Webpack ReferenceError: process is not defined"></a>问题一：<em>Webpack ReferenceError: process is not defined</em></h3><p>这个问题首先出现，由于对相关知识的匮乏，我尚未参透问题出现的原因。不过通过万能的Google，我找到了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/871">issue</a>。</p>
 <p>通过它找到了解决的方案（暂不了解原理）：</p>
 <p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
@@ -965,9 +965,9 @@
 <p>这样一改，这个问题果然不再出现了，但是还是得不到想要的结果。</p>
 <p>在找到这个方案之前，我读了几十篇博客，试了好多种方法。甚至删掉目录从头配置了好几遍，浪费了我大量的时间。</p>
 <h3 id="问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><a href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39" class="headerlink" title="问题二：Uncaught Error: Cannot find module &#39;axios&#39;"></a>问题二：<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></h3><p>执行完命令<code>npm run dev</code>之后，出现了一个白屏的界面：</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt=""></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt></p>
 <p>打开开发者工具：</p>
-<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt=""></p>
+<p><img src="../images/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt></p>
 <p>发现错误<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></p>
 <p>明明在执行<code>npm install</code>安装依赖项的时候安装了<code>axios</code>模块，为何这里却报错说找不到模块？</p>
 <p>多方查询之后，我找到了跟我问题一样的<a href="https://github.com/SimulatedGREG/electron-vue/issues/940">issue</a>,这里面提出的解决方案无非是重新安装<code>axios</code>，虽然预感不会有用，我还是侥幸心理试了一遍，果不其然，问题没有解决。</p>
@@ -1067,14 +1067,14 @@
 <p>本文就讲述如何快速利用hexo和GitHub Pages 建立个人博客网站。</p>
 <h2 id="1-在GitHub上新建repository并设置GitHub-Pages"><a href="#1-在GitHub上新建repository并设置GitHub-Pages" class="headerlink" title="1. 在GitHub上新建repository并设置GitHub Pages"></a>1. 在GitHub上新建repository并设置GitHub Pages</h2><ol>
 <li><p>首先登陆你的GitHub帐号，新建一个repository</p>
-<p> <img src="../images/hello-world/1.png" alt=""></p>
+<p> <img src="../images/hello-world/1.png" alt></p>
 <p> <strong>注意Repository name应该以自己的GitHub用户名+.github.io命名</strong>即：（这里因为我已经有了同名仓库所以报错）</p>
 <blockquote>
-<p><username>.github.io</p>
+<p><username>.github.io</username></p>
 </blockquote>
 </li>
 <li><p>进入repository的设置页面，设置GitHub Pages</p>
-<p> <img src="../images/hello-world/2.png" alt=""></p>
+<p> <img src="../images/hello-world/2.png" alt></p>
 <p> 在Theme Chooser 中随便选择一个主题或者不选择都可以。</p>
 <p> 如果你有其他的域名，也可以绑定在Custom domain中。</p>
 </li>
