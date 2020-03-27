@@ -27,17 +27,17 @@
 <meta property="og:site_name" content="zhuwenq">
 <meta property="og:description" content="写在前面为了充分利用服务器资源（单纯为了折腾），我决定在内网电脑上部署一个私有云服务，并通过内网穿透经由阿里云让它可以在外网访问。 完成这一部署，需要：内网机器（电脑，nas，高级的路由器或者树莓派+硬盘）一台，具有公网IP的服务器一台，域名一个。 可道云部署内网私有云盘 可道云采用windows操作界面，具有专业在线编辑器，支持Office的在线预览和编辑，可多人协同编辑作业，文档历史版本回溯；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png">
 <meta property="article:published_time" content="2020-03-14T08:20:13.000Z">
-<meta property="article:modified_time" content="2020-03-17T14:42:02.279Z">
+<meta property="article:modified_time" content="2020-03-27T18:28:15.289Z">
 <meta property="article:author" content="zhuwenq">
 <meta property="article:tag" content="阿里云">
 <meta property="article:tag" content="frp">
 <meta property="article:tag" content="内网穿透">
 <meta property="article:tag" content="私有云">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
+<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png">
 
 <link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/">
 
@@ -208,7 +208,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-17 22:42:02" itemprop="dateModified" datetime="2020-03-17T22:42:02+08:00">2020-03-17</time>
+                <time title="修改时间：2020-03-28 02:28:15" itemprop="dateModified" datetime="2020-03-28T02:28:15+08:00">2020-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -266,11 +266,11 @@
 <li><p>启动<code>Xampp</code>服务:</p>
 <p>点击<code>Apache</code>的<code>start</code>按钮</p>
 <p>点击<code>MySQL</code>的<code>start</code>按钮</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png" alt></p>
+<p><img src="/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/1.png" alt></p>
 </li>
 <li><p>安装可道云：</p>
 <p>在可道云<a href="https://kodcloud.com/download/">下载页面</a>下载源码</p>
-<p><img src="../images/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png" alt></p>
+<p><img src="/2020/03/14/%E4%BD%BF%E7%94%A8%E5%8F%AF%E9%81%93%E4%BA%91%E5%9C%A8%E5%86%85%E7%BD%91%E9%83%A8%E7%BD%B2%E7%A7%81%E6%9C%89%E4%BA%91%E5%B9%B6%E9%80%9A%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E5%9C%A8%E5%85%AC%E7%BD%91%E8%AE%BF%E9%97%AE/2.png" alt></p>
 <p>点击<code>Xampp Control Panel</code>的<code>Explorer</code>按键，找到<code>htdocs</code>文件夹，清空里面的内容。</p>
 <p>把下载的可道云源码解压到<code>htdocs</code>文件夹，这里是私有云网站的根目录。</p>
 <p>一切正常的话，浏览器访问<a href="http://127.0.0.1/">http://127.0.0.1/</a> 就可以在内网使用了（或者点击<code>Apache-&gt;admin</code>）。</p>

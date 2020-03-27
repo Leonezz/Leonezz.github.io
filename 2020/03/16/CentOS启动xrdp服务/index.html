@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="zhuwenq">
 <meta property="og:description" content="安装界面首先需要给CentOS安装桌面，网上找了一圈在我的系统上都不work，最后看了阿里云管理面板才发现我的操作系统是CentOS 8，而网上大多数教程都是针对CentOS 7的。 搜索CentOS 8 开启图形界面找到这个命令: 123dnf groupinstall &quot;workstation&quot;# ordnf groupinstall &quot;Server with GUI&quot; 安装图形界面。看看这个">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/16/images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/16/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png">
 <meta property="article:published_time" content="2020-03-16T14:51:44.000Z">
-<meta property="article:modified_time" content="2020-03-17T14:40:05.181Z">
+<meta property="article:modified_time" content="2020-03-27T18:21:11.337Z">
 <meta property="article:author" content="zhuwenq">
 <meta property="article:tag" content="阿里云">
 <meta property="article:tag" content="远程桌面">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/16/images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png">
+<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/16/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png">
 
 <link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/03/16/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/">
 
@@ -205,7 +205,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-17 22:40:05" itemprop="dateModified" datetime="2020-03-17T22:40:05+08:00">2020-03-17</time>
+                <time title="修改时间：2020-03-28 02:21:11" itemprop="dateModified" datetime="2020-03-28T02:21:11+08:00">2020-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,7 +246,7 @@
 <p>搜索<code>CentOS 8 开启图形界面</code>找到这个命令:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dnf groupinstall <span class="string">"workstation"</span></span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">dnf groupinstall <span class="string">"Server with GUI"</span></span><br></pre></td></tr></table></figure>
 <p>安装图形界面。看看这个size，足足有2.1G</p>
-<p><img src="../images/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt></p>
+<p><img src="/2020/03/16/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/1.png" alt></p>
 <p>安装完成后，使用命令：<code>systemctl set-default graphical</code>启用图形界面</p>
 <h1 id="安装xdrp"><a href="#安装xdrp" class="headerlink" title="安装xdrp"></a>安装xdrp</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install  epel* -y   <span class="comment">#配置源</span></span><br><span class="line">yum --enablerepo=epel -y install xrdp   <span class="comment">#安装xdrp</span></span><br><span class="line">systemctl start xrdp    <span class="comment">#启动xdrp</span></span><br><span class="line">systemctl <span class="built_in">enable</span> xrdp   <span class="comment">#设置xdrp开启自启</span></span><br></pre></td></tr></table></figure>
 
