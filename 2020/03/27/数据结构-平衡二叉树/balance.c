@@ -56,7 +56,7 @@ int getHeight(AVLTree *tree)
 }
 
 AVLTree *insert(AVLTree *tree, KeyType key)
-{
+{ //插入完成后该程序的递归过程会从下而上检查父节点的平衡性
     if (tree == NULL)
     {
         tree = (AVLTree *)malloc(sizeof(AVLTree));
@@ -77,19 +77,19 @@ AVLTree *insert(AVLTree *tree, KeyType key)
                 tree = leftRightRotation(tree);
             }
         }
-        else if (key > tree->key)
-        {
-            tree->right = insert(tree->right, key);
-            if (getHeight(tree->right) - getHeight(tree->left) == 2)
-            { //balance broken
-                if (key > tree->key)
-                { //single right rotation
-                    tree = singleRightRotation(tree);
-                }
-                else
-                { //right left rotation
-                    tree = rightLeftRotation(tree);
-                }
+    }
+    else if (key > tree->key)
+    {
+        tree->right = insert(tree->right, key);
+        if (getHeight(tree->right) - getHeight(tree->left) == 2)
+        { //balance broken
+            if (key > tree->key)
+            { //single right rotation
+                tree = singleRightRotation(tree);
+            }
+            else
+            { //right left rotation
+                tree = rightLeftRotation(tree);
             }
         }
     }
