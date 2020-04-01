@@ -126,7 +126,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">25</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">26</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -136,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">21</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
 
   </li>
   </ul>
@@ -165,6 +165,163 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E6%A0%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E6%A0%88/" class="post-title-link" itemprop="url">数据结构--堆栈</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-20 16:43:11" itemprop="dateCreated datePublished" datetime="2020-03-20T16:43:11+08:00">2020-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-28 02:29:24" itemprop="dateModified" datetime="2020-03-28T02:29:24+08:00">2020-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>堆栈<code>(Stack)</code>是计算机中重要的数据结构，在程序函数调用等重要操作中都需要这一数据结构。</p>
+<h2 id="后缀表达式"><a href="#后缀表达式" class="headerlink" title="后缀表达式"></a>后缀表达式</h2><p>数学中常见的运算表达式如$a+b<em>c+d/e$称为中缀表达式，它的一个特点就是运算符号如$+，-，*，/$都是位于运算符的数据中间的。把运算符拿到数据的后面，如$abc</em>+de/+$就称位后缀表达式。在使用计算机计算普通的中缀表达式求值时，一般就需要先把中缀表达式转换为后缀表达式，这是因为后缀表达式包含了表达式中各运算符的优先级信息，计算机解析执行起来逻辑清晰，容易实现。</p>
+<p>而在中缀表达式转换为后缀表达式以及计算机解析执行后缀表达式时，就需要堆栈<code>(Stack)</code>这一数据结构。</p>
+<h1 id="堆栈"><a href="#堆栈" class="headerlink" title="堆栈"></a>堆栈</h1><p>堆栈是一种只能在一端（栈顶）进行插入<code>(push)</code>，和删除<code>pop</code>操作的线性表，因此他也是一中后入先出<code>(Last In First Out)</code>的数据结构。</p>
+<h2 id="操作集"><a href="#操作集" class="headerlink" title="操作集"></a>操作集</h2><p>堆栈应具有以下基本操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Stack *<span class="title">createEmpty</span><span class="params">()</span></span>;                      <span class="comment">//生成空栈</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span>;                  <span class="comment">//查询是否满栈</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span>;                 <span class="comment">//查询是否空栈</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Stack *<span class="built_in">stack</span>, ElementType item)</span></span>; <span class="comment">//在栈顶插入元素</span></span><br><span class="line"><span class="function">ElementType <span class="title">pop</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span>;             <span class="comment">//删除并返回栈顶元素</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="链式结构"><a href="#链式结构" class="headerlink" title="链式结构"></a>链式结构</h3><ol start="0">
+<li><p>首先实现数据结构原型：<br> 使用链表储存数据时，链表的头节点指向栈顶，为了便于操作，头节点的<code>next</code>节点指向的是堆栈的第一个元素，即头节点只作为指示作用。</p>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    Stack* next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>生成空表<br>创建一个空的链表节点并返回：</p>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Stack* <span class="title">createEmpty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack* top = (Stack*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Stack));</span><br><span class="line">    top-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> top;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>查询是否满栈<br>链式结构不存在满栈</p>
+</li>
+<li><p>查询是否为空栈<br>由于链式结构的堆栈始终指向头节点，因此只要头节点的<code>next</code>节点不为<code>NULL</code>，栈就不是空的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;next == <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在栈顶插入元素<br>创建一个空节点<code>temp</code>，并把空节点的<code>next</code>指针指向头节点<code>top</code>的下一节点，然后把头节点的<code>next</code>指针指向<code>temp</code>。（<code>temp</code>的值初始化为要插入的值<code>item</code>）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Stack *<span class="built_in">stack</span>, ElementType item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *temp = (Stack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Stack));</span><br><span class="line">    temp-&gt;data = item;</span><br><span class="line">    temp-&gt;next = <span class="built_in">stack</span>-&gt;next;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;next = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除并返回栈顶元素<br>如果栈非空，首先把栈顶元素(<code>top</code>节点的<code>next</code>指针指向的节点的值<code>targetValue</code>)储存下来，然后删除栈顶节点，返回<code>targetValue</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ElementType <span class="title">pop</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//error!Empty stack</span></span><br><span class="line">    &#125;</span><br><span class="line">    ElementType targetValue = <span class="built_in">stack</span>-&gt;next-&gt;data;</span><br><span class="line">    Stack *target = <span class="built_in">stack</span>-&gt;next;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;next = target-&gt;next;</span><br><span class="line">    <span class="built_in">free</span>(target);</span><br><span class="line">    <span class="keyword">return</span> targetValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="顺序结构（数组）"><a href="#顺序结构（数组）" class="headerlink" title="顺序结构（数组）"></a>顺序结构（数组）</h3><ol start="0">
+<li><p>首先实现数据结构原型<br>在顺序结构中，由于数据在数组中储存，需要使用数组下标访问元素。因此需要一个下标始终指向栈顶。同时堆栈在创建时也需要指定最大的空间大小<code>MaxSize</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType *data;</span><br><span class="line">    <span class="keyword">int</span> top;</span><br><span class="line">&#125;Stack;</span><br></pre></td></tr></table></figure></li>
+<li><p>生成空表<br>由于需要指定堆栈最大长度，因此需要有一个参数传入。同时，堆栈的内存空间将在堆栈创建时分配完成。</p>
+<p>堆栈中指示栈顶位置的变量将被初始化为<code>-1</code>，它代表这是一个空栈。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Stack *<span class="title">createEmpty</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ElementType *data = (ElementType *)<span class="built_in">malloc</span>(maxSize * <span class="keyword">sizeof</span>(ElementType));</span><br><span class="line">    Stack *<span class="built_in">stack</span> = (Stack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Stack));</span><br><span class="line">    <span class="built_in">stack</span>-&gt;data = data;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;top = <span class="number">-1</span>;<span class="comment">//means an Empty Stack</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询是否满栈<br>由于数组实现的堆栈中不含堆栈长度的信息，因此被查询堆栈的大小需要显式传参。通过比交传入的大小数据和栈顶位置<code>top</code>，可以轻易得到堆栈是否满栈。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(Stack *<span class="built_in">stack</span>, <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;top &gt;= maxSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>查询是否为空栈<br>当为空栈时，<code>top</code>值为<code>-1</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;top == <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在栈顶插入元素<br>在栈未满的情况下，<code>push</code>操作可以简单地把<code>top</code>指示器<code>+1</code>并把栈顶赋值为要插入的元素完成：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Stack *<span class="built_in">stack</span>, ElementType item, <span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isFull(<span class="built_in">stack</span>, maxSize))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//Error!stack overflow</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;data[<span class="built_in">stack</span>-&gt;top++] = item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>删除并返回栈顶元素<br>栈不为空时，删除操作可以简单地把<code>top</code>指示器<code>-1</code>完成，此时虽然原栈顶元素仍在<code>data</code>数组中，但是由于栈顶指示器已经下移，原栈顶地址处于可擦写的状态，相当于删除。并且由于栈的内存空间在栈被构建时已经申请完毕，在栈上进行的操作将不会影响栈所占用的内存大小。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ElementType <span class="title">pop</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">//Error!stack is Empty</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;data[<span class="built_in">stack</span>-&gt;top--];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>栈的两种C语言（伪）实现大致如上，下面看看后缀表达式如何工作的。</p>
+<h2 id="转换中缀表达式为后缀表达式"><a href="#转换中缀表达式为后缀表达式" class="headerlink" title="转换中缀表达式为后缀表达式"></a>转换中缀表达式为后缀表达式</h2><p>首先建里堆栈用于储存运算符，然后顺序读取表达式每个对象（数值，符号等），对于每个对象，按如下法则处理：</p>
+<ol>
+<li>若对象是运算数值，直接输出</li>
+<li>若对象是左括号<code>&#39;(&#39;</code>，压入<code>(push)</code>堆栈</li>
+<li>若对象是右括号<code>&#39;)&#39;</code>，将栈内的运算符挨个弹出，直到遇到左括号<code>&#39;(&#39;</code></li>
+<li>若对象是运算符，将其与栈顶运算符比较：<ol>
+<li>若优先级大于栈顶运算符，则把该运算符压栈</li>
+<li>若优先级小于栈顶运算符，则把栈顶运算符弹出，继续与新的栈顶运算符比较，直到其优先级大于栈顶运算符为止。</li>
+</ol>
+</li>
+<li>若表达式中的对象读取完毕，挨个弹出栈内所有运算符。</li>
+</ol>
+<p>这样就把一个中缀表达式转换为了后缀表达式，看这个例子：<br><img src="/2020/03/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E6%A0%88/1.png" alt></p>
+<h2 id="计算后缀表达式"><a href="#计算后缀表达式" class="headerlink" title="计算后缀表达式"></a>计算后缀表达式</h2><p>首先建立堆栈用于储存计算结果，然后顺序读取后缀表达式每个对象，并按如下法则处理：</p>
+<ol>
+<li>如果对象是运算数，压栈</li>
+<li>如果对象是操作符，弹出栈内的两个元素按该操作符计算，并把结果压栈</li>
+<li>处理完所有对象后，栈顶的对象就是运算结果</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1256,139 +1413,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhuwenq">
-      <meta itemprop="description" content="Remain passionate.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhuwenq">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/" class="post-title-link" itemprop="url">记录生成electron-vue新应用的艰难险阻</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-04 01:27:26" itemprop="dateCreated datePublished" datetime="2020-03-04T01:27:26+08:00">2020-03-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 02:25:54" itemprop="dateModified" datetime="2020-03-28T02:25:54+08:00">2020-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/electron/electron-vue/" itemprop="url" rel="index"><span itemprop="name">electron-vue</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>由于疫情原因迟迟不能开学，在家里也完全不想准备考研的事。胡乱翻网页时，想到了早就想学习的技术：<em>electron</em> 。又了解到将 <em>electron</em>  和 <em>vue</em> 结合使用的框架 <em>electron-vue</em> 。在学习一门新技术时，我向来主张先构思一个有趣的应用，然后着手学习应用所需的知识，并且学习的同时制作应用。因此，我在本地新建了应用 <em>aao</em> 。旨在为学校的教务处网站开发一款移动软件。</p>
-<h2 id="首先在项目文件夹新建项目-aao"><a href="#首先在项目文件夹新建项目-aao" class="headerlink" title="首先在项目文件夹新建项目 aao"></a>首先在项目文件夹新建项目 <em>aao</em></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g vue-cli  <span class="comment"># 安装vue-cli脚手架，已经安装的可以跳过\</span></span><br><span class="line">$ vue init simulatedgreg/electron aao   <span class="comment">#初始化项目，由于不懂相关知识，我选择了全部的模块\</span></span><br><span class="line">$ <span class="built_in">cd</span> aao <span class="comment">#进入项目文件夹\</span></span><br><span class="line">$ npm install <span class="comment">#安装依赖项，也可使用 yarn</span></span><br></pre></td></tr></table></figure>
-
-<p>到这一步，项目理应已经配置完成了。</p>
-<h2 id="以开发模式运行"><a href="#以开发模式运行" class="headerlink" title="以开发模式运行"></a>以开发模式运行</h2><p>命令是：</p>
-<p><code>$ npm run dev   #问题就处在这里</code></p>
-<p>当我满心欢喜的希望出现默认的界面时，问题出现了。</p>
-<p><img src="/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/1.png" alt><br><em>(图为期望的界面)</em></p>
-<h3 id="问题一：Webpack-ReferenceError-process-is-not-defined"><a href="#问题一：Webpack-ReferenceError-process-is-not-defined" class="headerlink" title="问题一：Webpack ReferenceError: process is not defined"></a>问题一：<em>Webpack ReferenceError: process is not defined</em></h3><p>这个问题首先出现，由于对相关知识的匮乏，我尚未参透问题出现的原因。不过通过万能的Google，我找到了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/871">issue</a>。</p>
-<p>通过它找到了解决的方案（暂不了解原理）：</p>
-<p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
-<p><code>new HtmlWebpackPlugin({...})</code></p>
-<p>改为：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'index.html'</span>,</span><br><span class="line">      template: path.resolve(__dirname, <span class="string">'../src/index.ejs'</span>),</span><br><span class="line">      templateParameters(compilation, assets, options) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          compilation: compilation,</span><br><span class="line">          webpack: compilation.getStats().toJson(),</span><br><span class="line">          webpackConfig: compilation.options,</span><br><span class="line">          htmlWebpackPlugin: &#123;</span><br><span class="line">            files: assets,</span><br><span class="line">            options: options</span><br><span class="line">          &#125;,</span><br><span class="line">          process,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;,</span><br><span class="line">      minify: &#123;</span><br><span class="line">        collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">        removeComments: <span class="literal">true</span></span><br><span class="line">      &#125;,</span><br><span class="line">      nodeModules: <span class="literal">false</span></span><br><span class="line">    &#125;),</span><br></pre></td></tr></table></figure>
-
-<p>这样一改，这个问题果然不再出现了，但是还是得不到想要的结果。</p>
-<p>在找到这个方案之前，我读了几十篇博客，试了好多种方法。甚至删掉目录从头配置了好几遍，浪费了我大量的时间。</p>
-<h3 id="问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><a href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39" class="headerlink" title="问题二：Uncaught Error: Cannot find module &#39;axios&#39;"></a>问题二：<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></h3><p>执行完命令<code>npm run dev</code>之后，出现了一个白屏的界面：</p>
-<p><img src="/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/2.png" alt></p>
-<p>打开开发者工具：</p>
-<p><img src="/2020/03/04/%E8%AE%B0%E5%BD%95%E7%94%9F%E6%88%90electron-vue%E6%96%B0%E5%BA%94%E7%94%A8%E7%9A%84%E8%89%B0%E9%9A%BE%E9%99%A9%E9%98%BB/3.png" alt></p>
-<p>发现错误<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></p>
-<p>明明在执行<code>npm install</code>安装依赖项的时候安装了<code>axios</code>模块，为何这里却报错说找不到模块？</p>
-<p>多方查询之后，我找到了跟我问题一样的<a href="https://github.com/SimulatedGREG/electron-vue/issues/940">issue</a>,这里面提出的解决方案无非是重新安装<code>axios</code>，虽然预感不会有用，我还是侥幸心理试了一遍，果不其然，问题没有解决。</p>
-<p>又使用奇怪的关键词组合google了一下，幸运地点进了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/430">issue</a>，按照@MiYogurt提供地方案尝试了一下：</p>
-<p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>] <span class="comment">//看起来像是在引入模块</span></span><br></pre></td></tr></table></figure>
-
-<p>改为：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>] <span class="comment">//添加了axios</span></span><br></pre></td></tr></table></figure>
-<p>重新启动开发板应用，调试面板上报错的模块换了一个：<code>Uncaught Error: Cannot find module &#39;vuex&#39;</code>。这时我想起了当时在执行命令<code>vue init simulatedgreg/electron-vue aao</code>的时候，选择安装了以下几个模块<code>&#39;vue&#39;,&#39;axios&#39;,&#39;vue-router&#39;,&#39;vuex&#39;,&#39;vuex-electron&#39;,&#39;vue-electron&#39;</code>，所以我将<code>whiteListedModules</code>改成（实际上我是加一个运行一次，报错一次再加一个改的。脑子被折腾坏了. ）：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>,<span class="string">'vue-router'</span>,<span class="string">'vuex'</span>,<span class="string">'vuex-electron'</span>,<span class="string">'vue-electron'</span>] <span class="comment">//添加全部模块</span></span><br></pre></td></tr></table></figure>
-
-<p>这样再运行，果然得到了期望的界面。可以继续开发（收工睡觉）了</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一切都是因为懂的太少，前端技术这一块更是一无所知。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1459,7 +1483,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1472,7 +1496,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1523,13 +1547,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">47k</span>
+    <span title="站点总字数">49k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:19</span>
+    <span title="站点阅读时长">1:22</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/main-icon.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点v_i和v_j，一般用&lt;v_i,v_j&gt;表示由v_i指向v_j的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构--图">
+<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/index.html">
+<meta property="og:site_name" content="zhuwenq">
+<meta property="og:description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点v_i和v_j，一般用&lt;v_i,v_j&gt;表示由v_i指向v_j的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="article:published_time" content="2020-04-01T14:15:17.000Z">
+<meta property="article:modified_time" content="2020-04-01T15:26:38.687Z">
+<meta property="article:author" content="zhuwenq">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="图">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+
+<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构--图 | zhuwenq</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhuwenq</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">zhuwenq's blog.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/main-icon.jpeg" alt="zhuwenq">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构--图
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-01 22:15:17 / 修改时间：23:26:38" itemprop="dateCreated datePublished" datetime="2020-04-01T22:15:17+08:00">2020-04-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了<strong>图<code>(Graph)</code></strong>这种数据结构。</p>
+<h1 id="什么是图"><a href="#什么是图" class="headerlink" title="什么是图"></a>什么是图</h1><p>图是一种表示多对多关系的数据结构，它包含一组<strong>顶点<code>(Vertex)</code></strong>和顶点之间的连接关系（称为<strong>边<code>(Edge)</code></strong>）。<br>对于节点<code>v_i</code>和<code>v_j</code>，一般用<code>&lt;v_i,v_j&gt;</code>表示由<code>v_i</code>指向<code>v_j</code>的边。<br>图中的相同节点对一般只考虑一条边，不考虑重复的边和指向自己的边，根据边的单向双向，带权不带权，图可以分为<code>无向无权图，无向带权图，有向无权图，有向带权图</code></p>
+<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt="无向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png" alt="无向带权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png" alt="有向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt="有向带权图"></p>
+<h2 id="图的操作集"><a href="#图的操作集" class="headerlink" title="图的操作集"></a>图的操作集</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">()</span></span>;                                             <span class="comment">//创建空图返回</span></span><br><span class="line"><span class="function">Graph *<span class="title">insertVertex</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;           <span class="comment">//将节点插入图</span></span><br><span class="line"><span class="function">Graph *<span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span>;                 <span class="comment">//将边插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;         <span class="comment">//从顶点vertex出发深度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;       <span class="comment">//从顶点vertex出发宽度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shortestPath</span><span class="params">(Graph *graph, Vertex *vertex, <span class="keyword">int</span> dist[])</span></span>; <span class="comment">//计算从节点vertex到任意节点的最短路径</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">minSpanningTree</span><span class="params">(Graph *graph)</span></span>;                          <span class="comment">//计算图的最小生成树</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="如何表示一个图"><a href="#如何表示一个图" class="headerlink" title="如何表示一个图"></a>如何表示一个图</h2><h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>使用一个二维矩阵可以描述一个图。对于有<code>n</code>个顶点的图，可以用一个<code>n*n</code>大小的矩阵<code>G[n][n]</code>来表示。<br>首先给顶点编号<code>0---n-1</code>，矩阵的值<code>G[i][j] = 1(若&lt;v_i,v_j&gt;存在)</code>，<code>G[i][j] = 0(若&lt;v_i,v_j&gt;不存在)</code>。对于带权图，矩阵的值一般是边的权重。</p>
+<p>如下面的有向带权图：</p>
+<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt></p>
+<p>其邻接矩阵为：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>$v_0$</th>
+<th>$v_1$</th>
+<th>$v_2$</th>
+<th>$v_3$</th>
+<th>$v_4$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$v_0$</td>
+<td>0</td>
+<td><strong>2</strong></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_1$</td>
+<td>0</td>
+<td>0</td>
+<td><strong>2</strong></td>
+<td><strong>2</strong></td>
+<td><strong>3</strong></td>
+</tr>
+<tr>
+<td>$v_2$</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_3$</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_4$</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>对于无向图，他们的邻接矩阵一般是对称的：</p>
+<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
+<p>邻接矩阵为：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>$v_0$</th>
+<th>$v_1$</th>
+<th>$v_2$</th>
+<th>$v_3$</th>
+<th>$v_4$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$v_0$</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_1$</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td><strong>1</strong></td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_2$</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td>$v_3$</td>
+<td><strong>1</strong></td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$v_4$</td>
+<td>0</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>因此，对于无向图，可以使用一个长度为$N(N+1)/2$的序列储存，这样可以节省一半的空间。<br>例如取上述矩阵的下半部分：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>$v_0$</th>
+<th>$v_1$</th>
+<th>$v_2$</th>
+<th>$v_3$</th>
+<th>$v_4$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$v_0$</td>
+<td>0</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$v_1$</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$v_2$</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$v_3$</td>
+<td><strong>1</strong></td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>$v_4$</td>
+<td>0</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>将上述数据按行优先顺序储存在一个数组里，数组的长度为$N(N+1)/2$。<br>要访问节点<code>i,j(i行，j列)</code>之间的连接，可以访问数组的<code>i*(i+1)/2+j</code>位置。</p>
+<p>邻接矩阵是一种较为直观的表示方法，它的好处有：</p>
+<ol>
+<li>方便检查任意一对节点之间是否存在边</li>
+<li>方便查找所有与某一结点直接相连的节点</li>
+<li>方便计算节点的度（指向节点的边个数叫入度，从节点指向别的节点的边个数叫出度）。</li>
+</ol>
+<p>它的缺点也很明显：对较为稀疏的图（点多边少）而言，空间利用效率不高，计算图的总边数是时间效率不高。</p>
+<h3 id="邻接表"><a href="#邻接表" class="headerlink" title="邻接表"></a>邻接表</h3><p>使用一个长度为<code>n(节点个数)</code>的链表数组<code>G[n]</code>储存图。数组的元素<code>G[i]</code>表示编号为<code>i</code>的节点，<code>G[i]</code>后接它指向的所有节点指针。</p>
+<p>如：</p>
+<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
+<p>上图的邻接表为：</p>
+<table>
+<thead>
+<tr>
+<th>$v_0$</th>
+<th>3</th>
+<th>1</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$v_1$</td>
+<td>0</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>$v_2$</td>
+<td>1</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>$v_3$</td>
+<td>1</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>$v_4$</td>
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>这样的表示方法不会储存没有连接的无效信息，但是它把每条边都储存了两遍。对于稀疏的图而言，它的空间利用率较高，但是较为稠密的图会浪费较多空间。<br>邻接表可以方便的查找一个节点的所有直接相连节点，如果储存的图是无向图，它也可以方便的计算出节点的度。但是如果储存的是有向图，邻接表将无法方便的计算出节点的<strong>入度</strong>，同时它也无法方便地判断出给定节点对之间是否存在边。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>图是复杂的数据结构，上面提到的邻接矩阵，邻接表只是两种常见的，较为直观的表示方法。同时也容易发现，它们两个都对特定问题存在一定的缺陷，对于特定的关于图的问题，往往需要选择其他更适合问题本身的图的表达方式。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee ☕️.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="zhuwenq 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zhuwenq 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E5%9B%BE/" rel="tag"># 图</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/" rel="prev" title="数据结构--哈夫曼树">
+      <i class="fa fa-chevron-left"></i> 数据结构--哈夫曼树
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是图"><span class="nav-number">2.</span> <span class="nav-text">什么是图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#图的操作集"><span class="nav-number">2.1.</span> <span class="nav-text">图的操作集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何表示一个图"><span class="nav-number">2.2.</span> <span class="nav-text">如何表示一个图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">2.2.1.</span> <span class="nav-text">邻接矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#邻接表"><span class="nav-number">2.2.2.</span> <span class="nav-text">邻接表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhuwenq</p>
+  <div class="site-description" itemprop="description">Remain passionate.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Leonezz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Leonezz" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Leonez@nuaa.edu.cn" title="E-Mail → mailto:Leonez@nuaa.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://home.zhuwenq.icu:7020/" title="HomePage → http:&#x2F;&#x2F;home.zhuwenq.icu:7020" rel="noopener" target="_blank"><i class="fa fa-fw fa-home"></i>HomePage</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhuwenq</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">49k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:22</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyC9MNQaiIBSwKd9f41MpgL3cQvLlYNGun0',
+      projectId: 'blog-cd763'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
