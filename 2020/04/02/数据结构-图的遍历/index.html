@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/main-icon.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面图的遍历就是把图中的每个顶点不重复地访问一遍，它可以用来解决很多图的问题。 两种遍历深度优先搜索(Depth First Search,DFS)深度优先搜索顾名思义就是在搜索过程中瞅准某条路径一直向下访问，直到访问到了这条路径的终点才切换到其他路径。问题是，在某条路径上一路向下访问时，需要保存住来时的路径信息，否则在到达终点的时候将无法返回到起点切换其他路径。这种一路向下直到某个条件（终点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构--图的遍历">
+<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/index.html">
+<meta property="og:site_name" content="zhuwenq">
+<meta property="og:description" content="写在前面图的遍历就是把图中的每个顶点不重复地访问一遍，它可以用来解决很多图的问题。 两种遍历深度优先搜索(Depth First Search,DFS)深度优先搜索顾名思义就是在搜索过程中瞅准某条路径一直向下访问，直到访问到了这条路径的终点才切换到其他路径。问题是，在某条路径上一路向下访问时，需要保存住来时的路径信息，否则在到达终点的时候将无法返回到起点切换其他路径。这种一路向下直到某个条件（终点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/2.png">
+<meta property="article:published_time" content="2020-04-02T12:16:40.000Z">
+<meta property="article:modified_time" content="2020-04-02T14:20:35.358Z">
+<meta property="article:author" content="zhuwenq">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="图">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/1.png">
+
+<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据结构--图的遍历 | zhuwenq</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhuwenq</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">zhuwenq's blog.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/main-icon.jpeg" alt="zhuwenq">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">26</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">23</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构--图的遍历
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-02 20:16:40 / 修改时间：22:20:35" itemprop="dateCreated datePublished" datetime="2020-04-02T20:16:40+08:00">2020-04-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>图的遍历就是把图中的每个顶点不重复地访问一遍，它可以用来解决很多图的问题。</p>
+<h2 id="两种遍历"><a href="#两种遍历" class="headerlink" title="两种遍历"></a>两种遍历</h2><h3 id="深度优先搜索-Depth-First-Search-DFS"><a href="#深度优先搜索-Depth-First-Search-DFS" class="headerlink" title="深度优先搜索(Depth First Search,DFS)"></a>深度优先搜索<code>(Depth First Search,DFS)</code></h3><p>深度优先搜索顾名思义就是在搜索过程中瞅准某条路径一直向下访问，直到访问到了这条路径的终点才切换到其他路径。问题是，在某条路径上一路向下访问时，需要保存住来时的路径信息，否则在到达终点的时候将无法返回到起点切换其他路径。<br>这种一路向下直到某个条件（终点）再原路返回的过程很像程序设计中的递归思想，因此，深度优先搜索可以方便的使用 <strong>堆栈<code>(Stack)</code></strong> 实现。</p>
+<p>如下面所示的图：</p>
+<p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/1.png" alt></p>
+<p>假设使用深度优先搜索从节点<code>0</code>开始遍历，则首先对节点<code>0</code>的所有邻居节点（与<code>0</code>直接相连的节点）中的一个访问，假设访问到了节点<code>2</code>，则对节点<code>2</code>的邻居节点进行访问。首先访问邻居节点<code>0</code>，<code>0</code>已经被访问，因此切换到节点<code>1</code>。接着对节点<code>1</code>的邻居节点<code>2</code>访问，<code>2</code>已被访问，因此切换到<code>3</code>。接着访问<code>3</code>的邻居节点<code>4</code>。访问到节点<code>4</code>之后，对节点<code>4</code>的所有邻居节点访问，发现均被访问过。然后开始回溯，查找是否有尚未访问到的分支。比如此例中回溯到节点<code>3</code>，发现所有邻居节点都被访问过，继续回溯亦然，当回溯到起始节点<code>0</code>时，便知道所有节点都被访问过，遍历完成。</p>
+<p>实际的程序过程可以描述为：首先建立一个空栈，访问起始顶点<code>0</code>，并把<code>0</code>压栈，然后访问节点<code>0</code>的邻居节点<code>2</code>，把<code>2</code>压栈。访问节点<code>2</code>的未访问节点<code>1</code>，把<code>1</code>压栈，访问节点<code>3</code>,<code>4</code>，把<code>3</code>,<code>4</code>压栈。遍历节点<code>4</code>的邻居节点之后，前方无路可走，开始出栈。首先出栈节点<code>3</code>，访问节点<code>3</code>的未访问邻居节点并压栈，一直访问并压栈到尽头。之后对每个出栈的顶点做同样的操作，直到堆栈为空（顶点全部弹出）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="comment">//深度优先搜索</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createStack();</span><br><span class="line">    Vertex *nextNode = vertex;</span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        visit(nextNode);                                <span class="comment">//visit vertex</span></span><br><span class="line">        push(<span class="built_in">stack</span>, nextNode);                          <span class="comment">//push vertex to stack</span></span><br><span class="line">        Visited[nextNode-&gt;id] = <span class="number">1</span>;                      <span class="comment">//shows that this vertex was visted</span></span><br><span class="line">        <span class="keyword">int</span> end = <span class="number">1</span>;                                    <span class="comment">//flag that shows if route comes to end</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nextNode-&gt;neighborNum; ++i) <span class="comment">//neighbor of vertex</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = nextNode-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visited</span></span><br><span class="line">            &#123;</span><br><span class="line">                nextNode = neighbor; <span class="comment">//set nextNode neighbor not visited</span></span><br><span class="line">                end = <span class="number">-1</span>;            <span class="comment">//shows that end is not coming</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (end)</span><br><span class="line">        &#123;</span><br><span class="line">            nextNode = pop(<span class="built_in">stack</span>); <span class="comment">//if end comes,pop a vertex from stack</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个实现首先构造了一个顶点个数长度的数组来标识顶点是否被访问，然后利用循环和堆栈实现遍历过程。这是一个并不优雅的实现，甚至不知道是否正确。<br>如果直接用递归程序会非常清晰：(两段代码实际上都是伪代码，因为节点的邻居节点信息的取出是不规范的，不正确的)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">    visit(vertex);</span><br><span class="line">    Visted[vertex-&gt;id] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vertex-&gt;neighborNum;++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!Visited[vertex-&gt;neighbor[i]])&#123;</span><br><span class="line">            depthFirstSearch(graph,vertex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="广度优先遍历-Breadth-First-Search-BFS"><a href="#广度优先遍历-Breadth-First-Search-BFS" class="headerlink" title="广度优先遍历(Breadth First Search,BFS)"></a>广度优先遍历<code>(Breadth First Search,BFS)</code></h3><p>广度优先搜索过程类似于二叉树的<strong>层序遍历</strong>，都是先访问某节点，然后把该节点的相邻节点挨个访问，同样类似的是，广度优先遍历的实现也可以使用 <strong>队列<code>(Queue)</code></strong> 实现。实际上，树就是一种特殊的图（有顶点，有边。当有一个东西各方面都像鸭子，那他就是一个鸭子🦢）</p>
+<p>同一个图：</p>
+<p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/2.png" alt></p>
+<p>使用广度优先遍历的过程大致是，首先从起始顶点<code>0</code>出发，挨个访问它的邻居顶点<code>2</code>,<code>4</code>。然后访问节点<code>2</code>和它的邻居节点<code>0</code>(已被访问),<code>1</code>,<code>3</code>，然后访问节点<code>4</code>和它的邻居节点<code>0</code>,<code>1</code>,<code>3</code>。最后对节点<code>0</code>,<code>1</code>,<code>3</code>挨个进行上述的动作。</p>
+<p>使用队列实现的程序过程为：首先建立空的队列，将节点<code>0</code>入队，然后弹出节点<code>0</code>进行访问，同时把节点<code>0</code>的所有 <strong>未被访问过的</strong> 邻居节点<code>2</code>,<code>4</code>加入队列。然后从队列弹出一个顶点，对其进行访问并把它的所有 <strong>未被访问过的</strong> 邻居顶点加入队列。直到队列为空，说明遍历完成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visit(vertex);           <span class="comment">//visite vertex first</span></span><br><span class="line">    Visited[vertex-&gt;id] = <span class="number">1</span>; <span class="comment">//set visited true</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, vertex); <span class="comment">//add to queue to find its neighbors</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex *v = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v-&gt;neighborNum; ++i) <span class="comment">//find all neighbors</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = v-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visted,visit and add to queue</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(neighbor);</span><br><span class="line">                Visited[neighbor-&gt;id] = <span class="number">1</span>;</span><br><span class="line">                add(<span class="built_in">queue</span>, neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个实现仍然是伪代码，需要更加合理的查找顶点邻居信息的方法才能工作。</p>
+<p>两种遍历的时间复杂度实际上是相同的（全部遍历时），但是对于遍历的中途退出的问题，需要认真思考选择更合适的遍历方式。如寻路问题中需要根据地图的样式选择遍历方式。</p>
+<h2 id="图的一些术语"><a href="#图的一些术语" class="headerlink" title="图的一些术语"></a>图的一些术语</h2><ul>
+<li>连通：如果从顶点<code>v</code>到顶点<code>w</code>之间存在一条（无向）路径，则称顶点<code>v</code>和顶点<code>w</code>之间是连通的。</li>
+<li>强连通：有向图中顶点<code>v</code>和<code>w</code>之间的路径是双向路径，则<code>v</code>和<code>w</code>之间是强连通的。</li>
+<li>路径：顶点<code>v</code>到顶点<code>w</code>之间的路径是一系列顶点的序列，其中任意一对相邻的顶点之间在图中都有 <strong>边<code>(Edge)</code></strong> 。路径的长度是路径中的边数（对于带权图，路径长度是边的权值之和）。如果路径序列中所有的顶点都不相同（路径是无环的），则称路径为 <strong>简单路径</strong> 。</li>
+<li>回路：起点等于终点的路径</li>
+<li>连通图：图的 <strong>任意两点</strong> 均连通</li>
+<li>强连通图：<strong>有向图</strong> 的 <strong>任意两点</strong> 均强连通</li>
+<li>连通分量：无向图的极大连通子图：<ul>
+<li>极大顶点数：子图中再加任意一个点就不是连通图了</li>
+<li>极大边数：子图中所有顶点之间的边数</li>
+</ul>
+</li>
+<li>强连通分量：<strong>有向图</strong> 的极大强连通分量</li>
+</ul>
+<p>对于不连通的图，可以对图的每个连通分量调用上面两个遍历函数实现整个图的遍历。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Buy me a coffee ☕️.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="zhuwenq 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zhuwenq 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E5%9B%BE/" rel="tag"># 图</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/" rel="prev" title="数据结构--图">
+      <i class="fa fa-chevron-left"></i> 数据结构--图
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#两种遍历"><span class="nav-number">1.1.</span> <span class="nav-text">两种遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#深度优先搜索-Depth-First-Search-DFS"><span class="nav-number">1.1.1.</span> <span class="nav-text">深度优先搜索(Depth First Search,DFS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#广度优先遍历-Breadth-First-Search-BFS"><span class="nav-number">1.1.2.</span> <span class="nav-text">广度优先遍历(Breadth First Search,BFS)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图的一些术语"><span class="nav-number">1.2.</span> <span class="nav-text">图的一些术语</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">2.</span> <span class="nav-text">最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zhuwenq</p>
+  <div class="site-description" itemprop="description">Remain passionate.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Leonezz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Leonezz" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Leonez@nuaa.edu.cn" title="E-Mail → mailto:Leonez@nuaa.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://home.zhuwenq.icu:7020/" title="HomePage → http:&#x2F;&#x2F;home.zhuwenq.icu:7020" rel="noopener" target="_blank"><i class="fa fa-fw fa-home"></i>HomePage</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhuwenq</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:27</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyC9MNQaiIBSwKd9f41MpgL3cQvLlYNGun0',
+      projectId: 'blog-cd763'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
