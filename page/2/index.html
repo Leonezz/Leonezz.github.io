@@ -126,17 +126,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">26</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">27</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">23</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">24</span></a>
 
   </li>
   </ul>
@@ -165,6 +165,147 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zhuwenq">
+      <meta itemprop="description" content="Remain passionate.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuwenq">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/" class="post-title-link" itemprop="url">数据结构--树和树的表示</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-23 17:40:53" itemprop="dateCreated datePublished" datetime="2020-03-23T17:40:53+08:00">2020-03-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-08 16:06:33" itemprop="dateModified" datetime="2020-04-08T16:06:33+08:00">2020-04-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>客观世界中许多事物存在层次关系，如人类的族谱，社会组织的结构等。这些分层次的结构在管理方面具有一定的效率优势，树就是类似的一种具有层次结构关系的数据结构。</p>
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>二分查找<code>binarySearch</code>作为一种时间复杂度为<script type="math/tex">O(\log n)</script>的优秀查找算法，其在数据管理的查询方面具有重要地位。二分查找接受被查找元素所属的序列<code>list</code>（有序的，假设为升序）和被查找元素的值<code>target</code>两个参数，它的基本流程如下：</p>
+<ol>
+<li>定义两个变量<code>left</code>和<code>right</code>指向序列的左端和右端，变量<code>mid</code>指向两端的中间位置，查找将在这两端之间进行。</li>
+<li>初始化<code>left = 1</code>，<code>right = list.length</code>，<code>mid = (left + right) / 2</code>。</li>
+<li>比较<code>mid</code>处的元素与待查找元素<code>target</code>之间的关系：<ul>
+<li>若<code>list[mid] = target</code>，说明在<code>mid</code>处找到了元素<code>target</code>，返回<code>mid</code>。</li>
+<li>若<code>list[mid] &lt; target</code>，说明<code>target</code>在<code>mid</code>的右侧，这时应把<code>left</code>右移为<code>mid + 1</code>，然后更新<code>mid</code>为<code>(left + right) / 2</code>，重复过程 3。</li>
+<li>若<code>list[mid] &gt; target</code>，说明<code>target</code>在<code>mid</code>的左侧，这时应把<code>right</code>左移到<code>mid - 1</code>，然后更新<code>mid</code>为<code>(left + right) / 2</code>，重复过程 3。</li>
+</ul>
+</li>
+<li>最后若始终未从过程3.1跳出，则会导致左右交叉即<code>left &gt; right</code>，此时说明元素未查找到，应退出程序。</li>
+</ol>
+<p>算法C语言代码（伪）如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(ElementType *<span class="built_in">list</span>, <span class="keyword">int</span> listLength, ElementType target)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = listLength - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">list</span>[mid] == target)</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">list</span>[mid] &gt; target)</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">//means not frond!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二分查找算法之所以能获得较高的时间效率，原因之一就是它的搜索过程实际上是一颗搜索树。例如序列<code>[1,2,3,4,5,6,7,8,9,10,11]</code>，按照二分法建立树状结构如下：</p>
+<p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png" alt></p>
+<p>则对于任何一个元素的搜索次数都将不超过树的深度<code>4</code>。而对于一颗有<code>n</code>个节点的树（长度为<code>n</code>的序列），其搜索树的深度为<script type="math/tex">\log_2 n + 1</script>，因此二分搜索的最坏时间复杂度是<script type="math/tex">O(\log_2 n)</script></p>
+<h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>树是由<code>n</code>个元素构成的有穷集合。当<code>n = 0</code>时，称为空树。对于任何一颗非空树，它具有以下性质：</p>
+<ul>
+<li>一颗树有一个根节点<code>root</code></li>
+<li>其余节点可分为<code>m</code>个互不相交的有限集<script type="math/tex">T_1,T_2,T_3...T_m</script>，其中每个集合本身又可以视为一颗树，称为原树的子树<code>SubTree</code>。</li>
+</ul>
+<h2 id="术语解释"><a href="#术语解释" class="headerlink" title="术语解释"></a>术语解释</h2><p>树的一些基本术语：</p>
+<ol>
+<li>节点的度<code>Degree</code>：节点的子树个数</li>
+<li>树的度：树的所有节点中最大的度数</li>
+<li>叶节点<code>Leaf</code>：度为0的节点</li>
+<li>父节点<code>Parent</code>：有子树的节点是其子树根节点的父节点</li>
+<li>子节点<code>Child</code>：若<code>A</code>是<code>B</code>的父节点，则<code>B</code>是<code>A</code>的子节点</li>
+<li>兄弟节点<code>Sibling</code>：具有同一父节点的各节点彼此之间是兄弟节点</li>
+<li>路径和路径长度：从节点<script type="math/tex">n_1到n_k</script>的路径是一个节点序列<script type="math/tex">n_1,n_2...n_k</script>，其中<script type="math/tex">n_i</script>是<script type="math/tex">n_{i+1}</script>的父节点。路径所包含的边的条数是路径长度</li>
+<li>祖先节点<code>Ancestor</code>：沿着从根节点到某一节点<script type="math/tex">n_i</script>的路径所包含的所有节点都是节点<script type="math/tex">n_i</script>的祖先节点</li>
+<li>子孙节点<code>Descendant</code>：某一节点的子树中的所有节点都是这个节点的子孙节点</li>
+<li>节点的层次<code>Level</code>：规定根节点在1层，其他节点的层次为其父节点层次+1</li>
+<li>树的深度<code>Depth</code>：树中所有节点的最大层次称为树的深度</li>
+</ol>
+<h2 id="树的表示"><a href="#树的表示" class="headerlink" title="树的表示"></a>树的表示</h2><p>对于下图所示的树：</p>
+<p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/2.png" alt></p>
+<p>可以用链表表示节点：</p>
+<p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/3.png" alt></p>
+<p>问题：节点规格不统一，有的节点度为1，有的节点度为3。为了统一而采用树的度作为节点中需要保存的子节点个数过于浪费空间，可采用<strong>儿子-兄弟表示法</strong></p>
+<p>如图所示采用每个节点中保存一个子节点和相邻的兄弟节点的结构：</p>
+<p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/4.png" alt></p>
+<p>节点结构如下图：</p>
+<p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/5.png" alt></p>
+<p>这样的结构保证了节点的统一也保证了空间的利用效率，由于每个节点结构上连接其他两个节点，也成为<code>二叉树</code>。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>二叉树是一般树的基础结构，同时也是树结构研究中的核心和主要内容，学习树这一数据结构的最重点内容就是理解二叉树的结构和操作。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1294,96 +1435,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/08/%E8%A7%A3%E5%86%B3Qt%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zhuwenq">
-      <meta itemprop="description" content="Remain passionate.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhuwenq">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/08/%E8%A7%A3%E5%86%B3Qt%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">解决Qt程序的中文乱码问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-03-08 01:52:59 / 修改时间：01:57:11" itemprop="dateCreated datePublished" datetime="2020-03-08T01:52:59+08:00">2020-03-08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Qt/" itemprop="url" rel="index"><span itemprop="name">Qt</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>122</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在Qt提供的 <code>QString</code> 中，出于对跨平台的考虑，字符在赋值给 <code>QString</code> 对象时，会自动转换成 <code>utf-16</code> 编码。中文在这种情况下会乱码。</p>
-<p>下面的方式可以避免乱码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QString str = QString::fromLocal8Bit(<span class="string">"中文"</span>);</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1454,20 +1505,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1518,13 +1569,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">55k</span>
+    <span title="站点总字数">57k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:31</span>
+    <span title="站点阅读时长">1:35</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
