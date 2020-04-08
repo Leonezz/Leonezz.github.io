@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点v_i和v_j，一般用&lt;v_i,v_j&gt;表示由v_i指向v_j的">
+  <meta name="description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点$v_i$和$v_j$，一般用&lt;$v_i$,$v_j$&gt;表示由$">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构--图">
 <meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/index.html">
 <meta property="og:site_name" content="zhuwenq">
-<meta property="og:description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点v_i和v_j，一般用&lt;v_i,v_j&gt;表示由v_i指向v_j的">
+<meta property="og:description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。 什么是图图是一种表示多对多关系的数据结构，它包含一组顶点(Vertex)和顶点之间的连接关系（称为边(Edge)）。对于节点$v_i$和$v_j$，一般用&lt;$v_i$,$v_j$&gt;表示由$">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
 <meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
 <meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
 <meta property="article:published_time" content="2020-04-01T14:15:17.000Z">
-<meta property="article:modified_time" content="2020-04-08T08:11:15.382Z">
+<meta property="article:modified_time" content="2020-04-08T08:18:05.453Z">
 <meta property="article:author" content="zhuwenq">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="笔记">
@@ -212,7 +212,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-08 16:11:15" itemprop="dateModified" datetime="2020-04-08T16:11:15+08:00">2020-04-08</time>
+                <time title="修改时间：2020-04-08 16:18:05" itemprop="dateModified" datetime="2020-04-08T16:18:05+08:00">2020-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,11 +264,11 @@
 
       
         <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了<strong>图<code>(Graph)</code></strong>这种数据结构。</p>
-<h1 id="什么是图"><a href="#什么是图" class="headerlink" title="什么是图"></a>什么是图</h1><p>图是一种表示多对多关系的数据结构，它包含一组<strong>顶点<code>(Vertex)</code></strong>和顶点之间的连接关系（称为<strong>边<code>(Edge)</code></strong>）。<br>对于节点<code>v_i</code>和<code>v_j</code>，一般用<code>&lt;v_i,v_j&gt;</code>表示由<code>v_i</code>指向<code>v_j</code>的边。<br>图中的相同节点对一般只考虑一条边，不考虑重复的边和指向自己的边，根据边的单向双向，带权不带权，图可以分为<code>无向无权图，无向带权图，有向无权图，有向带权图</code></p>
+<h1 id="什么是图"><a href="#什么是图" class="headerlink" title="什么是图"></a>什么是图</h1><p>图是一种表示多对多关系的数据结构，它包含一组<strong>顶点<code>(Vertex)</code></strong>和顶点之间的连接关系（称为<strong>边<code>(Edge)</code></strong>）。<br>对于节点$v_i$和$v_j$，一般用&lt;$v_i$,$v_j$&gt;表示由$v_i$指向$v_j$的边。<br>图中的相同节点对一般只考虑一条边，不考虑重复的边和指向自己的边，根据边的单向双向，带权不带权，图可以分为<code>无向无权图，无向带权图，有向无权图，有向带权图</code></p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt="无向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png" alt="无向带权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png" alt="有向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt="有向带权图"></p>
 <h2 id="图的操作集"><a href="#图的操作集" class="headerlink" title="图的操作集"></a>图的操作集</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">(<span class="keyword">int</span> vertexCnt)</span></span>;                                             <span class="comment">//创建空图返回</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertVertex</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;           <span class="comment">//将节点插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span>;                 <span class="comment">//将边插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;         <span class="comment">//从顶点vertex出发深度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;       <span class="comment">//从顶点vertex出发宽度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shortestPath</span><span class="params">(Graph *graph, Vertex *vertex, <span class="keyword">int</span> dist[])</span></span>; <span class="comment">//计算从节点vertex到任意节点的最短路径</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">minSpanningTree</span><span class="params">(Graph *graph)</span></span>;                          <span class="comment">//计算图的最小生成树</span></span><br></pre></td></tr></table></figure>
 <p>图的建立实现在后文给出</p>
-<h2 id="如何表示一个图"><a href="#如何表示一个图" class="headerlink" title="如何表示一个图"></a>如何表示一个图</h2><h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>使用一个二维矩阵可以描述一个图。对于有<code>n</code>个顶点的图，可以用一个<code>n*n</code>大小的矩阵<code>G[n][n]</code>来表示。<br>首先给顶点编号<code>0---n-1</code>，矩阵的值<code>G[i][j] = 1(若&lt;v_i,v_j&gt;存在)</code>，<code>G[i][j] = 0(若&lt;v_i,v_j&gt;不存在)</code>。对于带权图，矩阵的值一般是边的权重。</p>
+<h2 id="如何表示一个图"><a href="#如何表示一个图" class="headerlink" title="如何表示一个图"></a>如何表示一个图</h2><h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>使用一个二维矩阵可以描述一个图。对于有<code>n</code>个顶点的图，可以用一个<code>n*n</code>大小的矩阵<code>G[n][n]</code>来表示。<br>首先给顶点编号<code>0---n-1</code>，矩阵的值$G[i][j] = 1(若<v_i,v_j>存在)$，$G[i][j] = 0(若<v_i,v_j>不存在)$。对于带权图，矩阵的值一般是边的权重。</v_i,v_j></v_i,v_j></p>
 <p>如下面的有向带权图：</p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt></p>
 <p>其邻接矩阵为：</p>
