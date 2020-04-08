@@ -265,18 +265,13 @@
 <h2 id="生成一般ssh密钥（用于远程登陆）"><a href="#生成一般ssh密钥（用于远程登陆）" class="headerlink" title="生成一般ssh密钥（用于远程登陆）"></a>生成一般ssh密钥（用于远程登陆）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
 <p><img src="/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/1.png" alt></p>
 <p>输入要生成的密钥路径和文件名便可生成密钥文件，私钥<code>yourkeyfilename</code>和公钥<code>yourkeyfilename.pub</code>（最好放在<code>username/.ssh</code>文件夹下）。生成完成后，使用命令<code>scp -P 端口号 本地公钥文件地址 用户名@远程地址:.ssh/authorized_keys</code> 把公钥复制到远程服务器的<code>home/.ssh/authorized_keys</code>文件即可。</p>
-<p>值得注意的是，如果没有采用ssh密钥的默认命名（<code>id_rsa和id_rsa.pub</code>），而是使用了自定义的命名，这样直接<code>ssh username@host</code>是无法工作的。这是因为ssh会默认寻找名为<code>id_rsa</code>的私钥文件与远程机器上的公钥文件进行比对，为了让ssh明白我们已经给私钥文件重新起了名字，还需要配置一个config文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">Host host</span><br><span class="line">HostName hostname</span><br><span class="line">User username</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的私钥路径</span><br></pre></td></tr></table></figure>
-
+<p>值得注意的是，如果没有采用ssh密钥的默认命名（<code>id_rsa和id_rsa.pub</code>），而是使用了自定义的命名，这样直接<code>ssh username@host</code>是无法工作的。这是因为ssh会默认寻找名为<code>id_rsa</code>的私钥文件与远程机器上的公钥文件进行比对，为了让ssh明白我们已经给私钥文件重新起了名字，还需要配置一个config文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">Host host</span><br><span class="line">HostName hostname</span><br><span class="line">User username</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的私钥路径</span><br></pre></td></tr></table></figure></p>
 <p>这样ssh在建立指向host的连接验证公私钥配对时，就知道去你设定的私钥路径寻找私钥文件了。</p>
 <p>如果登录仍不成功，可能是远程服务器上的<code>~/.ssh/</code>文件夹和<code>~/.ssh/authorized_keys</code>文件的权限问题导致的。使用命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod ~/.ssh 700    <span class="comment">#只有文件拥有者（创建文件的用户）具有读写，执行的权限</span></span><br><span class="line">chmod ~/.ssh/authorized_keys 600    <span class="comment">#只有文件拥有者具有读写权限</span></span><br></pre></td></tr></table></figure>
-
 <p>给文件赋予正确的权限</p>
 <h2 id="生成用于git的ssh密钥"><a href="#生成用于git的ssh密钥" class="headerlink" title="生成用于git的ssh密钥"></a>生成用于git的ssh密钥</h2><p>首先使用命令<code>git config --global user.name = &quot;your github user name&quot;&amp;&amp;git config --global user.email = &quot;you github email&quot;</code>设置git用户名和邮箱。</p>
-<p><code>ssh-keygen -C &quot;you email address&quot;</code>生成密钥，过程与上面的相同。生成完成之后编辑<code>config</code>文件，添加以下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">## Github</span><br><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的git ssh私钥路径</span><br></pre></td></tr></table></figure>
-
+<p><code>ssh-keygen -C &quot;you email address&quot;</code>生成密钥，过程与上面的相同。生成完成之后编辑<code>config</code>文件，添加以下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .ssh&#x2F;config</span><br><span class="line">## Github</span><br><span class="line">Host github.com</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile ~&#x2F;.ssh&#x2F;yourkeyfilename #你的git ssh私钥路径</span><br></pre></td></tr></table></figure></p>
 <p>然后使用文本编辑器打开刚刚生成的公钥文件，复制全部内容。打开github的<a href="https://github.com/settings/keys">ssh key配置页面</a></p>
 <p><img src="/2020/03/15/%E4%BD%BF%E7%94%A8ssh%E8%BF%9B%E8%A1%8Cgit-push/3.png" alt></p>
 <p>点击<code>new SSH key</code>按键：</p>
@@ -640,6 +635,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

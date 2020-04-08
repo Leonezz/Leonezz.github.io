@@ -265,7 +265,6 @@
       
         <p>由于疫情原因迟迟不能开学，在家里也完全不想准备考研的事。胡乱翻网页时，想到了早就想学习的技术：<em>electron</em> 。又了解到将 <em>electron</em>  和 <em>vue</em> 结合使用的框架 <em>electron-vue</em> 。在学习一门新技术时，我向来主张先构思一个有趣的应用，然后着手学习应用所需的知识，并且学习的同时制作应用。因此，我在本地新建了应用 <em>aao</em> 。旨在为学校的教务处网站开发一款移动软件。</p>
 <h2 id="首先在项目文件夹新建项目-aao"><a href="#首先在项目文件夹新建项目-aao" class="headerlink" title="首先在项目文件夹新建项目 aao"></a>首先在项目文件夹新建项目 <em>aao</em></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g vue-cli  <span class="comment"># 安装vue-cli脚手架，已经安装的可以跳过\</span></span><br><span class="line">$ vue init simulatedgreg/electron aao   <span class="comment">#初始化项目，由于不懂相关知识，我选择了全部的模块\</span></span><br><span class="line">$ <span class="built_in">cd</span> aao <span class="comment">#进入项目文件夹\</span></span><br><span class="line">$ npm install <span class="comment">#安装依赖项，也可使用 yarn</span></span><br></pre></td></tr></table></figure>
-
 <p>到这一步，项目理应已经配置完成了。</p>
 <h2 id="以开发模式运行"><a href="#以开发模式运行" class="headerlink" title="以开发模式运行"></a>以开发模式运行</h2><p>命令是：</p>
 <p><code>$ npm run dev   #问题就处在这里</code></p>
@@ -275,9 +274,7 @@
 <p>通过它找到了解决的方案（暂不了解原理）：</p>
 <p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
 <p><code>new HtmlWebpackPlugin({...})</code></p>
-<p>改为：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'index.html'</span>,</span><br><span class="line">      template: path.resolve(__dirname, <span class="string">'../src/index.ejs'</span>),</span><br><span class="line">      templateParameters(compilation, assets, options) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          compilation: compilation,</span><br><span class="line">          webpack: compilation.getStats().toJson(),</span><br><span class="line">          webpackConfig: compilation.options,</span><br><span class="line">          htmlWebpackPlugin: &#123;</span><br><span class="line">            files: assets,</span><br><span class="line">            options: options</span><br><span class="line">          &#125;,</span><br><span class="line">          process,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;,</span><br><span class="line">      minify: &#123;</span><br><span class="line">        collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">        removeComments: <span class="literal">true</span></span><br><span class="line">      &#125;,</span><br><span class="line">      nodeModules: <span class="literal">false</span></span><br><span class="line">    &#125;),</span><br></pre></td></tr></table></figure>
-
+<p>改为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="string">'index.html'</span>,</span><br><span class="line">      template: path.resolve(__dirname, <span class="string">'../src/index.ejs'</span>),</span><br><span class="line">      templateParameters(compilation, assets, options) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          compilation: compilation,</span><br><span class="line">          webpack: compilation.getStats().toJson(),</span><br><span class="line">          webpackConfig: compilation.options,</span><br><span class="line">          htmlWebpackPlugin: &#123;</span><br><span class="line">            files: assets,</span><br><span class="line">            options: options</span><br><span class="line">          &#125;,</span><br><span class="line">          process,</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;,</span><br><span class="line">      minify: &#123;</span><br><span class="line">        collapseWhitespace: <span class="literal">true</span>,</span><br><span class="line">        removeAttributeQuotes: <span class="literal">true</span>,</span><br><span class="line">        removeComments: <span class="literal">true</span></span><br><span class="line">      &#125;,</span><br><span class="line">      nodeModules: <span class="literal">false</span></span><br><span class="line">    &#125;),</span><br></pre></td></tr></table></figure></p>
 <p>这样一改，这个问题果然不再出现了，但是还是得不到想要的结果。</p>
 <p>在找到这个方案之前，我读了几十篇博客，试了好多种方法。甚至删掉目录从头配置了好几遍，浪费了我大量的时间。</p>
 <h3 id="问题二：Uncaught-Error-Cannot-find-module-39-axios-39"><a href="#问题二：Uncaught-Error-Cannot-find-module-39-axios-39" class="headerlink" title="问题二：Uncaught Error: Cannot find module &#39;axios&#39;"></a>问题二：<code>Uncaught Error: Cannot find module &#39;axios&#39;</code></h3><p>执行完命令<code>npm run dev</code>之后，出现了一个白屏的界面：</p>
@@ -290,12 +287,10 @@
 <p>又使用奇怪的关键词组合google了一下，幸运地点进了这个<a href="https://github.com/SimulatedGREG/electron-vue/issues/430">issue</a>，按照@MiYogurt提供地方案尝试了一下：</p>
 <p>将文件 <em>.electron-vue/webpack.renderer.config.js:</em> 中的</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>] <span class="comment">//看起来像是在引入模块</span></span><br></pre></td></tr></table></figure>
-
 <p>改为：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>] <span class="comment">//添加了axios</span></span><br></pre></td></tr></table></figure>
 <p>重新启动开发板应用，调试面板上报错的模块换了一个：<code>Uncaught Error: Cannot find module &#39;vuex&#39;</code>。这时我想起了当时在执行命令<code>vue init simulatedgreg/electron-vue aao</code>的时候，选择安装了以下几个模块<code>&#39;vue&#39;,&#39;axios&#39;,&#39;vue-router&#39;,&#39;vuex&#39;,&#39;vuex-electron&#39;,&#39;vue-electron&#39;</code>，所以我将<code>whiteListedModules</code>改成（实际上我是加一个运行一次，报错一次再加一个改的。脑子被折腾坏了. ）：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> whiteListedModules = [<span class="string">'vue'</span>,<span class="string">'axios'</span>,<span class="string">'vue-router'</span>,<span class="string">'vuex'</span>,<span class="string">'vuex-electron'</span>,<span class="string">'vue-electron'</span>] <span class="comment">//添加全部模块</span></span><br></pre></td></tr></table></figure>
-
 <p>这样再运行，果然得到了期望的界面。可以继续开发（收工睡觉）了</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一切都是因为懂的太少，前端技术这一块更是一无所知。</p>
 
@@ -651,6 +646,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

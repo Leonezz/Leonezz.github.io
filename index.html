@@ -245,17 +245,14 @@
 <p>假设使用深度优先搜索从节点<code>0</code>开始遍历，则首先对节点<code>0</code>的所有邻居节点（与<code>0</code>直接相连的节点）中的一个访问，假设访问到了节点<code>2</code>，则对节点<code>2</code>的邻居节点进行访问。首先访问邻居节点<code>0</code>，<code>0</code>已经被访问，因此切换到节点<code>1</code>。接着对节点<code>1</code>的邻居节点<code>2</code>访问，<code>2</code>已被访问，因此切换到<code>3</code>。接着访问<code>3</code>的邻居节点<code>4</code>。访问到节点<code>4</code>之后，对节点<code>4</code>的所有邻居节点访问，发现均被访问过。然后开始回溯，查找是否有尚未访问到的分支。比如此例中回溯到节点<code>3</code>，发现所有邻居节点都被访问过，继续回溯亦然，当回溯到起始节点<code>0</code>时，便知道所有节点都被访问过，遍历完成。</p>
 <p>实际的程序过程可以描述为：首先建立一个空栈，访问起始顶点<code>0</code>，并把<code>0</code>压栈，然后访问节点<code>0</code>的邻居节点<code>2</code>，把<code>2</code>压栈。访问节点<code>2</code>的未访问节点<code>1</code>，把<code>1</code>压栈，访问节点<code>3</code>,<code>4</code>，把<code>3</code>,<code>4</code>压栈。遍历节点<code>4</code>的邻居节点之后，前方无路可走，开始出栈。首先出栈节点<code>3</code>，访问节点<code>3</code>的未访问邻居节点并压栈，一直访问并压栈到尽头。之后对每个出栈的顶点做同样的操作，直到堆栈为空（顶点全部弹出）。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="comment">//深度优先搜索</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createStack();</span><br><span class="line">    Vertex *nextNode = vertex;</span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        visit(nextNode);                                <span class="comment">//visit vertex</span></span><br><span class="line">        push(<span class="built_in">stack</span>, nextNode);                          <span class="comment">//push vertex to stack</span></span><br><span class="line">        Visited[nextNode-&gt;id] = <span class="number">1</span>;                      <span class="comment">//shows that this vertex was visted</span></span><br><span class="line">        <span class="keyword">int</span> end = <span class="number">1</span>;                                    <span class="comment">//flag that shows if route comes to end</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nextNode-&gt;neighborNum; ++i) <span class="comment">//neighbor of vertex</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = nextNode-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visited</span></span><br><span class="line">            &#123;</span><br><span class="line">                nextNode = neighbor; <span class="comment">//set nextNode neighbor not visited</span></span><br><span class="line">                end = <span class="number">-1</span>;            <span class="comment">//shows that end is not coming</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (end)</span><br><span class="line">        &#123;</span><br><span class="line">            nextNode = pop(<span class="built_in">stack</span>); <span class="comment">//if end comes,pop a vertex from stack</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这个实现首先构造了一个顶点个数长度的数组来标识顶点是否被访问，然后利用循环和堆栈实现遍历过程。这是一个并不优雅的实现，甚至不知道是否正确。<br>如果直接用递归程序会非常清晰：(两段代码实际上都是伪代码，因为节点的邻居节点信息的取出是不规范的，不正确的)</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">    visit(vertex);</span><br><span class="line">    Visted[vertex-&gt;id] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vertex-&gt;neighborNum;++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!Visited[vertex-&gt;neighbor[i]])&#123;</span><br><span class="line">            depthFirstSearch(graph,vertex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="广度优先遍历-Breadth-First-Search-BFS"><a href="#广度优先遍历-Breadth-First-Search-BFS" class="headerlink" title="广度优先遍历(Breadth First Search,BFS)"></a>广度优先遍历<code>(Breadth First Search,BFS)</code></h3><p>广度优先搜索过程类似于二叉树的<strong>层序遍历</strong>，都是先访问某节点，然后把该节点的相邻节点挨个访问，同样类似的是，广度优先遍历的实现也可以使用 <strong>队列<code>(Queue)</code></strong> 实现。实际上，树就是一种特殊的图（有顶点，有边。当有一个东西各方面都像鸭子，那他就是一个鸭子🦢）</p>
 <p>同一个图：</p>
 <p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/2.png" alt></p>
 <p>使用广度优先遍历的过程大致是，首先从起始顶点<code>0</code>出发，挨个访问它的邻居顶点<code>2</code>,<code>4</code>。然后访问节点<code>2</code>和它的邻居节点<code>0</code>(已被访问),<code>1</code>,<code>3</code>，然后访问节点<code>4</code>和它的邻居节点<code>0</code>,<code>1</code>,<code>3</code>。最后对节点<code>0</code>,<code>1</code>,<code>3</code>挨个进行上述的动作。</p>
 <p>使用队列实现的程序过程为：首先建立空的队列，将节点<code>0</code>入队，然后弹出节点<code>0</code>进行访问，同时把节点<code>0</code>的所有 <strong>未被访问过的</strong> 邻居节点<code>2</code>,<code>4</code>加入队列。然后从队列弹出一个顶点，对其进行访问并把它的所有 <strong>未被访问过的</strong> 邻居顶点加入队列。直到队列为空，说明遍历完成。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visit(vertex);           <span class="comment">//visite vertex first</span></span><br><span class="line">    Visited[vertex-&gt;id] = <span class="number">1</span>; <span class="comment">//set visited true</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, vertex); <span class="comment">//add to queue to find its neighbors</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex *v = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v-&gt;neighborNum; ++i) <span class="comment">//find all neighbors</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = v-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visted,visit and add to queue</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(neighbor);</span><br><span class="line">                Visited[neighbor-&gt;id] = <span class="number">1</span>;</span><br><span class="line">                add(<span class="built_in">queue</span>, neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这个实现仍然是伪代码，需要更加合理的查找顶点邻居信息的方法才能工作。</p>
 <p>两种遍历的时间复杂度实际上是相同的（全部遍历时），但是对于遍历的中途退出的问题，需要认真思考选择更合适的遍历方式。如寻路问题中需要根据地图的样式选择遍历方式。</p>
 <h2 id="图的一些术语"><a href="#图的一些术语" class="headerlink" title="图的一些术语"></a>图的一些术语</h2><ul>
@@ -323,7 +320,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-05 20:53:39" itemprop="dateModified" datetime="2020-04-05T20:53:39+08:00">2020-04-05</time>
+                <time title="修改时间：2020-04-08 16:11:15" itemprop="dateModified" datetime="2020-04-08T16:11:15+08:00">2020-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -371,25 +368,26 @@
 <h1 id="什么是图"><a href="#什么是图" class="headerlink" title="什么是图"></a>什么是图</h1><p>图是一种表示多对多关系的数据结构，它包含一组<strong>顶点<code>(Vertex)</code></strong>和顶点之间的连接关系（称为<strong>边<code>(Edge)</code></strong>）。<br>对于节点<code>v_i</code>和<code>v_j</code>，一般用<code>&lt;v_i,v_j&gt;</code>表示由<code>v_i</code>指向<code>v_j</code>的边。<br>图中的相同节点对一般只考虑一条边，不考虑重复的边和指向自己的边，根据边的单向双向，带权不带权，图可以分为<code>无向无权图，无向带权图，有向无权图，有向带权图</code></p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt="无向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png" alt="无向带权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png" alt="有向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt="有向带权图"></p>
 <h2 id="图的操作集"><a href="#图的操作集" class="headerlink" title="图的操作集"></a>图的操作集</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">(<span class="keyword">int</span> vertexCnt)</span></span>;                                             <span class="comment">//创建空图返回</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertVertex</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;           <span class="comment">//将节点插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span>;                 <span class="comment">//将边插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;         <span class="comment">//从顶点vertex出发深度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;       <span class="comment">//从顶点vertex出发宽度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shortestPath</span><span class="params">(Graph *graph, Vertex *vertex, <span class="keyword">int</span> dist[])</span></span>; <span class="comment">//计算从节点vertex到任意节点的最短路径</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">minSpanningTree</span><span class="params">(Graph *graph)</span></span>;                          <span class="comment">//计算图的最小生成树</span></span><br></pre></td></tr></table></figure>
-
 <p>图的建立实现在后文给出</p>
 <h2 id="如何表示一个图"><a href="#如何表示一个图" class="headerlink" title="如何表示一个图"></a>如何表示一个图</h2><h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>使用一个二维矩阵可以描述一个图。对于有<code>n</code>个顶点的图，可以用一个<code>n*n</code>大小的矩阵<code>G[n][n]</code>来表示。<br>首先给顶点编号<code>0---n-1</code>，矩阵的值<code>G[i][j] = 1(若&lt;v_i,v_j&gt;存在)</code>，<code>G[i][j] = 0(若&lt;v_i,v_j&gt;不存在)</code>。对于带权图，矩阵的值一般是边的权重。</p>
 <p>如下面的有向带权图：</p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt></p>
 <p>其邻接矩阵为：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
 <th></th>
-<th>$v_0$</th>
-<th>$v_1$</th>
-<th>$v_2$</th>
-<th>$v_3$</th>
-<th>$v_4$</th>
+<th><script type="math/tex">v_0</script></th>
+<th><script type="math/tex">v_1</script></th>
+<th><script type="math/tex">v_2</script></th>
+<th><script type="math/tex">v_3</script></th>
+<th><script type="math/tex">v_4</script></th>
 </tr>
 </thead>
-<tbody><tr>
-<td>$v_0$</td>
+<tbody>
+<tr>
+<td><script type="math/tex">v_0</script></td>
 <td>0</td>
 <td><strong>2</strong></td>
 <td>0</td>
@@ -397,7 +395,7 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_1$</td>
+<td><script type="math/tex">v_1</script></td>
 <td>0</td>
 <td>0</td>
 <td><strong>2</strong></td>
@@ -405,7 +403,7 @@
 <td><strong>3</strong></td>
 </tr>
 <tr>
-<td>$v_2$</td>
+<td><script type="math/tex">v_2</script></td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -413,7 +411,7 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_3$</td>
+<td><script type="math/tex">v_3</script></td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -421,30 +419,34 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_4$</td>
+<td><script type="math/tex">v_4</script></td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>对于无向图，他们的邻接矩阵一般是对称的：</p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
 <p>邻接矩阵为：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
 <th></th>
-<th>$v_0$</th>
-<th>$v_1$</th>
-<th>$v_2$</th>
-<th>$v_3$</th>
-<th>$v_4$</th>
+<th><script type="math/tex">v_0</script></th>
+<th><script type="math/tex">v_1</script></th>
+<th><script type="math/tex">v_2</script></th>
+<th><script type="math/tex">v_3</script></th>
+<th><script type="math/tex">v_4</script></th>
 </tr>
 </thead>
-<tbody><tr>
-<td>$v_0$</td>
+<tbody>
+<tr>
+<td><script type="math/tex">v_0</script></td>
 <td>0</td>
 <td><strong>1</strong></td>
 <td>0</td>
@@ -452,7 +454,7 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_1$</td>
+<td><script type="math/tex">v_1</script></td>
 <td><strong>1</strong></td>
 <td>0</td>
 <td><strong>1</strong></td>
@@ -460,7 +462,7 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_2$</td>
+<td><script type="math/tex">v_2</script></td>
 <td>0</td>
 <td><strong>1</strong></td>
 <td>0</td>
@@ -468,7 +470,7 @@
 <td><strong>1</strong></td>
 </tr>
 <tr>
-<td>$v_3$</td>
+<td><script type="math/tex">v_3</script></td>
 <td><strong>1</strong></td>
 <td><strong>1</strong></td>
 <td>0</td>
@@ -476,67 +478,63 @@
 <td>0</td>
 </tr>
 <tr>
-<td>$v_4$</td>
+<td><script type="math/tex">v_4</script></td>
 <td>0</td>
 <td>0</td>
 <td><strong>1</strong></td>
 <td>0</td>
 <td>0</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>因此，对于无向图，可以使用一个长度为$N(N+1)/2$的序列储存，这样可以节省一半的空间。<br>例如取上述矩阵的下半部分：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
 <th></th>
-<th>$v_0$</th>
-<th>$v_1$</th>
-<th>$v_2$</th>
-<th>$v_3$</th>
-<th>$v_4$</th>
+<th><script type="math/tex">v_0</script></th>
+<th><script type="math/tex">v_1</script></th>
+<th><script type="math/tex">v_2</script></th>
+<th><script type="math/tex">v_3</script></th>
+<th><script type="math/tex">v_4</script></th>
 </tr>
 </thead>
-<tbody><tr>
-<td>$v_0$</td>
+<tbody>
+<tr>
+<td><script type="math/tex">v_0</script></td>
 <td>0</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr>
-<td>$v_1$</td>
+<td><script type="math/tex">v_1</script></td>
 <td><strong>1</strong></td>
 <td>0</td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 <tr>
-<td>$v_2$</td>
+<td><script type="math/tex">v_2</script></td>
 <td>0</td>
 <td><strong>1</strong></td>
 <td>0</td>
-<td></td>
-<td></td>
 </tr>
 <tr>
-<td>$v_3$</td>
+<td><script type="math/tex">v_3</script></td>
 <td><strong>1</strong></td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-<td></td>
-</tr>
-<tr>
-<td>$v_4$</td>
-<td>0</td>
-<td>0</td>
 <td><strong>1</strong></td>
 <td>0</td>
 <td>0</td>
 </tr>
-</tbody></table>
+<tr>
+<td><script type="math/tex">v_4</script></td>
+<td>0</td>
+<td>0</td>
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>将上述数据按行优先顺序储存在一个数组里，数组的长度为$N(N+1)/2$。<br>要访问节点<code>i,j(i行，j列)</code>之间的连接，可以访问数组的<code>i*(i+1)/2+j</code>位置。</p>
 <p>邻接矩阵是一种较为直观的表示方法，它的好处有：</p>
 <ol>
@@ -549,69 +547,60 @@
 <p>如：</p>
 <p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
 <p>上图的邻接表为：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th>$v_0$</th>
+<th><script type="math/tex">v_0</script></th>
 <th>3</th>
 <th>1</th>
 <th></th>
 </tr>
 </thead>
-<tbody><tr>
-<td>$v_1$</td>
+<tbody>
+<tr>
+<td><script type="math/tex">v_1</script></td>
 <td>0</td>
 <td>2</td>
 <td>3</td>
 </tr>
 <tr>
-<td>$v_2$</td>
+<td><script type="math/tex">v_2</script></td>
 <td>1</td>
 <td>4</td>
-<td></td>
 </tr>
 <tr>
-<td>$v_3$</td>
+<td><script type="math/tex">v_3</script></td>
 <td>1</td>
 <td>1</td>
-<td></td>
 </tr>
 <tr>
-<td>$v_4$</td>
+<td><script type="math/tex">v_4</script></td>
 <td>2</td>
-<td></td>
-<td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>这样的表示方法不会储存没有连接的无效信息，但是它把每条边都储存了两遍。对于稀疏的图而言，它的空间利用率较高，但是较为稠密的图会浪费较多空间。<br>邻接表可以方便的查找一个节点的所有直接相连节点，如果储存的图是无向图，它也可以方便的计算出节点的度。但是如果储存的是有向图，邻接表将无法方便的计算出节点的<strong>入度</strong>，同时它也无法方便地判断出给定节点对之间是否存在边。</p>
 <h2 id="图的建立"><a href="#图的建立" class="headerlink" title="图的建立"></a>图的建立</h2><p>上面写了图的两种表示，下面给出两种表示下图的建立。</p>
 <h3 id="邻接矩阵-1"><a href="#邻接矩阵-1" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>首先给出图的原型：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">graph</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexCount;                       <span class="comment">//顶点数</span></span><br><span class="line">    <span class="keyword">int</span> edgeCount;                         <span class="comment">//边数</span></span><br><span class="line">    WeightType graphMat[MaxSize][MaxSize]; <span class="comment">//邻接矩阵，元素表示边的权重</span></span><br><span class="line">    DataType data[MaxSize];                <span class="comment">//节点数据</span></span><br><span class="line">&#125; Graph;</span><br></pre></td></tr></table></figure>
-
 <p>图的建立首先需要建立一个只有节点没有边的图：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">(<span class="keyword">int</span> vertexCnt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Graph *graph = (Graph *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Graph));</span><br><span class="line">    graph-&gt;vertexCount = vertexCnt; <span class="comment">//初始化顶点数</span></span><br><span class="line">    graph-&gt;edgeCount = <span class="number">0</span>;           <span class="comment">//初始化边数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;vertexCount; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        graph-&gt;data[i] = <span class="number">0</span>; <span class="comment">//数据初始化，应该初始化为用户给定的数据</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; graph-&gt;vertexCount; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            graph-&gt;graphMat[i][j] = <span class="number">0</span>; <span class="comment">//连接初始化</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>然后把边插入到图中，边应该保存起点和终点以及权重数据：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Vertex;<span class="comment">//邻接矩阵中，节点可用坐标表示</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">edge</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Vertex start;      <span class="comment">//起点</span></span><br><span class="line">    Vertex end;        <span class="comment">//终点</span></span><br><span class="line">    WeightType weight; <span class="comment">//权重</span></span><br><span class="line">&#125; Edge;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (graph == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (edge-&gt;start &gt;= graph-&gt;vertexCount || edge-&gt;end &gt;= graph-&gt;vertexCount)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    graph-&gt;graphMat[edge-&gt;start][edge-&gt;end] = edge-&gt;weight;</span><br><span class="line">    <span class="comment">//对于无向图，还需要下面一句</span></span><br><span class="line">    graph-&gt;graphMat[edge-&gt;end][edge-&gt;start] = edge-&gt;weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>对于给定的边的集合<code>Edge edges[someNumber]</code>只要对其中每个边调用插入函数就可以了</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Edge edges[cnt];</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; cnt;++i)</span><br><span class="line">&#123;</span><br><span class="line">    insertEdge(graph,edges[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="邻接表-1"><a href="#邻接表-1" class="headerlink" title="邻接表"></a>邻接表</h3><p>邻接表表示的图原型有所不同，首先建立节点的原型，根据邻接表的结构，节点应该是一个链表。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">lnode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexPosition; <span class="comment">//邻接点下标，即顶点编号</span></span><br><span class="line">    WeightType weight;  <span class="comment">//边权重</span></span><br><span class="line">    LVertex *next;</span><br><span class="line">&#125; LVertex;</span><br></pre></td></tr></table></figure>
-
 <p>邻接表应该是一个指针数组，数组元素是链表指针：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">table</span></span></span><br><span class="line"><span class="class">&#123;</span>                         <span class="comment">//忽略顶点数据</span></span><br><span class="line">    LVertex *firstVertex; <span class="comment">//第一个顶点</span></span><br><span class="line">&#125; LTable;</span><br></pre></td></tr></table></figure>
-
 <p>根据上面两个结构实现图的结构原型：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">lgraph</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexCount;            <span class="comment">//顶点数</span></span><br><span class="line">    <span class="keyword">int</span> edgeCount;              <span class="comment">//边数</span></span><br><span class="line">    LTable graphTable[MaxSize]; <span class="comment">//邻接表</span></span><br><span class="line">&#125; LGraph;</span><br></pre></td></tr></table></figure>
-
 <p>邻接表实现的图建立第一步仍然是建立一个一定数量节点的空图：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LGraph *<span class="title">createGraph</span><span class="params">(<span class="keyword">int</span> vertexCount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LGraph *graph = (LGraph *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(LGraph));</span><br><span class="line">    graph-&gt;edgeCount = <span class="number">0</span>;</span><br><span class="line">    graph-&gt;vertexCount = vertexCount;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;vertexCount; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        graph-&gt;graphTable[i].firstVertex = <span class="literal">NULL</span>; <span class="comment">//邻接表链表初始化为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>然后将边插入，由于邻接表中只保存了头节点，因此插入方式采用头插法。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertLEdge</span><span class="params">(LGraph *graph, Edge *edge)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//建立要插入的节点</span></span><br><span class="line">    LVertex *vertex = (LVertex *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(LVertex));</span><br><span class="line">    vertex-&gt;vertexPosition = edge-&gt;end;</span><br><span class="line">    vertex-&gt;weight = edge-&gt;weight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//插入邻接表</span></span><br><span class="line">    vertex-&gt;next = graph-&gt;graphTable[edge-&gt;start].firstVertex;</span><br><span class="line">    graph-&gt;graphTable[edge-&gt;start].firstVertex = vertex;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//对于无向图，还需要插入边&lt;end,start&gt;</span></span><br><span class="line">    LVertex *sVertex = (Vertex *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Vertex));</span><br><span class="line">    sVertex-&gt;vertexPosition = edge-&gt;start;</span><br><span class="line">    sVertex-&gt;weight = edge-&gt;weight;</span><br><span class="line"></span><br><span class="line">    sVertex-&gt;next = graph-&gt;graphTable[edge-&gt;end].firstVertex;</span><br><span class="line">    graph-&gt;graphTable[edge-&gt;end].firstVertex = sVertex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>通过给定边数据建立完整图的过程与邻接矩阵无异。</p>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>图是复杂的数据结构，上面提到的邻接矩阵，邻接表只是两种常见的，较为直观的表示方法。同时也容易发现，它们两个都对特定问题存在一定的缺陷，对于特定的关于图的问题，往往需要选择其他更适合问题本身的图的表达方式。</p>
 
@@ -656,10 +645,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-03-31 19:38:59 / 修改时间：21:27:57" itemprop="dateCreated datePublished" datetime="2020-03-31T19:38:59+08:00">2020-03-31</time>
+              <time title="创建时间：2020-03-31 19:38:59" itemprop="dateCreated datePublished" datetime="2020-03-31T19:38:59+08:00">2020-03-31</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-08 16:04:13" itemprop="dateModified" datetime="2020-04-08T16:04:13+08:00">2020-04-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -705,8 +700,8 @@
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>计算机能够直接读取的数据是一串二进制数，人类能够直接读取的数据是各种字符。为了能够在计算机中储存字符，聪明的科学家发明了各种编码<code>(encode)</code>方式将字符编码到二进制数。比如众所周知的<code>ASCII</code>编码，就是一套基于拉丁语字母的编码方式。它的每个字符由<code>8 bits</code>二进制编数码而成，因此也是一种<strong>等长码</strong>。<br>考虑这样一种情形：在一篇若干字符组成的文章中，各个字符出现的频率一般是不同的。假如我们可以设计出一种<strong>不等长编码</strong>，让出现频率较高的字符使用更短的编码，出现频率较低的字符使用较长的编码，这样可以实现对文章的无损压缩。<br><strong>哈夫曼编码</strong>就是这样一种压缩编码。</p>
 <h1 id="哈夫曼树-Huffman-Tree"><a href="#哈夫曼树-Huffman-Tree" class="headerlink" title="哈夫曼树(Huffman Tree)"></a>哈夫曼树<code>(Huffman Tree)</code></h1><p>考虑下面这种判定树：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(num&lt;<span class="number">60</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(num &lt;<span class="number">70</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(num&lt;<span class="number">80</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(num&lt;<span class="number">90</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>如果对小规模的学生成绩进行5分制取整，可以使用上面这段愚蠢的程序。如果要处理的是较大规模的数据，那么上面的判断过程还有优化的空间。<br>根据上面的判断过程，对于<code>60</code>以下的数据，需要判断一次，<code>60-70</code>的数据，需要判断两次，<code>70-80</code>的数据，需要判断三次。。。。假如要处理的数据集对不同分段的数据有个出现频率的信息，比如：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -718,7 +713,8 @@
 <th>&gt;90</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>频率</td>
 <td>0.05</td>
 <td>0.15</td>
@@ -726,31 +722,28 @@
 <td>0.3</td>
 <td>0.1</td>
 </tr>
-</tbody></table>
-<p>那么上面的判断过程平均判断次数为：$0.05<em>1+0.15</em>2+0.4<em>3+0.3</em>4+0.1*4=3.15$次</p>
+</tbody>
+</table>
+</div>
+<p>那么上面的判断过程平均判断次数为：<script type="math/tex">0.05*1+0.15*2+0.4*3+0.3*4+0.1*4=3.15</script>次</p>
 <p>根据上面的频率表可以查看出，<code>70-90</code>的占比较大，而他们需要判断<code>3,4</code>次。如果让占比较大的只判断一次，而让占比较小的<code>&lt;60</code>分段判断4次，似乎可以减少平均判断次数，提高效率。例如改进为如下判断：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(num&lt;<span class="number">80</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">70</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(num&lt;<span class="number">60</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">90</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>则平均判断次数为：$0.05<em>3+0.15</em>3+0.4<em>2+0，3</em>2+0.1*2=2.2$次，优化了不少。这就是哈夫曼树的思想：根据元素出现的频率构造搜索树。</p>
-<h2 id="带权路径长度-WPL"><a href="#带权路径长度-WPL" class="headerlink" title="带权路径长度(WPL)"></a>带权路径长度<code>(WPL)</code></h2><p>假设二叉树有<code>n</code>个<strong>叶子节点</strong>，每个叶子节点的权值为$W_k$，从根节点到每个叶子节点的长度为$L_k$，则每个叶子节点的带权路径和就是$WPL = \Sigma W_kL_k$。<br><strong>哈夫曼树就是WPL最小的二叉树</strong>，又叫最优二叉树。</p>
+<p>则平均判断次数为：<script type="math/tex">0.05*3+0.15*3+0.4*2+0，3*2+0.1*2=2.2</script>次，优化了不少。这就是哈夫曼树的思想：根据元素出现的频率构造搜索树。</p>
+<h2 id="带权路径长度-WPL"><a href="#带权路径长度-WPL" class="headerlink" title="带权路径长度(WPL)"></a>带权路径长度<code>(WPL)</code></h2><p>假设二叉树有<code>n</code>个<strong>叶子节点</strong>，每个叶子节点的权值为<script type="math/tex">W_k</script>，从根节点到每个叶子节点的长度为<script type="math/tex">L_k</script>，则每个叶子节点的带权路径和就是<script type="math/tex">WPL = \sum W_kL_k</script>。<br><strong>哈夫曼树就是WPL最小的二叉树</strong>，又叫最优二叉树。</p>
 <h1 id="哈夫曼树的构造"><a href="#哈夫曼树的构造" class="headerlink" title="哈夫曼树的构造"></a>哈夫曼树的构造</h1><p>哈夫曼树的构造过程很简单，从一个带权节点的序列中取出权值最小的两个节点<code>a</code>和<code>b</code>，将<code>a</code>和<code>b</code>合并，并且构造一个新节点作为<code>a</code>和<code>b</code>的父节点，父节点的权值为<code>a,b</code>权值之和。然后把父节点放回到序列中，再取出权值最小的两个节点合并。一直做到序列为空，哈夫曼树就形成了。</p>
 <p>哈弗曼数结构上就是普通的二叉树，因此它的原型为：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">hafman</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    WeightType weight;</span><br><span class="line">    HuffmanTree *left;</span><br><span class="line">    HuffmanTree *right;</span><br><span class="line">&#125; HuffmanTree;</span><br></pre></td></tr></table></figure>
-
 <p>构造的过程需要取出权值最小的元素，不妨用<strong>最小堆<code>(MinHeap)</code></strong>储存节点，最小堆的实现与最大堆类似，可见<a href="http://blog.zhuwenq.icu:7010/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/">这篇博客</a>。如果使用排好序的序列也可以实现。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HuffmanTree *<span class="title">constructHuffmanTree</span><span class="params">(MinHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HuffmanTree *huffman;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; heap-&gt;size; ++i) <span class="comment">//size nodes need size-1 times insert</span></span><br><span class="line">    &#123;</span><br><span class="line">        huffman = (HuffmanTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(HuffmanTree));</span><br><span class="line">        huffman-&gt;left = deleteMin(heap);</span><br><span class="line">        huffman-&gt;right = deleteMin(heap);</span><br><span class="line">        huffman-&gt;weight = huffman-&gt;left-&gt;weight +</span><br><span class="line">                          huffman-&gt;right-&gt;weight;</span><br><span class="line">        insert(heap, huffman);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> deleteMin(heap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="哈夫曼树的特点"><a href="#哈夫曼树的特点" class="headerlink" title="哈夫曼树的特点"></a>哈夫曼树的特点</h2><p>根据哈夫曼树构造的过程，可以看出哈夫曼树具有以下特点：</p>
 <ol>
 <li>没有度为1的节点<br>哈夫曼树构造时总是两两合一，因此它的所有节点要么度为2，要么度为0</li>
-<li><code>n</code>个<strong>叶节点</strong>的哈夫曼树总结点数为<code>2n-1</code><br>二叉树的节点分为三类：度为0，1，2的三类节点。设度为<code>i</code>的节点数量为$n_i$，同时满足关系：$n_2=n_0-1$。因此在哈夫曼树中：叶节点数量<code>n</code>即为$n_0$，由于没有度为1的点，所以节点总数是$n_0+n_2=2n-1$。</li>
+<li><code>n</code>个<strong>叶节点</strong>的哈夫曼树总结点数为<code>2n-1</code><br>二叉树的节点分为三类：度为0，1，2的三类节点。设度为<code>i</code>的节点数量为<script type="math/tex">n_i</script>，同时满足关系：<script type="math/tex">n_2=n_0-1</script>。因此在哈夫曼树中：叶节点数量<code>n</code>即为<script type="math/tex">n_0</script>，由于没有度为1的点，所以节点总数是<script type="math/tex">n_0+n_2=2n-1</script>。</li>
 <li>哈夫曼树交换左右子树仍然是哈夫曼树</li>
 <li>对于同一组带权节点序列，可能存在不同构的两颗哈夫曼树，但是他们的<code>WPL</code>相同。</li>
 </ol>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>接着最前面提到的编码问题。</p>
-<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>是一种字符串的不等长编码方式，可以使字符串占用的空间最小。使用不等长编码有一个问题：给定一串编码，无法准确的把每个字符分割出来，不同的分割方式有不同的含义，即二义性问题。针对这个问题，又有聪明人提出了解决的方法：使用<strong>前缀码<code>(Prefix Code)</code></strong>。<br>所谓前缀码，即满足：任何字符的编码都不是其他字符编码的前缀。例如给出下面的三个字母的非前缀编码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a:  <span class="number">1</span></span><br><span class="line">b:  <span class="number">0</span></span><br><span class="line">c:  <span class="number">10</span></span><br></pre></td></tr></table></figure>
-<p>则字符<code>a</code>的编码<code>1</code>是字符<code>c</code>的编码<code>10</code>的前缀，当给出编码<code>10</code>时，无法分辨究竟是<code>ab</code>还是<code>c</code>。</p>
+<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>是一种字符串的不等长编码方式，可以使字符串占用的空间最小。使用不等长编码有一个问题：给定一串编码，无法准确的把每个字符分割出来，不同的分割方式有不同的含义，即二义性问题。针对这个问题，又有聪明人提出了解决的方法：使用<strong>前缀码<code>(Prefix Code)</code></strong>。<br>所谓前缀码，即满足：任何字符的编码都不是其他字符编码的前缀。例如给出下面的三个字母的非前缀编码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a:  <span class="number">1</span></span><br><span class="line">b:  <span class="number">0</span></span><br><span class="line">c:  <span class="number">10</span></span><br></pre></td></tr></table></figure><br>则字符<code>a</code>的编码<code>1</code>是字符<code>c</code>的编码<code>10</code>的前缀，当给出编码<code>10</code>时，无法分辨究竟是<code>ab</code>还是<code>c</code>。</p>
 <p>哈夫曼编码是在一棵二叉树上进行的，规定<code>0</code>代表左子树，<code>1</code>代表右子树，同时字符只储存在叶节点上。这样每个字符的编码实际上描述了从根节点到该字符所在叶节点的路径，同时任何一个字符的编码都不可能是其他字符编码的前缀。</p>
 <p>解决了二义性问题，哈夫曼编码下一个要解决的问题就是效率。结合哈夫曼树的思想，把字符串中每个字符的出现次数作为该字符的权值建立哈夫曼树，这样出现次数多的节点将位于较浅位置处的叶节点，其路径编码（<code>0</code>代表左，<code>1</code>代表右）长度也较短。这样就实现了对一个字符串或者一篇文章的字符不等长编码，也就实现了对字符串的压缩。</p>
 
@@ -841,7 +834,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>操作系统是用户与计算机沟通的桥梁，人只能通过操作系统的抽象才能实现对计算机的操作和控制。在操作系统里有一个很重要的内容叫任务管理，一般是把各个任务放进一个容器中，操作系统从容器里取出任务进行处理。如果使用队列储存任务，那么该操作系统的任务调度将具有队列的特点–先入先出<code>(First In First Out)</code>。<br>而多数情况下操作系统的任务都是有优先级的，比如有的任务负责监控操作系统抛出的异常，有的任务只负责打印一个<code>Hello World!</code>，那么显然的，异常监控的任务将拥有更高的优先级。<br>因此我们不能使用队列<code>(Queue)</code>来作为操作系统的任务容器，我们需要一个更加高级的，能够以优先级顺序取出元素的数据结构，这一数据结构就是 <strong>堆<code>(Heap)</code></strong> 或者也叫 <strong>优先队列<code>(Priority Queue)</code></strong>。</p>
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>操作系统是用户与计算机沟通的桥梁，人只能通过操作系统的抽象才能实现对计算机的操作和控制。在操作系统里有一个很重要的内容叫任务管理，一般是把各个任务放进一个容器中，操作系统从容器里取出任务进行处理。如果使用队列储存任务，那么该操作系统的任务调度将具有队列的特点—先入先出<code>(First In First Out)</code>。<br>而多数情况下操作系统的任务都是有优先级的，比如有的任务负责监控操作系统抛出的异常，有的任务只负责打印一个<code>Hello World!</code>，那么显然的，异常监控的任务将拥有更高的优先级。<br>因此我们不能使用队列<code>(Queue)</code>来作为操作系统的任务容器，我们需要一个更加高级的，能够以优先级顺序取出元素的数据结构，这一数据结构就是 <strong>堆<code>(Heap)</code></strong> 或者也叫 <strong>优先队列<code>(Priority Queue)</code></strong>。</p>
 <h1 id="堆-Heap-or-优先队列-Priority-Queue"><a href="#堆-Heap-or-优先队列-Priority-Queue" class="headerlink" title="堆(Heap) or 优先队列(Priority Queue)"></a>堆<code>(Heap)</code> or 优先队列<code>(Priority Queue)</code></h1><p>优先队列是一种特殊的队列，它的元素取出顺序是元素的优先级大小，而不是元素的放入顺序。</p>
 <h2 id="几种实现方式"><a href="#几种实现方式" class="headerlink" title="几种实现方式"></a>几种实现方式</h2><ul>
 <li>一般数组（无序）：<ul>
@@ -872,12 +865,8 @@
 <h3 id="最大堆"><a href="#最大堆" class="headerlink" title="最大堆"></a>最大堆</h3><p>注意到优先队列只有两个主要操作： <strong>插入<code>(Insert)</code></strong> 和 <strong>删除<code>(Delete)</code></strong><br>如果我们使用一颗二叉树储存优先队列的数据，应该着重优化更加困难的删除操作。考虑这样一种结构：二叉树的最大节点始终在它的根节点处，对每一棵子树而言亦如此，那么删除操作将始终在根节点进行。为了避免二叉树变斜，我们使用完全二叉树储存数据，这样就形成了一个 <strong>最大堆<code>(MaxHeap)</code></strong></p>
 <p>最大堆是一颗 <a href="http://blog.zhuwenq.icu:7010/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/"><strong>完全二叉树<code>(Complete Binary Tree)</code></strong></a>，同时它的每个节点比它的左右子树中每个节点大（比子树小称为最小树）。<br>如下图就是一个最大堆：</p>
 <p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/1.png" alt></p>
-<h1 id="最大堆的实现"><a href="#最大堆的实现" class="headerlink" title="最大堆的实现"></a>最大堆的实现</h1><p><a href="http://blog.zhuwenq.icu:7010/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/">数据结构–二叉树和二叉树的储存结构</a>中说过，对于完全二叉树，它具有父节点序号是子节点序号的二分之一这一性质，因此完全二叉树内部可以使用数组实现，同时数组实现的完全二叉树具有很高的效率也很方便操作，只是容量一般是固定的，空间效率较低。数据结构原型如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">maxheap</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    KeyType *data; <span class="comment">//堆的数据</span></span><br><span class="line">    <span class="keyword">int</span> size;      <span class="comment">//当前元素个数</span></span><br><span class="line">    <span class="keyword">int</span> capacity;  <span class="comment">//堆的最大容量</span></span><br><span class="line">&#125; MaxHeap;</span><br></pre></td></tr></table></figure>
-
-<p>主要操作有：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span>;  <span class="comment">//创建空堆，最大空间为maxSize</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(MaxHeap *heap)</span></span>;               <span class="comment">//判断堆是否已满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(MaxHeap *heap)</span></span>;              <span class="comment">//判断堆是否为空</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(MaxHeap *heap, KeyType key)</span></span>; <span class="comment">//把元素key插入堆</span></span><br><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span>;        <span class="comment">//删除并返回堆中的最大值</span></span><br></pre></td></tr></table></figure>
-<p>下面只讨论插入和删除操作 <del>（今天就不水其他操作了）</del></p>
+<h1 id="最大堆的实现"><a href="#最大堆的实现" class="headerlink" title="最大堆的实现"></a>最大堆的实现</h1><p><a href="http://blog.zhuwenq.icu:7010/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/">数据结构—二叉树和二叉树的储存结构</a>中说过，对于完全二叉树，它具有父节点序号是子节点序号的二分之一这一性质，因此完全二叉树内部可以使用数组实现，同时数组实现的完全二叉树具有很高的效率也很方便操作，只是容量一般是固定的，空间效率较低。数据结构原型如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">maxheap</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    KeyType *data; <span class="comment">//堆的数据</span></span><br><span class="line">    <span class="keyword">int</span> size;      <span class="comment">//当前元素个数</span></span><br><span class="line">    <span class="keyword">int</span> capacity;  <span class="comment">//堆的最大容量</span></span><br><span class="line">&#125; MaxHeap;</span><br></pre></td></tr></table></figure></p>
+<p>主要操作有：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span>;  <span class="comment">//创建空堆，最大空间为maxSize</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(MaxHeap *heap)</span></span>;               <span class="comment">//判断堆是否已满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(MaxHeap *heap)</span></span>;              <span class="comment">//判断堆是否为空</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(MaxHeap *heap, KeyType key)</span></span>; <span class="comment">//把元素key插入堆</span></span><br><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span>;        <span class="comment">//删除并返回堆中的最大值</span></span><br></pre></td></tr></table></figure><br>下面只讨论插入和删除操作 <del>（今天就不水其他操作了）</del></p>
 <h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>一般的数组实现的完全二叉树可以很方便的插入。我们在原型中维护有表示二叉树当前元素个数的<code>tag</code>，并且完全二叉树的节点下标有简单的层序规律（自上而下，自左而右）。因此可以直接把元素插入到数组的<code>size + 1</code>处。<br>然而作为一个最大堆，这样的插入可能会破坏最大堆的另一个原则：根节点总是大于左右子树节点。因此，在插入到<code>size + 1</code>位置后，还需要判断该原则是否被破坏，如果被破坏则需要修复这一原则。</p>
 <p>例如上面图片中的堆如果插入元素<code>2</code>，被插入的位置下标为<code>10</code>，是下标为<code>5</code>的节点<code>3</code>的左子树位置。同时<code>2</code>小于<code>3</code>，这个插入不会破坏根最大原则。</p>
 <p>假如插入的元素是<code>5</code>，则会因为<code>5</code>大于<code>3</code>而需要对最大堆进行修复。修复的过程也很简单，只要把节点<code>5</code>与节点<code>3</code>交换位置就行了（插入的节点与父节点交换位置）。假如插入的元素是<code>91</code>，则需要一直交换到整棵树的根节点处。</p>
@@ -885,7 +874,6 @@
 <p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/3.png" alt></p>
 <p>这个实现采用了另一个方案，插入时先根据根最大原则判断合适的位置在哪里，在判断的同时把不合适的节点统统后移，为新插入的节点腾出位置。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(MaxHeap *heap, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//if heap is NULL,do nothing</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isFull(heap))</span><br><span class="line">        <span class="keyword">return</span>;                  <span class="comment">//if heap is full,do nothing</span></span><br><span class="line">    <span class="keyword">int</span> position = ++heap-&gt;size; <span class="comment">//insert position should be 1 after size</span></span><br><span class="line">    <span class="comment">//when break out loop,heap-&gt;data[position]&gt;key &amp;&amp; position is the right position</span></span><br><span class="line">    <span class="keyword">for</span> (; heap-&gt;data[position] &lt; key; position /= <span class="number">2</span>)</span><br><span class="line">    &#123; <span class="comment">//in loop,heap-&gt;data[position]&gt;key,move data down</span></span><br><span class="line">        heap-&gt;data[position] = heap-&gt;data[position / <span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    heap-&gt;data[position] = key; <span class="comment">//insert key to the right pos</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>最大堆删除的位置是确定的：总是二叉树的根节点位置。然而不能直接地就把根节点删除掉，因为一方面根节点在数组中的下标是<code>0</code>，把它删除了以后后面所有的元素都要前移，时间复杂度是<code>O(n)</code>（如果不移迟早空间会被全部丢失）；另一方面是因为我们有更好的选择：删掉数组尾部位置的节点，然后把尾部节点的元素拿到根节点替换原来的根节点。这样删除过程可以简述为：删掉尾部节点，替换根节点。</p>
 <p>与插入过程类似，根节点被尾节点替换之后最大堆的根最大原则无法得到保证。<br>如下图最大堆：</p>
 <p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/4.png" alt></p>
@@ -895,14 +883,10 @@
 <p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/6.png" alt></p>
 <p>下面的实现采用了与插入类似的方案：先不做替换，而是先让不合适的节点移位，腾出合适的节点把被删掉的尾部节点插入。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isEmpty(heap))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    KeyType target = heap-&gt;data[<span class="number">1</span>];</span><br><span class="line">    KeyType temp = heap-&gt;data[heap-&gt;size--];</span><br><span class="line">    <span class="keyword">int</span> child = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> parent = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (; parent * <span class="number">2</span> &lt;= heap-&gt;size; parent = child)</span><br><span class="line">    &#123;</span><br><span class="line">        child = parent * <span class="number">2</span>; <span class="comment">//left child index,may overflow</span></span><br><span class="line">        <span class="keyword">if</span> (child &lt;= heap-&gt;size &amp;&amp; heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>])</span><br><span class="line">        &#123; <span class="comment">//if right child is bigger,turn to right child</span></span><br><span class="line">            child++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[child] &lt;= temp)</span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">//if order is corrict,break</span></span><br><span class="line">        <span class="keyword">else</span>       <span class="comment">//replace nodes</span></span><br><span class="line">            heap-&gt;data[parent] = heap-&gt;data[child];</span><br><span class="line">    &#125;</span><br><span class="line">    heap-&gt;data[parent] = temp; <span class="comment">//put temp to right position</span></span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>或者也可以直接把尾部节点放在根节点，然后从上到下判断顺序是否正确，不正确就交换位置。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isEmpty(heap))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    KeyType target = heap-&gt;data[<span class="number">1</span>];</span><br><span class="line">    heap-&gt;data[<span class="number">1</span>] = heap-&gt;data[heap-&gt;size--];</span><br><span class="line">    <span class="keyword">int</span> child = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i * <span class="number">2</span> &lt; heap-&gt;size; i = child)</span><br><span class="line">    &#123;</span><br><span class="line">        child = i * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>])</span><br><span class="line">            child++;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[i] &lt; heap-&gt;data[child])</span><br><span class="line">            swap(&amp;heap-&gt;data[i], &amp;heap-&gt;data[child]);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>最后水一水从一个已知序列建堆的操作：假如给定一个序列（无序），使用它的数据建立一个非空堆。<br>类似如下的操作：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType * <span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span>;</span><br></pre></td></tr></table></figure><br>有两种思路，一种是先建立一个空堆，然后把元素一个一个插入到空堆中，这种方法的时间复杂度是<code>O(nlog n)</code>。另一种是将序列中的元素直接放在一个数组里，按照完全二叉树的构造，这个数组就是一个完全二叉树。然后对完全二叉树中的每个父节点进行修正，最终得到一个最大堆，这个操作是线性的复杂度<code>O(n)</code>(不包括数组拷贝的时间)。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType *<span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    MaxHeap *heap = (MaxHeap*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MaxHeap));</span><br><span class="line">    heap-&gt;data = (KeyType*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(KeyType) * (size + <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;size;++i)&#123;</span><br><span class="line">        heap-&gt;data[i] = <span class="built_in">list</span>[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> parent = heap-&gt;size / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">for</span>(;parent &gt; <span class="number">0</span>;parent--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> child = parent * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(child + <span class="number">1</span> &lt;= heap-&gt;size)</span><br><span class="line">        &#123;</span><br><span class="line">            child += heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(heap-&gt;data[parent] &lt; heap-&gt;data[child])</span><br><span class="line">            swap(&amp;heap-&gt;data[parent],&amp;heap-&gt;data[child]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>最后水一水从一个已知序列建堆的操作：假如给定一个序列（无序），使用它的数据建立一个非空堆。<br>类似如下的操作：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType * <span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>有两种思路，一种是先建立一个空堆，然后把元素一个一个插入到空堆中，这种方法的时间复杂度是<code>O(nlog n)</code>。另一种是将序列中的元素直接放在一个数组里，按照完全二叉树的构造，这个数组就是一个完全二叉树。然后对完全二叉树中的每个父节点进行修正，最终得到一个最大堆，这个操作是线性的复杂度<code>O(n)</code>(不包括数组拷贝的时间)。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType *<span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    MaxHeap *heap = (MaxHeap*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MaxHeap));</span><br><span class="line">    heap-&gt;data = (KeyType*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(KeyType) * (size + <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;size;++i)&#123;</span><br><span class="line">        heap-&gt;data[i] = <span class="built_in">list</span>[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> parent = heap-&gt;size / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">for</span>(;parent &gt; <span class="number">0</span>;parent--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> child = parent * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(child + <span class="number">1</span> &lt;= heap-&gt;size)</span><br><span class="line">        &#123;</span><br><span class="line">            child += heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(heap-&gt;data[parent] &lt; heap-&gt;data[child])</span><br><span class="line">            swap(&amp;heap-&gt;data[parent],&amp;heap-&gt;data[child]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -952,7 +936,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 11:31:16" itemprop="dateModified" datetime="2020-03-28T11:31:16+08:00">2020-03-28</time>
+                <time title="修改时间：2020-04-08 16:05:18" itemprop="dateModified" datetime="2020-04-08T16:05:18+08:00">2020-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -999,16 +983,16 @@
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>假如搜索一颗<a href="http://blog.zhuwenq.icu:7010/2020/03/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/">二叉搜索树<code>(Binary Search Tree)</code></a>中的某个节点，那么搜索的最坏次数将是该二叉搜索树的高度。再假如被搜索的二叉树是一颗斜二叉树，那么搜索的最坏情况将需要树的节点个数<code>n</code>次。如果二叉搜索树的高度尽可能小，将大大降低搜索的时间复杂度，相比斜二叉树的最坏时间复杂度为<code>O(n)</code>，较为平衡的二叉树将把时间复杂度降低为<code>O(log n)</code>。<br>按照高度尽可能低或者左右尽可能平衡来排列节点的<strong>二叉搜索树</strong>就是<strong>平衡二叉树<code>(Balance Binary Tree) or (AVL Tree)</code></strong>(AVL是以发明这一数据结构的科学家命名的)。</p>
 <h2 id="平衡因子"><a href="#平衡因子" class="headerlink" title="平衡因子"></a>平衡因子</h2><p><strong>平衡因子<code>(Balance Factor)</code></strong>表示一个树节点的平衡程度，它的值<code>BF(T)</code>由节点<code>T</code>的左右子树高度差决定：<code>BF(T) = Hl(T) - Hr(T)</code></p>
 <h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树的任一节点它的左右子树高度差即平衡因子的绝对值不超过1，即<code>|BF(T)|&lt;=1</code></p>
-<h2 id="平衡二叉树的高度"><a href="#平衡二叉树的高度" class="headerlink" title="平衡二叉树的高度"></a>平衡二叉树的高度</h2><p>设$n_h$为高度为$h$的平衡二叉树最小节点数，则对于该二叉树的任一节点，其左右子树的高度分别为$h-1$和$h-2$，其节点数分别为$n_{h-1}$和$n_{h-2}$，则该二叉树的节点总数为$n_h = n_{h-1}+n_{h-2}+1$。该递推公式推广到该二叉树的任一子树都成立，因此，高度为<code>h</code>的平衡二叉树节点数满足<strong>类斐波那契数列的递推公式</strong>。<br>设斐波那契数列的第<code>h</code>项值为$F_h = F_{h-1}+F_{h-2}$，则$n_h=F_h-1$。<br>又因为$F_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h$，<br>所以：$n_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h-1$<br>所以，对于节点数为<code>n</code>的平衡二叉树，它的高度是$\log_2 n$数量级的，搜索的最坏时间复杂度是<code>O(log n)</code></p>
+<h2 id="平衡二叉树的高度"><a href="#平衡二叉树的高度" class="headerlink" title="平衡二叉树的高度"></a>平衡二叉树的高度</h2><p>设<script type="math/tex">n_h</script>为高度为<script type="math/tex">h</script>的平衡二叉树最小节点数，则对于该二叉树的任一节点，其左右子树的高度分别为<script type="math/tex">h-1</script>和<script type="math/tex">h-2</script>，其节点数分别为<script type="math/tex">n_{h-1}</script>和<script type="math/tex">n_{h-2}</script>，则该二叉树的节点总数为<script type="math/tex">n_h = n_{h-1}+n_{h-2}+1</script>。该递推公式推广到该二叉树的任一子树都成立，因此，高度为<code>h</code>的平衡二叉树节点数满足<strong>类斐波那契数列的递推公式</strong>。<br>设斐波那契数列的第<code>h</code>项值为<script type="math/tex">F_h = F_{h-1}+F_{h-2}</script>，则<script type="math/tex">n_h=F_h-1</script>。<br>又因为<script type="math/tex">F_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h</script>，<br>所以：<script type="math/tex">n_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h-1</script><br>所以，对于节点数为<code>n</code>的平衡二叉树，它的高度是<script type="math/tex">\log_2 n</script>数量级的，搜索的最坏时间复杂度是<code>O(log n)</code></p>
 <p>由此可见，平衡二叉树是性能很高的二叉搜索树。</p>
 <h2 id="平衡二叉树的自平衡"><a href="#平衡二叉树的自平衡" class="headerlink" title="平衡二叉树的自平衡"></a>平衡二叉树的自平衡</h2><p>由于平衡二叉树也是一颗二叉搜索树，它在节点插入时仍需满足二叉搜索树左小右大的规则。这种情况下难免会破坏原有的平衡（平衡因子会改变）。如：</p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/1.png" alt></p>
 <p>对这颗树而言，它是平衡的，除最倒数第二层节点外其他节点的平衡因数都是<code>0</code>。此时如果要插入元素<code>8</code>，根据二叉搜索树的插入规则，节点将被插入到节点<code>7</code>的右子节点位置，不会破坏树的平衡。<br>如果被插入的元素是<code>79</code>，则会被插入到节点<code>78</code>的右子节点位置，此时节点<code>71</code>的平衡因数将变为<code>-2</code>，节点<code>50</code>的平衡因数也会变为<code>-2</code>，平衡性被破坏。<br>我们称平衡性被破坏的节点为<strong>发现者</strong>，破坏平衡性的节点为<strong>破坏者</strong>。根据<strong>破坏者</strong>与<strong>发现者</strong>的相对位置，把破坏平衡的插入分为4种情况：</p>
 <ol>
-<li><code>RR插入</code>–破坏者位于发现者的<strong>右子树</strong>的<strong>右边</strong></li>
-<li><code>LL插入</code>–破坏者位于发现者的<strong>左子树</strong>的<strong>左边</strong></li>
-<li><code>RL插入</code>–破坏者位于发现者的<strong>右子树</strong>的<strong>左边</strong></li>
-<li><code>LR插入</code>–破坏者位于发现者的<strong>左子树</strong>的<strong>右边</strong></li>
+<li><code>RR插入</code>—破坏者位于发现者的<strong>右子树</strong>的<strong>右边</strong></li>
+<li><code>LL插入</code>—破坏者位于发现者的<strong>左子树</strong>的<strong>左边</strong></li>
+<li><code>RL插入</code>—破坏者位于发现者的<strong>右子树</strong>的<strong>左边</strong></li>
+<li><code>LR插入</code>—破坏者位于发现者的<strong>左子树</strong>的<strong>右边</strong></li>
 </ol>
 <p>对这四种情况分别进行处理，把被破坏的平衡树重新构造成平衡二叉树，就是平衡二叉树的自平衡。四种处理方式分别为：<code>RR旋转</code>，<code>LL旋转</code>，<code>RL旋转</code>，<code>LR旋转</code>，旋转的结果需要满足二叉查找树的规则。</p>
 <h3 id="RR旋转"><a href="#RR旋转" class="headerlink" title="RR旋转"></a><code>RR旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/2.png" alt></p>
@@ -1018,7 +1002,6 @@
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/4.png" alt></p>
 <p>过程可以简述为：使用发现者<code>F</code>的右子节点<code>r</code>代替发现者，然后把发现者<code>F</code>挂到<code>r</code>的左子节点处，同时把<code>r</code>的左子节点（可以为空）重新挂在<code>F</code>的右子节点处。新插入的节点保持不动。最后返回占据原<code>F</code>节点位置的节点（应该为<code>r</code>）。（有顺口溜内味了）</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注意：此函数不应单独使用，它应该配合插入操作使用</span></span><br><span class="line"><span class="comment">//      因为单单将finder的子树旋转是不够的，还需要把返回的节点挂载到原树上</span></span><br><span class="line"><span class="function">AVLTree *<span class="title">singleRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;                                    <span class="comment">//tree is the finder</span></span><br><span class="line">    AVLTree *replacer = tree-&gt;right; <span class="comment">//right child of finder</span></span><br><span class="line">    tree-&gt;right = replacer-&gt;left;    <span class="comment">//right child's left child to finder's right child</span></span><br><span class="line">    replacer-&gt;left = tree;           <span class="comment">//finder to right child's left child</span></span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="LL旋转"><a href="#LL旋转" class="headerlink" title="LL旋转"></a><code>LL旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/5.png" alt></p>
 <p>类似的，假设上图所示的平衡二叉树要插入元素<code>2</code></p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/6.png" alt></p>
@@ -1026,7 +1009,6 @@
 <p>与<code>RR插入</code>类似，发现者的左子树所有节点都小于发现者，因此可以用发现者的左子节点代替发现者的位置，然后把发现者挂在其左子节点的右子节点处（发现者一定大于它的左子节点），同时把发现者的左子节点的右子树挂在发现者的左子节点位置。</p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/7.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">singleLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree *replacer = tree-&gt;left;</span><br><span class="line">    tree-&gt;left = replacer-&gt;right;</span><br><span class="line">    replacer-&gt;right = tree;</span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="RL旋转"><a href="#RL旋转" class="headerlink" title="RL旋转"></a><code>RL旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/10.png" alt></p>
 <p>如上平衡二叉树，插入元素<code>49</code></p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/11.png" alt></p>
@@ -1036,7 +1018,6 @@
 <p>然后对节点<code>F</code>做左旋。</p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/13.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">rightLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;right = singleRightRotation(tree-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> singleLeftRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="LR旋转"><a href="#LR旋转" class="headerlink" title="LR旋转"></a><code>LR旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/14.png" alt></p>
 <p>上图所示树插入元素<code>25</code></p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/15.png" alt></p>
@@ -1045,10 +1026,8 @@
 <p>再对节点<code>30</code>做右旋</p>
 <p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/17.png" alt></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">leftRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;left = singleLeftRotation(tree-&gt;left);</span><br><span class="line">    <span class="keyword">return</span> singleRightRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h3><p>在上述四种旋转的基础上，可以实现新的具有自平衡特点的插入操作。插入之后判断其父节点的平衡因子，如果平衡被破坏，使用对应的旋转操作恢复平衡。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">insert</span><span class="params">(AVLTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="comment">//插入完成后该程序的递归过程会从下而上检查父节点的平衡性</span></span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tree = (AVLTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(AVLTree));</span><br><span class="line">        tree-&gt;key = key;</span><br><span class="line">        tree-&gt;left = tree-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">    &#123; <span class="comment">//insert left sub tree</span></span><br><span class="line">        tree-&gt;left = insert(tree-&gt;left, key);</span><br><span class="line">        <span class="keyword">if</span> (getHeight(tree-&gt;left) - getHeight(tree-&gt;right) == <span class="number">2</span>)</span><br><span class="line">        &#123; <span class="comment">//balance broken</span></span><br><span class="line">            <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">            &#123; <span class="comment">//single left rotation</span></span><br><span class="line">                tree = singleLeftRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123; <span class="comment">//signle left right rotation</span></span><br><span class="line">                tree = leftRightRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        tree-&gt;right = insert(tree-&gt;right, key);</span><br><span class="line">        <span class="keyword">if</span> (getHeight(tree-&gt;right) - getHeight(tree-&gt;left) == <span class="number">2</span>)</span><br><span class="line">        &#123; <span class="comment">//balance broken</span></span><br><span class="line">            <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">            &#123; <span class="comment">//single right rotation</span></span><br><span class="line">                tree = singleRightRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123; <span class="comment">//right left rotation</span></span><br><span class="line">                tree = rightLeftRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(getHeight(tree-&gt;left), getHeight(tree-&gt;right)) + <span class="number">1</span>; <span class="comment">//update height</span></span><br><span class="line">    <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>👴怀疑删除操作也可能破坏平衡性，但是👴困了。</p>
 
       
@@ -1144,7 +1123,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>前面介绍树的博文<a href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">树和树的表示</a>提到了一种序列搜索算法–二分查找<code>(Binary Search)</code>算法，并且提到了其搜索过程实际上是一种树状结构。二分查找法是一种对静态数据的查找算法，它的搜索对象是一个长度一定的序列（需要在算法的入参中指定搜索的起始位置）。对于动态的序列，经常需要对其进行插入和删除的操作。如果事先把数据组织成树状的结构，它的动态插入删除查找等操作将十分便利。并且对于一个较为平衡的二叉树而言,各项操作也有很好的效率</p>
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>前面介绍树的博文<a href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">树和树的表示</a>提到了一种序列搜索算法—二分查找<code>(Binary Search)</code>算法，并且提到了其搜索过程实际上是一种树状结构。二分查找法是一种对静态数据的查找算法，它的搜索对象是一个长度一定的序列（需要在算法的入参中指定搜索的起始位置）。对于动态的序列，经常需要对其进行插入和删除的操作。如果事先把数据组织成树状的结构，它的动态插入删除查找等操作将十分便利。并且对于一个较为平衡的二叉树而言,各项操作也有很好的效率</p>
 <h1 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h1><p>二叉搜索树<code>(Binary Search Tree)</code>又称为二叉查找树。二叉搜索树本质上是一颗二叉树，在非空时它具有以下性质：</p>
 <ol>
 <li>左子树的所有键值<code>key</code>小于根节点键值</li>
@@ -1152,7 +1131,6 @@
 <li>左子树和右子树也是二叉搜索树<br>（每个节点的键值是唯一的）</li>
 </ol>
 <h2 id="特别操作"><a href="#特别操作" class="headerlink" title="特别操作"></a>特别操作</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从二叉搜索树中找出键值为key的节点地址</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最小键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最大键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMax</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//向二叉搜索树插入键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//从二叉搜索树删除键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ul>
 <li><p><code>find</code><br>查找的操作较为简单<br>若树为空，返回<code>NULL</code><br>若树非空，将<code>key</code>与根节点的<code>key</code>进行比较：</p>
 <ul>
@@ -1176,10 +1154,8 @@
 </li>
 <li><p><code>delete</code><br>删除操作是最为复杂的，因为被删除的节点处在不同位置时，操作的行为也是不同的。首先找到要删除的节点</p>
 <ol>
-<li><p>若删除的节点是叶节点，可以直接将其置为<code>NULL</code></p>
-</li>
-<li><p>若删除的节点有一个子节点，可以使用它的孩子节点代替被删除的节点</p>
-</li>
+<li>若删除的节点是叶节点，可以直接将其置为<code>NULL</code></li>
+<li>若删除的节点有一个子节点，可以使用它的孩子节点代替被删除的节点</li>
 <li><p>若删除的节点有两个子节点，则有两种选择：</p>
 <ol>
 <li>使用被删除节点的左子树的最大值节点代替被删除节点</li>
@@ -1187,7 +1163,6 @@
 </ol>
 <p>然后还需要删除左子树/右子树中那个拿去代替被删除节点的节点，过程较为复杂，删除子树节点的操作需要递归完成<del>（其他的实现不会😁）</del></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType *key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinarySearchTree *target = <span class="built_in">find</span>(tree, key);</span><br><span class="line">    <span class="keyword">if</span> (target == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (target-&gt;left &amp;&amp; target-&gt;right)</span><br><span class="line">    &#123;                                              <span class="comment">//both left child and right child are valid</span></span><br><span class="line">        KeyType <span class="built_in">min</span> = findMin(target-&gt;right)-&gt;key; <span class="comment">//or findMax(target-&gt;left)</span></span><br><span class="line">        target-&gt;key = <span class="built_in">min</span>;</span><br><span class="line">        <span class="keyword">delete</span> (target-&gt;right, <span class="built_in">min</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinarySearchTree *temp = target; <span class="comment">//copy target address,it need to be freed</span></span><br><span class="line">        <span class="keyword">if</span> (target-&gt;left != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only left child</span></span><br><span class="line">            target = target-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (target-&gt;right != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only right child</span></span><br><span class="line">            target = target-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//else no child,just free the node will be fine</span></span><br><span class="line">        <span class="built_in">free</span>(temp);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 </li>
 </ol>
 </li>
@@ -1287,13 +1262,14 @@
 <li><p>在命令行输入命令 <code>mkdir &quot;%USERPROFILE%\AppData\Local\terminal&quot;</code>创建文件夹，然后找个好看的图标(<code>ico</code>)文件放进去，它将出现在右键菜单的头部作为图标。如果找不到好康的，也可以到<a href="https://github.com/microsoft/terminal/blob/master/res/terminal.ico">这里</a>下载<code>Windows Terminal</code>默认的图标。</p>
 </li>
 <li><p>新建文件<code>wt.reg</code>，把下面的代码写入保存：</p>
-<pre><code class="Bash">Windows Registry Editor Version 5.00
+<pre><code class="lang-Bash"> Windows Registry Editor Version 5.00
 
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
-@=<span class="string">"Open terminal here"</span>
-<span class="string">"Icon"</span>=<span class="string">"%USERPROFILE%\\AppData\\Local\\terminal\\terminal.ico"</span>
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt\<span class="built_in">command</span>]
-@=<span class="string">"C:\\Users\\{your user name}\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"</span></code></pre>
+ [HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
+ @=&quot;Open terminal here&quot;
+ &quot;Icon&quot;=&quot;%USERPROFILE%\\AppData\\Local\\terminal\\terminal.ico&quot;
+ [HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
+ @=&quot;C:\\Users\\{your user name}\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe&quot;
+</code></pre>
 <p> 其中第一个<code>@</code>处是将要出现在右键菜单的提示语<br> 它的下一句是图标的路径<br> 最后一句是<code>Windows Terminal</code>的程序路径，他需要是绝对路径，因此请把<code>{your user name}</code>换成你的<code>Windows</code>用户名。</p>
 <p> 双击运行，添加注册表。</p>
 </li>
@@ -1401,15 +1377,14 @@
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>树是一种复杂的数据结构，同时也是一种重要的二维结构。树的遍历过程实际上就是一种把二维结构转换为一维序列即线性化的过程。</p>
 <h1 id="四种遍历"><a href="#四种遍历" class="headerlink" title="四种遍历"></a>四种遍历</h1><p>树的主要遍历顺序有四种:</p>
 <ol>
-<li>前序遍历<code>(PreOrderTraversal)</code>：根节点–&gt;左子树–&gt;右子树</li>
-<li>中序遍历<code>(InOrderTraversal)</code>：左子树–&gt;根节点–&gt;右子树</li>
-<li>后序遍历<code>(PostOrderTraversal)</code>：左子树–&gt;右子树–&gt;根节点</li>
-<li>层序遍历<code>(LevelOrderTraversal)</code>：从上到下–&gt;从左到右</li>
+<li>前序遍历<code>(PreOrderTraversal)</code>：根节点—&gt;左子树—&gt;右子树</li>
+<li>中序遍历<code>(InOrderTraversal)</code>：左子树—&gt;根节点—&gt;右子树</li>
+<li>后序遍历<code>(PostOrderTraversal)</code>：左子树—&gt;右子树—&gt;根节点</li>
+<li>层序遍历<code>(LevelOrderTraversal)</code>：从上到下—&gt;从左到右</li>
 </ol>
-<h1 id="遍历实现"><a href="#遍历实现" class="headerlink" title="遍历实现"></a>遍历实现</h1><p>抽象一个函数<code>void visit(BinaryTree *tree)</code>用来访问节点：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">treeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    BinaryTree *left;</span><br><span class="line">    BinaryTree *right;</span><br><span class="line">&#125; BinaryTree;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(BinaryTree *tree)</span></span>; <span class="comment">//访问节点</span></span><br></pre></td></tr></table></figure>
+<h1 id="遍历实现"><a href="#遍历实现" class="headerlink" title="遍历实现"></a>遍历实现</h1><p>抽象一个函数<code>void visit(BinaryTree *tree)</code>用来访问节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">treeNode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    BinaryTree *left;</span><br><span class="line">    BinaryTree *right;</span><br><span class="line">&#125; BinaryTree;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(BinaryTree *tree)</span></span>; <span class="comment">//访问节点</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="递归实现"><a href="#递归实现" class="headerlink" title="递归实现"></a>递归实现</h2><ol>
-<li><p>前序遍历<br>前序遍历首先访问根节点，然后访问左子树的根节点，然后访问左子树的左子树的根节点…直到左子树一路向左访问完毕，它将自下而上访问右子树。对于右子树，它也将贯彻根–左–右的顺序一路访问，直到遍历完成。<br>递归实现如下：</p>
+<li><p>前序遍历<br>前序遍历首先访问根节点，然后访问左子树的根节点，然后访问左子树的左子树的根节点…直到左子树一路向左访问完毕，它将自下而上访问右子树。对于右子树，它也将贯彻根—左—右的顺序一路访问，直到遍历完成。<br>递归实现如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree)</span><br><span class="line">    &#123;                                  <span class="comment">//if empty tree or reaches the leaf,exit</span></span><br><span class="line">        visit(tree);                   <span class="comment">//pay a visit to the root</span></span><br><span class="line">        preOrderTraversal(tree-&gt;left); <span class="comment">//pre order,traversal left first</span></span><br><span class="line">        preOrderTraversal(tree-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>中序遍历<br>中序遍历先访问左子树，然后访问根节点，最后访问右子树。因此可以将前序递归的访问移到对左子树递归的后面简单的实现。</p>
@@ -1417,30 +1392,26 @@
 </li>
 <li><p>后序遍历<br>同样的，可以把访问语句移到访问右子树的后面。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree)</span><br><span class="line">    &#123;</span><br><span class="line">        postOrderTraversal(tree-&gt;left);</span><br><span class="line">        postOrderTraversal(tree-&gt;right);</span><br><span class="line">        visit(tree);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>层序遍历不具有明显的递归特征，暂不讨论其递归实现</p>
-</li>
+<li>层序遍历不具有明显的递归特征，暂不讨论其递归实现</li>
 </ol>
 <h2 id="非递归实现"><a href="#非递归实现" class="headerlink" title="非递归实现"></a>非递归实现</h2><p>众所周知，递归的程序虽然逻辑清晰代码简单，但是其运行起来有许多不稳定因素。由于函数在构建时是以函数栈的形式储存函数信息的，因此在处理较大规模的输入时，递归的程序常常会发生爆栈的严重异常。<br>同时，递归实现的遍历本质上是把节点压入堆栈并在适当的时机弹出，因此，可以考虑使用<strong>堆栈<code>(Stack)</code></strong>实现二叉树的遍历。<br>首先实现一个大致的堆栈，关于堆栈的详细介绍和实现可见<a href="http://blog.zhuwenq.icu:7010/2020/03/20/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86%E6%A0%88/">这篇博客</a></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ElementType int</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ElementType data;</span><br><span class="line">    Stack *next;</span><br><span class="line">&#125; Stack;</span><br><span class="line"></span><br><span class="line"><span class="function">Stack *<span class="title">createEmpty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *top = (Stack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Stack));</span><br><span class="line">    top-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;next == <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Stack *<span class="built_in">stack</span>, ElementType item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *temp = (Stack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Stack));</span><br><span class="line">    temp-&gt;data = item;</span><br><span class="line">    temp-&gt;next = <span class="built_in">stack</span>-&gt;next;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;next = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ElementType <span class="title">pop</span><span class="params">(Stack *<span class="built_in">stack</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//error!Empty stack</span></span><br><span class="line">    &#125;</span><br><span class="line">    ElementType targetValue = <span class="built_in">stack</span>-&gt;next-&gt;data;</span><br><span class="line">    Stack *target = <span class="built_in">stack</span>-&gt;next;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;next = target-&gt;next;</span><br><span class="line">    <span class="built_in">free</span>(target);</span><br><span class="line">    <span class="keyword">return</span> targetValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
-<li><p>前序遍历<br>根据前序遍历的顺序，我们首先把二叉树<code>T</code>的左边最外侧节点依照从上到下的顺序依次访问（保证了先访问根节点和先处理左子树）和压栈（保存节点，后面才能取到右子节点）。左外侧访问并压栈完后，如果堆栈不为空，弹出一个节点，此节点是最后一个压栈的也是二叉树左下角的节点。将此节点转向它的右子节点，重复前面的过程（保证了后处理右子树）。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinaryTree *t = tree; <span class="comment">//make a copy</span></span><br><span class="line">    Stack *<span class="built_in">stack</span> = createEmpty();</span><br><span class="line">    <span class="keyword">while</span> (t || !isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123; <span class="comment">//if t==null &amp;&amp; stack is empty,exit</span></span><br><span class="line">        <span class="keyword">while</span> (t)</span><br><span class="line">        &#123; <span class="comment">//push left nodes</span></span><br><span class="line">            push(<span class="built_in">stack</span>, t);</span><br><span class="line">            visit(t); <span class="comment">//visit root and left nodes first</span></span><br><span class="line">            t = t-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            t = pop(<span class="built_in">stack</span>);</span><br><span class="line">            t = t-&gt;right; <span class="comment">//turn to right</span></span><br><span class="line">            visit(t);     <span class="comment">//visit right node</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>中序遍历<br>中序遍历按照左子节点–根节点–右子节点的顺序访问，先把左外侧节点压栈但不访问，压栈完成后弹出节点进行访问（保证了先访问的是左子节点先处理的是左子树）。访问完成后转向弹出节点的右子节点重复过程。</p>
+<li>前序遍历<br>根据前序遍历的顺序，我们首先把二叉树<code>T</code>的左边最外侧节点依照从上到下的顺序依次访问（保证了先访问根节点和先处理左子树）和压栈（保存节点，后面才能取到右子节点）。左外侧访问并压栈完后，如果堆栈不为空，弹出一个节点，此节点是最后一个压栈的也是二叉树左下角的节点。将此节点转向它的右子节点，重复前面的过程（保证了后处理右子树）。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinaryTree *t = tree; <span class="comment">//make a copy</span></span><br><span class="line">    Stack *<span class="built_in">stack</span> = createEmpty();</span><br><span class="line">    <span class="keyword">while</span> (t || !isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123; <span class="comment">//if t==null &amp;&amp; stack is empty,exit</span></span><br><span class="line">        <span class="keyword">while</span> (t)</span><br><span class="line">        &#123; <span class="comment">//push left nodes</span></span><br><span class="line">            push(<span class="built_in">stack</span>, t);</span><br><span class="line">            visit(t); <span class="comment">//visit root and left nodes first</span></span><br><span class="line">            t = t-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            t = pop(<span class="built_in">stack</span>);</span><br><span class="line">            t = t-&gt;right; <span class="comment">//turn to right</span></span><br><span class="line">            visit(t);     <span class="comment">//visit right node</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>中序遍历<br>中序遍历按照左子节点—根节点—右子节点的顺序访问，先把左外侧节点压栈但不访问，压栈完成后弹出节点进行访问（保证了先访问的是左子节点先处理的是左子树）。访问完成后转向弹出节点的右子节点重复过程。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinaryTree *t = tree;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createEmpty();</span><br><span class="line">    <span class="keyword">while</span> (t || !isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (t)</span><br><span class="line">        &#123;</span><br><span class="line">            push(<span class="built_in">stack</span>, t);</span><br><span class="line">            t = t-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            t = pop(<span class="built_in">stack</span>);</span><br><span class="line">            visit(t);</span><br><span class="line">            t = t-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>后序遍历<br>后序遍历先处理左子树，再处理右子树，最后处理根节点。在先处理左子树的中序遍历的基础上，弹出节点<code>T</code>后并不立刻进行处理，而是进行一次判断：若<code>T</code>没有右子节点<code>T-&gt;right == null</code>，则该节点为叶节点，进行访问；若节点存在右子节点，则不进行访问，把<code>T</code>转向<code>T</code>的右子节点，重复上面的过程转而处理右子树。<br>这个过程存在一个错误：当<code>T</code>存在右子节点时，把<code>T</code>转向了<code>T-&gt;right</code>，由于<code>T</code>是以<code>pop</code>的方式出栈，则堆栈中尚未进行处理的<code>T</code>节点（根节点）被删除了，这就导致了根节点缺失。<br>为了解决这个问题，我们可以在<code>T</code>存在右节点时，为<code>T</code>的值做一个拷贝<code>TCopy</code>，但不保留<code>T</code>的子节点信息。即：<code>TCopy-&gt;left == TCopy-&gt;right == null</code>。然后把<code>TCopy</code>压栈，这样保证了根节点<code>T</code>的值能够被访问到，同时在<code>T</code>的右子树处理完成，堆栈再次弹出根节点时，其右子节点不会被重复处理。</p>
  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinaryTree *t = tree;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createEmpty();</span><br><span class="line">    BinaryTree *tCopy = (BinaryTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BinaryTree));</span><br><span class="line">    <span class="keyword">while</span> (t || !isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (t)</span><br><span class="line">        &#123;</span><br><span class="line">            push(<span class="built_in">stack</span>, t);</span><br><span class="line">            t = t-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            t = pop(<span class="built_in">stack</span>);</span><br><span class="line">            tCopy-&gt;data = t-&gt;data;</span><br><span class="line">            t = t-&gt;right; <span class="comment">//turn to right</span></span><br><span class="line">            <span class="keyword">if</span> (t)</span><br><span class="line">            &#123; </span><br><span class="line">                tCopy-&gt;left = tCopy-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">                push(<span class="built_in">stack</span>, tCopy); <span class="comment">//temp will be visited after right sub tree</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(t);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">free</span>(tCopy);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>层序遍历<br>层序遍历按照先上后下，先左后右的顺序，因此在访问左子节点时，需要暂存右子节点。可以采用<strong>堆栈<code>(Stack)</code></strong>或者<strong>队列<code>(Queue)</code></strong>储存。</p>
-<ul>
+<li>层序遍历<br>层序遍历按照先上后下，先左后右的顺序，因此在访问左子节点时，需要暂存右子节点。可以采用<strong>堆栈<code>(Stack)</code></strong>或者<strong>队列<code>(Queue)</code></strong>储存。<ul>
 <li>堆栈实现<br>暂不讨论（<del>不会</del>）</li>
 <li>队列实现<br>队列的详细实现见<a href="http://blog.zhuwenq.icu:7010/2020/03/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%98%9F%E5%88%97/">这篇博客</a><br>先将根节点入队，然后出队根节点进行访问，访问完成后顺序压栈根节点的左子节点，右子节点。<br>再次出队一个节点，访问完成后顺序入队它的左右子节点。重复本过程直到访问完毕。   <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">levelOrderTraversal</span><span class="params">(BinaryTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//Error!empty tree</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, tree); <span class="comment">//add root to queue</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123; <span class="comment">//when queue is empty,traversal done</span></span><br><span class="line">        BinaryTree *t = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        visit(t);</span><br><span class="line">        <span class="keyword">if</span> (t-&gt;left)</span><br><span class="line">            add(<span class="built_in">queue</span>, t-&gt;left);</span><br><span class="line">        <span class="keyword">if</span> (t-&gt;right)</span><br><span class="line">            add(<span class="built_in">queue</span>, t-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 </li>
 </ul>
 </li>
 </ol>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>二叉树十分复杂且重要，二叉树的遍历又是二叉树重要的基础操作之一，理解并掌握上述遍历方法十分必要。</p>
-<h2 id="由两种遍历唯一地确定一颗二叉树"><a href="#由两种遍历唯一地确定一颗二叉树" class="headerlink" title="由两种遍历唯一地确定一颗二叉树"></a>由两种遍历唯一地确定一颗二叉树</h2><p>设前序遍历为<code>Pre</code>，中序遍历为<code>In</code>，后序遍历为<code>Post</code>。则在已知<code>In &amp; Pre</code>或者<code>In &amp; Post</code>的情况下可以唯一低确定一颗二叉树。<br>分析：<br>一个先序遍历序列由<strong>根节点–左子树节点–右子树节点</strong>组成<br>一个中序遍历序列由<strong>左子树节点–根节点–右子树节点</strong>组成<br>一个后序遍历序列由<strong>左子树节点–右子树节点–根节点</strong>组成<br>例如已知<code>Pre &amp; In</code>:</p>
+<h2 id="由两种遍历唯一地确定一颗二叉树"><a href="#由两种遍历唯一地确定一颗二叉树" class="headerlink" title="由两种遍历唯一地确定一颗二叉树"></a>由两种遍历唯一地确定一颗二叉树</h2><p>设前序遍历为<code>Pre</code>，中序遍历为<code>In</code>，后序遍历为<code>Post</code>。则在已知<code>In &amp; Pre</code>或者<code>In &amp; Post</code>的情况下可以唯一低确定一颗二叉树。<br>分析：<br>一个先序遍历序列由<strong>根节点—左子树节点—右子树节点</strong>组成<br>一个中序遍历序列由<strong>左子树节点—根节点—右子树节点</strong>组成<br>一个后序遍历序列由<strong>左子树节点—右子树节点—根节点</strong>组成<br>例如已知<code>Pre &amp; In</code>:</p>
 <p><img src="/2020/03/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/1.png" alt></p>
 <p>由先序序列的第一个元素可以知道根节点，利用根节点在中序序列中查询其位置，可以得知左子树的长度。然后在先序序列中的根节点后方截取该长度，即得二叉树的左子树序列。<br>左子树序列的首元素是左子树的根节点…如此迭代到叶节点便确定了左子树的构造，右子树同理。</p>
 <p>如果只已知<code>Pre &amp; Post</code>则无法确定左子树序列或者右子树序列的长度，无法确定二叉树。</p>
@@ -1494,7 +1465,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 02:31:41" itemprop="dateModified" datetime="2020-03-28T02:31:41+08:00">2020-03-28</time>
+                <time title="修改时间：2020-04-08 16:03:00" itemprop="dateModified" datetime="2020-04-08T16:03:00+08:00">2020-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1540,38 +1511,32 @@
       
           <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>二叉树是一个有穷的节点集合，这个集合可以为空。若集合不为空，则集合是由根节点<code>root</code>和被称为左子树和右子树的两颗不相交的二叉树组成。</p>
 <h2 id="特殊二叉树"><a href="#特殊二叉树" class="headerlink" title="特殊二叉树"></a>特殊二叉树</h2><ul>
-<li><p>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt></p>
-</li>
-<li><p>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt></p>
-</li>
+<li>斜二叉树<code>(Skewed Binary Tree)</code><br>如图：<br><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/1.png" alt></li>
+<li>完美二叉树<code>(Perfect Binary Tree)</code>或满二叉树<code>(Full Binary Tree)</code><br><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/2.png" alt></li>
 <li><p>完全二叉树<code>(Complete Binary Tree)</code><br>有n个节点的二叉树，对树中节点按从上到下，从左到右的顺序进行编号。与满二叉树相比，相同位置处的节点编号相同。</p>
 <p>即：完全二叉树相当于满二叉树少了最下层叶子节点的右侧若干节点。</p>
 </li>
 </ul>
 <h2 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h2><ul>
-<li><p>二叉树的第<code>i</code>层最大节点个数为$2^{i-1}$</p>
-</li>
-<li><p>深度为<code>k</code>的二叉树最大节点总数为$2^k-1$</p>
-</li>
-<li><p>对于任何非空二叉树<code>T</code>，若$n_0$表示叶节点的个数，$n_2$是度为2的非叶节点的个数，那么两者满足关系$n_0 = n_2 + 1$</p>
+<li>二叉树的第<code>i</code>层最大节点个数为<script type="math/tex">2^{i-1}</script></li>
+<li>深度为<code>k</code>的二叉树最大节点总数为<script type="math/tex">2^k-1</script></li>
+<li><p>对于任何非空二叉树<code>T</code>，若<script type="math/tex">n_0</script>表示叶节点的个数，<script type="math/tex">n_2</script>是度为2的非叶节点的个数，那么两者满足关系<script type="math/tex">n_0 = n_2 + 1</script></p>
 <p><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/3.png" alt></p>
-<p>  证明：对于总结点数为<code>n</code>的二叉树，其边总数为<code>n-1</code>。总的节点数<code>n</code>由度为<code>0,1,2</code>的节点组成，即$n-1 = n_0+n_1+n_2-1$。</p>
-<p>  同时，对于二叉树的节点，其度数即为其对总边数的贡献值，即：度为<code>i</code>的节点将贡献<code>i</code>条边。所以边数<code>n-1</code>满足$n-1=0<em>n_0+1</em>n_1+2*n_2$。</p>
-<p>  所以$n - 1 = n_0+n_1+n_2-1=0<em>n_0+1</em>n_1+2*n_2$，即：$n_0 = n_2 + 1$。</p>
+<p>  证明：对于总结点数为<code>n</code>的二叉树，其边总数为<code>n-1</code>。总的节点数<code>n</code>由度为<code>0,1,2</code>的节点组成，即<script type="math/tex">n-1 = n_0+n_1+n_2-1</script>。</p>
+<p>  同时，对于二叉树的节点，其度数即为其对总边数的贡献值，即：度为<code>i</code>的节点将贡献<code>i</code>条边。所以边数<code>n-1</code>满足<script type="math/tex">n-1=0*n_0+1*n_1+2*n_2</script>。</p>
+<p>  所以<script type="math/tex">n - 1 = n_0+n_1+n_2-1=0*n_0+1*n_1+2*n_2</script>，即：<script type="math/tex">n_0 = n_2 + 1</script>。</p>
 <p>  证毕。</p>
 </li>
 </ul>
 <h2 id="ADT描述"><a href="#ADT描述" class="headerlink" title="ADT描述"></a>ADT描述</h2><h3 id="操作集"><a href="#操作集" class="headerlink" title="操作集"></a>操作集</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isEmpty</span><span class="params">(BinaryTree* tree)</span></span>;     <span class="comment">//判断二叉树是否为空</span></span><br><span class="line"><span class="function">BinaryTree* <span class="title">createBinaryTree</span><span class="params">()</span></span>;     <span class="comment">//创建一个二叉树</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traversal</span><span class="params">(BinaryTree* tree)</span></span>;   <span class="comment">//遍历二叉树</span></span><br></pre></td></tr></table></figure>
-
-<p>对于二叉树而言，遍历是其最重要的操作。常见的遍历方法有：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;   <span class="comment">//先序遍历，根--左子树--右子树</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;    <span class="comment">//中序遍历，左子树--根--右子树</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;  <span class="comment">//后序遍历，左子树--右子树--根</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">levelOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>; <span class="comment">//层次遍历，从上到下，从左到右</span></span><br></pre></td></tr></table></figure>
-
+<p>对于二叉树而言，遍历是其最重要的操作。常见的遍历方法有：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;   <span class="comment">//先序遍历，根--左子树--右子树</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;    <span class="comment">//中序遍历，左子树--根--右子树</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>;  <span class="comment">//后序遍历，左子树--右子树--根</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">levelOrderTraversal</span><span class="params">(BinaryTree* tree)</span></span>; <span class="comment">//层次遍历，从上到下，从左到右</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="储存结构"><a href="#储存结构" class="headerlink" title="储存结构"></a>储存结构</h2><h3 id="顺序结构"><a href="#顺序结构" class="headerlink" title="顺序结构"></a>顺序结构</h3><ul>
 <li>对于完全二叉树，对其按从上到下，从左到右的顺序进行编号：</li>
 </ul>
 <p><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/4.png" alt></p>
 <p>如图不难看出，父节点的编号为<code>i</code>时，其左子节点的编号为<code>2i</code>，其右子节点的编号为<code>2i+1</code>，父节点的编号是子节点编号除以2的向下取整。</p>
 <p>对于这样的二叉树，我们可以定义一个长度合适的数组来储存数的数据，由于其节点编号的规律性，树的遍历等操作不会困难。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1587,7 +1552,8 @@
 <th>K</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>编号</td>
 <td>1</td>
 <td>2</td>
@@ -1599,13 +1565,16 @@
 <td>8</td>
 <td>9</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <ul>
 <li><p>对于一般二叉树，也可以用这样的方式储存。不过首先需要把非完全二叉树用空节点变为完全二叉树：</p>
 <p>  <img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/5.png" alt></p>
 </li>
 </ul>
 <p>用数组储存为：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1625,7 +1594,8 @@
 <th>C</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>编号</td>
 <td>1</td>
 <td>2</td>
@@ -1641,7 +1611,9 @@
 <td>12</td>
 <td>13</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>可见，数组结构的二叉树会造成一定的空间浪费。</p>
 <h3 id="链式结构"><a href="#链式结构" class="headerlink" title="链式结构"></a>链式结构</h3><p>将节点设计成如图样式，内部储存节点数据和指向左右子节点的指针。</p>
 <p><img src="/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/6.png" alt></p>
@@ -1695,7 +1667,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 02:33:17" itemprop="dateModified" datetime="2020-03-28T02:33:17+08:00">2020-03-28</time>
+                <time title="修改时间：2020-04-08 16:06:33" itemprop="dateModified" datetime="2020-04-08T16:06:33+08:00">2020-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1720,7 +1692,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1740,7 +1712,7 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>客观世界中许多事物存在层次关系，如人类的族谱，社会组织的结构等。这些分层次的结构在管理方面具有一定的效率优势，树就是类似的一种具有层次结构关系的数据结构。</p>
-<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>二分查找<code>binarySearch</code>作为一种时间复杂度为$O(\log n)$的优秀查找算法，其在数据管理的查询方面具有重要地位。二分查找接受被查找元素所属的序列<code>list</code>（有序的，假设为升序）和被查找元素的值<code>target</code>两个参数，它的基本流程如下：</p>
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>二分查找<code>binarySearch</code>作为一种时间复杂度为<script type="math/tex">O(\log n)</script>的优秀查找算法，其在数据管理的查询方面具有重要地位。二分查找接受被查找元素所属的序列<code>list</code>（有序的，假设为升序）和被查找元素的值<code>target</code>两个参数，它的基本流程如下：</p>
 <ol>
 <li>定义两个变量<code>left</code>和<code>right</code>指向序列的左端和右端，变量<code>mid</code>指向两端的中间位置，查找将在这两端之间进行。</li>
 <li>初始化<code>left = 1</code>，<code>right = list.length</code>，<code>mid = (left + right) / 2</code>。</li>
@@ -1752,16 +1724,14 @@
 </li>
 <li>最后若始终未从过程3.1跳出，则会导致左右交叉即<code>left &gt; right</code>，此时说明元素未查找到，应退出程序。</li>
 </ol>
-<p>算法C语言代码（伪）如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(ElementType *<span class="built_in">list</span>, <span class="keyword">int</span> listLength, ElementType target)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = listLength - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">list</span>[mid] == target)</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">list</span>[mid] &gt; target)</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">//means not frond!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>算法C语言代码（伪）如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(ElementType *<span class="built_in">list</span>, <span class="keyword">int</span> listLength, ElementType target)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> right = listLength - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">list</span>[mid] == target)</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">list</span>[mid] &gt; target)</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">//means not frond!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>二分查找算法之所以能获得较高的时间效率，原因之一就是它的搜索过程实际上是一颗搜索树。例如序列<code>[1,2,3,4,5,6,7,8,9,10,11]</code>，按照二分法建立树状结构如下：</p>
 <p><img src="/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png" alt></p>
-<p>则对于任何一个元素的搜索次数都将不超过树的深度<code>4</code>。而对于一颗有<code>n</code>个节点的树（长度为<code>n</code>的序列），其搜索树的深度为$\log_2 n + 1$，因此二分搜索的最坏时间复杂度是$O(\log_2 n)$</p>
+<p>则对于任何一个元素的搜索次数都将不超过树的深度<code>4</code>。而对于一颗有<code>n</code>个节点的树（长度为<code>n</code>的序列），其搜索树的深度为<script type="math/tex">\log_2 n + 1</script>，因此二分搜索的最坏时间复杂度是<script type="math/tex">O(\log_2 n)</script></p>
 <h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>树是由<code>n</code>个元素构成的有穷集合。当<code>n = 0</code>时，称为空树。对于任何一颗非空树，它具有以下性质：</p>
 <ul>
 <li>一颗树有一个根节点<code>root</code></li>
-<li>其余节点可分为<code>m</code>个互不相交的有限集$T_1,T_2,T_3…T_m$，其中每个集合本身又可以视为一颗树，称为原树的子树<code>SubTree</code>。</li>
+<li>其余节点可分为<code>m</code>个互不相交的有限集<script type="math/tex">T_1,T_2,T_3...T_m</script>，其中每个集合本身又可以视为一颗树，称为原树的子树<code>SubTree</code>。</li>
 </ul>
 <h2 id="术语解释"><a href="#术语解释" class="headerlink" title="术语解释"></a>术语解释</h2><p>树的一些基本术语：</p>
 <ol>
@@ -1771,8 +1741,8 @@
 <li>父节点<code>Parent</code>：有子树的节点是其子树根节点的父节点</li>
 <li>子节点<code>Child</code>：若<code>A</code>是<code>B</code>的父节点，则<code>B</code>是<code>A</code>的子节点</li>
 <li>兄弟节点<code>Sibling</code>：具有同一父节点的各节点彼此之间是兄弟节点</li>
-<li>路径和路径长度：从节点$n_1到n_k$的路径是一个节点序列$n_1,n_2…n_k$，其中$n_i$是$n_{i+1}$的父节点。路径所包含的边的条数是路径长度</li>
-<li>祖先节点<code>Ancestor</code>：沿着从根节点到某一节点$n_i$的路径所包含的所有节点都是节点$n_i$的祖先节点</li>
+<li>路径和路径长度：从节点<script type="math/tex">n_1到n_k</script>的路径是一个节点序列<script type="math/tex">n_1,n_2...n_k</script>，其中<script type="math/tex">n_i</script>是<script type="math/tex">n_{i+1}</script>的父节点。路径所包含的边的条数是路径长度</li>
+<li>祖先节点<code>Ancestor</code>：沿着从根节点到某一节点<script type="math/tex">n_i</script>的路径所包含的所有节点都是节点<script type="math/tex">n_i</script>的祖先节点</li>
 <li>子孙节点<code>Descendant</code>：某一节点的子树中的所有节点都是这个节点的子孙节点</li>
 <li>节点的层次<code>Level</code>：规定根节点在1层，其他节点的层次为其父节点层次+1</li>
 <li>树的深度<code>Depth</code>：树中所有节点的最大层次称为树的深度</li>
@@ -2087,6 +2057,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

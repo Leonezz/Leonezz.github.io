@@ -274,29 +274,27 @@
 </li>
 </ol>
 <h2 id="2-安装hexo并在本地建站"><a href="#2-安装hexo并在本地建站" class="headerlink" title="2. 安装hexo并在本地建站"></a>2. 安装hexo并在本地建站</h2><ol>
-<li><p>作为github用户，git的安装不再赘述，可以直接到<a href="https://git-scm.com/">Git官网</a>下载安装。</p>
-</li>
-<li><p>安装Node.js。可直接到<a href="https://nodejs.org/zh-cn/">Node.js官网</a>下载安装。</p>
-</li>
+<li>作为github用户，git的安装不再赘述，可以直接到<a href="https://git-scm.com/">Git官网</a>下载安装。</li>
+<li>安装Node.js。可直接到<a href="https://nodejs.org/zh-cn/">Node.js官网</a>下载安装。</li>
 <li><p>安装hexo并初始化blog文件夹<br> 使用npm包管理工具安装hexo。<br> 打开命令行，输入命令：</p>
 <p> <code>$ npm install -g hexo-cli</code></p>
 <p> 安装完成之后，命令行进入你预备的博客文件夹(必须是空文件夹)，输入：</p>
 <p> <code>$ hexo init</code></p>
 <p> 此时会发现文件夹中呈以下结构：</p>
-<pre><code>└─&lt;yourblogfolder&gt;
-    ├─node_modules/
-    ├─scaffolds/
-    ├─source/
-    ├─themes/
-    ├─.gitignore
-    ├─_config.yml
-    ├─package.json
-    └─package_lock.json</code></pre></li>
+<pre><code> └─&lt;yourblogfolder&gt;
+     ├─node_modules/
+     ├─scaffolds/
+     ├─source/
+     ├─themes/
+     ├─.gitignore
+     ├─_config.yml
+     ├─package.json
+     └─package_lock.json
+</code></pre></li>
 <li><p>更换主题<br>在hexo的<a href="https://hexo.io/themes/">主题页面</a>上有许多漂亮的博客主题，选择一个进入它的github页面，找到项目地址。<br>输入以下命令安装:(这里我用的ayer主题)<br><code>$ git clone https://github.com/Shen-Yu/hexo-theme-ayer.git themes/ayer</code>       </p>
 <p>完成后打开themes文件夹，发现多了文件夹ayer/，里面便是ayer主题的文件。</p>
 <p>回到blog文件夹下，打开_config.yml文件，找到</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line">theme: <span class="string">''</span></span><br></pre></td></tr></table></figure>
-
 <p> 代码块，将字段theme改成你下载的主题名。</p>
 <p> 其他更多配置都在文件_config.yml中，访问<a href="https://hexo.io/zh-cn/docs/">hexo文档</a>查看详情。</p>
 </li>
@@ -304,7 +302,6 @@
 <h2 id="3-网站部署"><a href="#3-网站部署" class="headerlink" title="3. 网站部署"></a>3. 网站部署</h2><ol>
 <li><p>配置部署<br>在_config.yml文件中，找到：</p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line">deploy:</span><br><span class="line"><span class="built_in">type</span>: git</span><br><span class="line">repo: https://github.com/Leonezz/Leonezz.github.io.git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure>
-
 <p> 其中字段<em>repo</em>填写你刚刚新建的GitHub repository地址。</p>
 <p> 该代码段实际上是在配置Hexo Deploy，它描述了要网站托管的GitHub地址和分支。但是hexo需要安装额外的插件才能正确执行该deploy。在blog文件夹下输入以下命令：</p>
 <p> <code>$ npm install hexo-deployer-git --save</code></p>
@@ -315,8 +312,7 @@
 </li>
 </ol>
 <h2 id="4-hexo-常用命令"><a href="#4-hexo-常用命令" class="headerlink" title="4. hexo 常用命令"></a>4. hexo 常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; hexo init <span class="comment">#初始化网站文件夹\</span></span><br><span class="line">&gt; hexo clean <span class="comment">#清除缓存\</span></span><br><span class="line">&gt; hexo g <span class="comment">#生成网站\</span></span><br><span class="line">&gt; hexo s <span class="comment">#在localHost预览网站\</span></span><br><span class="line">&gt; hexo d <span class="comment">#将网站部署到服务器\</span></span><br><span class="line">&gt; hexo new page <span class="string">"newMenu"</span> <span class="comment">#新增的菜单项文件夹\</span></span><br><span class="line">&gt; hexo n <span class="string">"博客名字"</span> <span class="comment">#新建博客</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="ref："><a href="#ref：" class="headerlink" title="ref："></a>ref：</h2><p><a href="https://hexo.io/zh-cn/docs/">hexo Doc</a><br><a href="https://zhuanlan.zhihu.com/p/26625249">GitHub+Hexo 搭建个人网站详细教程</a></p>
+<h2 id="ref："><a href="#ref：" class="headerlink" title="ref："></a>ref：</h2><p><a href="https://hexo.io/zh-cn/docs/">hexo Doc</a>\<br><a href="https://zhuanlan.zhihu.com/p/26625249">GitHub+Hexo 搭建个人网站详细教程</a></p>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>刚刚建立好博客网站，作为第一篇博文，写下我建站时遇到的问题和查阅的资料以及解决的方法再合适不过了。</p>
 
     </div>
@@ -666,6 +662,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

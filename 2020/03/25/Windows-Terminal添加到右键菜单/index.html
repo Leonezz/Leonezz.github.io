@@ -258,13 +258,14 @@
 <li><p>在命令行输入命令 <code>mkdir &quot;%USERPROFILE%\AppData\Local\terminal&quot;</code>创建文件夹，然后找个好看的图标(<code>ico</code>)文件放进去，它将出现在右键菜单的头部作为图标。如果找不到好康的，也可以到<a href="https://github.com/microsoft/terminal/blob/master/res/terminal.ico">这里</a>下载<code>Windows Terminal</code>默认的图标。</p>
 </li>
 <li><p>新建文件<code>wt.reg</code>，把下面的代码写入保存：</p>
-<pre><code class="Bash">Windows Registry Editor Version 5.00
+<pre><code class="lang-Bash"> Windows Registry Editor Version 5.00
 
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
-@=<span class="string">"Open terminal here"</span>
-<span class="string">"Icon"</span>=<span class="string">"%USERPROFILE%\\AppData\\Local\\terminal\\terminal.ico"</span>
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt\<span class="built_in">command</span>]
-@=<span class="string">"C:\\Users\\{your user name}\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"</span></code></pre>
+ [HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
+ @=&quot;Open terminal here&quot;
+ &quot;Icon&quot;=&quot;%USERPROFILE%\\AppData\\Local\\terminal\\terminal.ico&quot;
+ [HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
+ @=&quot;C:\\Users\\{your user name}\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe&quot;
+</code></pre>
 <p> 其中第一个<code>@</code>处是将要出现在右键菜单的提示语<br> 它的下一句是图标的路径<br> 最后一句是<code>Windows Terminal</code>的程序路径，他需要是绝对路径，因此请把<code>{your user name}</code>换成你的<code>Windows</code>用户名。</p>
 <p> 双击运行，添加注册表。</p>
 </li>
@@ -626,6 +627,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

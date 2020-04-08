@@ -259,17 +259,14 @@
 <p>假设使用深度优先搜索从节点<code>0</code>开始遍历，则首先对节点<code>0</code>的所有邻居节点（与<code>0</code>直接相连的节点）中的一个访问，假设访问到了节点<code>2</code>，则对节点<code>2</code>的邻居节点进行访问。首先访问邻居节点<code>0</code>，<code>0</code>已经被访问，因此切换到节点<code>1</code>。接着对节点<code>1</code>的邻居节点<code>2</code>访问，<code>2</code>已被访问，因此切换到<code>3</code>。接着访问<code>3</code>的邻居节点<code>4</code>。访问到节点<code>4</code>之后，对节点<code>4</code>的所有邻居节点访问，发现均被访问过。然后开始回溯，查找是否有尚未访问到的分支。比如此例中回溯到节点<code>3</code>，发现所有邻居节点都被访问过，继续回溯亦然，当回溯到起始节点<code>0</code>时，便知道所有节点都被访问过，遍历完成。</p>
 <p>实际的程序过程可以描述为：首先建立一个空栈，访问起始顶点<code>0</code>，并把<code>0</code>压栈，然后访问节点<code>0</code>的邻居节点<code>2</code>，把<code>2</code>压栈。访问节点<code>2</code>的未访问节点<code>1</code>，把<code>1</code>压栈，访问节点<code>3</code>,<code>4</code>，把<code>3</code>,<code>4</code>压栈。遍历节点<code>4</code>的邻居节点之后，前方无路可走，开始出栈。首先出栈节点<code>3</code>，访问节点<code>3</code>的未访问邻居节点并压栈，一直访问并压栈到尽头。之后对每个出栈的顶点做同样的操作，直到堆栈为空（顶点全部弹出）。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="comment">//深度优先搜索</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createStack();</span><br><span class="line">    Vertex *nextNode = vertex;</span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        visit(nextNode);                                <span class="comment">//visit vertex</span></span><br><span class="line">        push(<span class="built_in">stack</span>, nextNode);                          <span class="comment">//push vertex to stack</span></span><br><span class="line">        Visited[nextNode-&gt;id] = <span class="number">1</span>;                      <span class="comment">//shows that this vertex was visted</span></span><br><span class="line">        <span class="keyword">int</span> end = <span class="number">1</span>;                                    <span class="comment">//flag that shows if route comes to end</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nextNode-&gt;neighborNum; ++i) <span class="comment">//neighbor of vertex</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = nextNode-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visited</span></span><br><span class="line">            &#123;</span><br><span class="line">                nextNode = neighbor; <span class="comment">//set nextNode neighbor not visited</span></span><br><span class="line">                end = <span class="number">-1</span>;            <span class="comment">//shows that end is not coming</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (end)</span><br><span class="line">        &#123;</span><br><span class="line">            nextNode = pop(<span class="built_in">stack</span>); <span class="comment">//if end comes,pop a vertex from stack</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这个实现首先构造了一个顶点个数长度的数组来标识顶点是否被访问，然后利用循环和堆栈实现遍历过程。这是一个并不优雅的实现，甚至不知道是否正确。<br>如果直接用递归程序会非常清晰：(两段代码实际上都是伪代码，因为节点的邻居节点信息的取出是不规范的，不正确的)</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">    visit(vertex);</span><br><span class="line">    Visted[vertex-&gt;id] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vertex-&gt;neighborNum;++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!Visited[vertex-&gt;neighbor[i]])&#123;</span><br><span class="line">            depthFirstSearch(graph,vertex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="广度优先遍历-Breadth-First-Search-BFS"><a href="#广度优先遍历-Breadth-First-Search-BFS" class="headerlink" title="广度优先遍历(Breadth First Search,BFS)"></a>广度优先遍历<code>(Breadth First Search,BFS)</code></h3><p>广度优先搜索过程类似于二叉树的<strong>层序遍历</strong>，都是先访问某节点，然后把该节点的相邻节点挨个访问，同样类似的是，广度优先遍历的实现也可以使用 <strong>队列<code>(Queue)</code></strong> 实现。实际上，树就是一种特殊的图（有顶点，有边。当有一个东西各方面都像鸭子，那他就是一个鸭子🦢）</p>
 <p>同一个图：</p>
 <p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/2.png" alt></p>
 <p>使用广度优先遍历的过程大致是，首先从起始顶点<code>0</code>出发，挨个访问它的邻居顶点<code>2</code>,<code>4</code>。然后访问节点<code>2</code>和它的邻居节点<code>0</code>(已被访问),<code>1</code>,<code>3</code>，然后访问节点<code>4</code>和它的邻居节点<code>0</code>,<code>1</code>,<code>3</code>。最后对节点<code>0</code>,<code>1</code>,<code>3</code>挨个进行上述的动作。</p>
 <p>使用队列实现的程序过程为：首先建立空的队列，将节点<code>0</code>入队，然后弹出节点<code>0</code>进行访问，同时把节点<code>0</code>的所有 <strong>未被访问过的</strong> 邻居节点<code>2</code>,<code>4</code>加入队列。然后从队列弹出一个顶点，对其进行访问并把它的所有 <strong>未被访问过的</strong> 邻居顶点加入队列。直到队列为空，说明遍历完成。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visit(vertex);           <span class="comment">//visite vertex first</span></span><br><span class="line">    Visited[vertex-&gt;id] = <span class="number">1</span>; <span class="comment">//set visited true</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, vertex); <span class="comment">//add to queue to find its neighbors</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex *v = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v-&gt;neighborNum; ++i) <span class="comment">//find all neighbors</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = v-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visted,visit and add to queue</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(neighbor);</span><br><span class="line">                Visited[neighbor-&gt;id] = <span class="number">1</span>;</span><br><span class="line">                add(<span class="built_in">queue</span>, neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这个实现仍然是伪代码，需要更加合理的查找顶点邻居信息的方法才能工作。</p>
 <p>两种遍历的时间复杂度实际上是相同的（全部遍历时），但是对于遍历的中途退出的问题，需要认真思考选择更合适的遍历方式。如寻路问题中需要根据地图的样式选择遍历方式。</p>
 <h2 id="图的一些术语"><a href="#图的一些术语" class="headerlink" title="图的一些术语"></a>图的一些术语</h2><ul>
@@ -637,6 +634,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
