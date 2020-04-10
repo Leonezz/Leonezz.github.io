@@ -1,12 +1,13 @@
 #include <malloc.h>
+#include <iostream>
 #define ElementType int
 #define MaxSize ;
 
-typedef struct stack
+struct Stack
 {
     ElementType data;
     Stack *next;
-} Stack;
+};
 
 Stack *createEmpty();                      //生成空栈
 int isFull(Stack *stack);                  //查询是否满栈
@@ -38,11 +39,37 @@ ElementType pop(Stack *stack)
 {
     if (isEmpty(stack))
     {
-        return; //error!Empty stack
+        return -1; //error!Empty stack
     }
     ElementType targetValue = stack->next->data;
     Stack *target = stack->next;
     stack->next = target->next;
     free(target);
     return targetValue;
+}
+
+typedef int Vertex;
+
+void getPath(Stack *stack, Vertex **path, Vertex start, Vertex end)
+{
+    Vertex v = end;
+    while (v != -1)
+    {
+        push(stack, v);
+        end = path[start][end];
+        v = path[start][end];
+    }
+}
+
+int main()
+{
+    std::cout << "sdas" << std::endl;
+    Vertex **path = (Vertex **)malloc(25 * sizeof(Vertex));
+    path = {};
+    Stack *stack = createEmpty();
+    getPath(stack, path, 1, 5);
+    while (!isEmpty(stack))
+    {
+        std::cout << pop(stack) << std::endl;
+    }
 }
