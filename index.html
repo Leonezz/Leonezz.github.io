@@ -192,10 +192,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-10 17:02:50 / 修改时间：22:54:38" itemprop="dateCreated datePublished" datetime="2020-04-10T17:02:50+08:00">2020-04-10</time>
+              <time title="创建时间：2020-04-10 17:02:50" itemprop="dateCreated datePublished" datetime="2020-04-10T17:02:50+08:00">2020-04-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-11 13:37:52" itemprop="dateModified" datetime="2020-04-11T13:37:52+08:00">2020-04-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -242,75 +248,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>打开高德地图，查找从A地点到B地点的地铁线路图时，结果页面会有“时间最短”，“价格最低”，“步行最少”等选项。如果把地铁站点看作图的顶点，地铁站之间的连接看作边并且边的权重是地铁经过这条边时需要的时间或者票价的话，就可以把地铁线路的查找抽象为一个图的最短路径问题。<br>即：在网络（带权图）中，求两个不同顶点之间的所有路径中，边的权值和最小的那条路径。这条路径就叫<strong>最短路径<code>(Shortest Path)</code></strong>，这条路径的起点叫做<strong>源点<code>(Source</code></strong>，路径的最后一个顶点叫做<strong>终点<code>(Destination)</code></strong>。<br>最短路径问题不是一个孤立的问题，它是一系列问题的集合，可以分为<strong>单源最短路径问题</strong>和<strong>多源最短路径问题</strong>。</p>
-<h1 id="单源最短路径问题"><a href="#单源最短路径问题" class="headerlink" title="单源最短路径问题"></a>单源最短路径问题</h1><p>即从某固定源点出发，求其到其他任一点的最短路径。<br>其过程是按照路径长度递增（非递减）的顺序找到到达各个顶点的最短路径。<br>如下图所示的图：</p>
-<p><img src="/2020/04/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/1.png" alt></p>
-<p>假设顶点<code>0</code>是源点，则距源点的距离为$0$的顶点是<code>0</code>，距离源点为$1$的顶点有<code>1,4</code>，他们是源点的邻接点。查找距离为$2$的顶点时，不需要从源点开始查找，可以从距离为$1$的顶点查找他们的邻接点（同时不能是源点的邻接点）。这一过程与<strong>广度优先搜索</strong>相似，都是优先查找顶点的所有邻接点。<br>对距离从$0$到$2$的顶点列表，可得下表：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>距源点的距离</th>
-<th>顶点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$0$</td>
-<td><code>0</code></td>
-</tr>
-<tr>
-<td>$1$</td>
-<td><code>1</code>,<code>4</code></td>
-</tr>
-<tr>
-<td>$2$</td>
-<td><code>2</code>,<code>3</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>回忆<strong>广度优先搜索</strong>的程序过程：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[MaxSize] = <span class="number">-1</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visit(vertex);           <span class="comment">//visite vertex first</span></span><br><span class="line">    Visited[vertex-&gt;id] = <span class="number">1</span>; <span class="comment">//set visited true</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, vertex); <span class="comment">//add to queue to find its neighbors</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex *v = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (v 的每个邻居节点 neighbor)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visted,visit and add to queue</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(neighbor);</span><br><span class="line">                Visited[neighbor-&gt;id] = <span class="number">1</span>;</span><br><span class="line">                add(<span class="built_in">queue</span>, neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="无权单源最短路径算法"><a href="#无权单源最短路径算法" class="headerlink" title="无权单源最短路径算法"></a>无权单源最短路径算法</h2><p>对于广度优先搜索，我们需要一个<code>Visited</code>数组来记录顶点有没有被访问过，在最短路径问题中，我们还需要记录顶点与源点之间的距离。这里使用一个<code>dist</code>数组<code>dist[v] = 顶点v与源点之间的距离</code>来记录距离。同时最短路径问题实际上需要求解的不仅是最短距离，还需要求解实际的路径，因此我们还需要一个容器记录从源点到达顶点的路径。可以使用一个<code>path</code>数组<code>path[w] = v //v是从源点去顶点w的必经顶点</code>来记录路径，这样，当需要直到源点到顶点<code>w</code>的路径时，递归的访问数组<code>path</code>就可以得到:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vertex v;<span class="comment">//目的顶点w</span></span><br><span class="line">Stack <span class="built_in">stack</span>;</span><br><span class="line"><span class="keyword">while</span>(dist[w]!=<span class="number">0</span>)<span class="comment">//Dist[w] == 0时，说明递归到了源点，路径生成完毕</span></span><br><span class="line">&#123;</span><br><span class="line">    push(<span class="built_in">stack</span>,w);<span class="comment">//路径顶点压栈</span></span><br><span class="line">    w = path[w];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>综上，无权单源最短路径问题的程序过程大致如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> dist[MaxSize] = &#123;<span class="number">-1</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> path[MaxSize];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shortestPath</span><span class="params">(Vertex vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Queue *<span class="built_in">queue</span> = <span class="keyword">new</span> Queue();</span><br><span class="line">    enqueue(<span class="built_in">queue</span>, vertex);</span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex v = dequeue(<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (v 的所有邻居顶点 n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (dist[n] == <span class="number">-1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                dist[n] = dist[v] + <span class="number">1</span>;</span><br><span class="line">                path[n] = v;</span><br><span class="line">                enqueue(<span class="built_in">queue</span>, n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个过程的大部分与广度优先搜索无异，只是在判断是否已访问以及标记路径距离和记录路径方面稍有不同。<br>程序执行完成后，从源点到图中各个顶点的最短路径长度被记录在数组<code>dist[]</code>中，路径信息被记录在数组<code>path[]</code>中。</p>
-<h2 id="带权单源最短路径算法"><a href="#带权单源最短路径算法" class="headerlink" title="带权单源最短路径算法"></a>带权单源最短路径算法</h2><p>首先看如下图所示的带权图：</p>
-<p><img src="/2020/04/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/2.png" alt></p>
-<p>可以看到边 <script type="math/tex"><v_2,v_5></script> 的权值是$-10$，对这个图而言，只要沿着路径<script type="math/tex">v_4\rightarrow v_2\rightarrow v_5</script>这个路径走一圈，总的权值和就是$-5$，如果走无数圈，权值和就是<script type="math/tex">-\infty</script>。这种走一圈权值和为负值的圈被称为<strong>负值圈<code>(nagative-cost cycle)</code></strong>，显然，只要图中存在负值圈，一般的算法肯定无法正常工作。因此，下面的讨论默认图中不存在负值圈。</p>
-<p>无权图可以看作特殊的带权图，因此，带权图的单源最短路径算法实际上与无权图的单源最短路径算法有一定的相似之处，他们都是按照路径长度递增（非递减）的顺序找到最短路径。下面讨论的带权图的单源最短路径算法就是大名鼎鼎的<strong>迪杰斯特拉<code>(Dijkstra)</code>算法</strong>。</p>
-<p><code>Dijkstra</code>算法大致有以下过程：</p>
-<ul>
-<li>定义一个集合<code>s</code>，<code>s</code>在初始状态下只有源点<code>source</code>存在。然后逐步将<strong>已经确定了最短路径的节点$v_i$</strong>收进集合<code>s</code>。即：$s={source+已经确定了最短路径的顶点v_i}$</li>
-<li>对于图中任何一个尚未收进<code>s</code>的顶点<code>v</code>，定义<code>dist[v] = 源点到顶点 v 的最短路径长度</code>，同时该路径必须仅仅经过集合<code>s</code>中的顶点，即路径$source\rightarrow v_i\in s\rightarrow v$的长度。值得注意的是，在程序运行的初始阶段，集合<code>s</code>中的顶点较少，此时路径$source\rightarrow v_i\in s\rightarrow v$多半并不是最短路径，但是随着集合<code>s</code>的扩大，该路径也会不断完善，最后当所有顶点都被收入集合<code>s</code>，最后的路径就一定是最短路径了。</li>
-<li>由于路径是按照<strong>递增（非递减）</strong>的顺序生成的，因此有以下结论：<ol>
-<li>真正的最短路径肯定只经过集合<code>s</code>中的节点（没整明白为什么）</li>
-<li>每次收录进集合<code>s</code>的顶点是剩余未收录顶点中<code>dist</code>值最小的顶点（贪心算法）</li>
-<li>增加一个顶点<code>v</code>进入集合<code>s</code>时，可能会影响到其他顶点<code>w</code>的<code>dist</code>值，这是因为源点到顶点<code>w</code>的路径可能会经过顶点<code>v</code>，并且顶点<code>v</code>到顶点<code>w</code>之间可能存在一条边。因此需要对顶点<code>w</code>的<code>dist</code>值进行更新：<code>dist[w] = min(dist[w],dist[v] + &lt;v,w&gt;的权值)</code>。</li>
-</ol>
-</li>
-</ul>
-<p>下面是<code>Dijkstra</code>算法的大致过程，首先为了表示集合<code>s</code>，我们使用一个数组<code>collected</code>来记录顶点是否被收录（类似图的搜索算法中的<code>Visited</code>数组）</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> dist[MaxSize] = &#123;infty&#125;;</span><br><span class="line"><span class="keyword">int</span> path[MaxSize];</span><br><span class="line"><span class="keyword">bool</span> collected[MaxSize] = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dijkstra</span><span class="params">(Vertex vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        取未被集合收录的顶点中dist值最小的顶点v <span class="comment">//这个过程可以直接扫描全部顶点然后取最小或者把顶点存在一个最小堆中</span></span><br><span class="line">        <span class="keyword">if</span> (v不存在，即顶点完全被收录)</span><br><span class="line">            <span class="keyword">break</span>;           <span class="comment">//跳出循环</span></span><br><span class="line">        collected[v] = <span class="literal">true</span>; <span class="comment">//收录顶点</span></span><br><span class="line">        <span class="keyword">for</span> (v 的所有邻居节点 w)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (!collected[w])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (dist[v] + weight(v, w) &lt; dist[w])</span><br><span class="line">                &#123; <span class="comment">//注意到这个条件要求dist[w]&gt;=dist[v]+weight(v,w)时下面的更新路径长度代码才会运行</span></span><br><span class="line">                    <span class="comment">//因此dist的初始值应该是正无穷，否则其初始值可能无法被更新</span></span><br><span class="line">                    dist[w] = dist[v] + weight(v, w);</span><br><span class="line">                    path[w] = v;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段伪代码不适用于存在负边的情况，至于存在负边的情况我还没整明白。</p>
-<h1 id="多源最短路径算法"><a href="#多源最短路径算法" class="headerlink" title="多源最短路径算法"></a>多源最短路径算法</h1><p>多源最短路径问题求解的是任意两点之间的最短路径，要实现这个问题的求解，可以用图中每一个顶点作为源点对其运行一次单源最短路径算法，这种方法比较low而且对于稠密图效率不高。或者还有一种大名鼎鼎的算法专门解决这个问题：<strong>佛洛伊得<code>(Floyd)</code>算法</strong></p>
-<p><code>Floyd</code>算法对于稠密图的效果较好，因此下面的图使用邻接矩阵表示。<code>Floyd</code>算法的路径是按照顶点的编号递增的顺序生成的，它的大致过程如下：</p>
-<ul>
-<li>用矩阵$D^k[i][j]$表示顶点$i$到顶点$j$之间仅经过编号小于等于$k$的顶点的最短路径长度，即路径$i\rightarrow (l\leqslant k)\rightarrow j$的长度。程序运行的初始阶段，$k$值较小，路径并不一定是最短路径，当$k$增长到顶点个数少一时，所得的最短路径就是实际上的最短路径了，即最短路径是逐步生成的</li>
-<li>矩阵$D^k[i][j]$的初始值是$D^{-1}[i][j]$，它可以直接初始化为图的邻接矩阵，对角元全部是$0$，对于没有直接边的顶点$k$和$m$，其初始值$D^{-1}[k][m]$应该被初始化为无穷大</li>
-<li>从矩阵$D^{k-1}[i][j]$递推到矩阵$D^k[i][j]$时，即新读入一个顶点$k$：<ol>
-<li>$k$不影响$i$到$j$的最短路径，即k不在路径上，则不需要更新最短路径长度：$D^k[i][j]=D^{k-1}[i][j]$</li>
-<li>$k$影响$i$到$j$的最短路径，即从$k$走的路径更短，则新的路径由两部分组成：$D^k[i][j]=D^{k-1}[i][k]+D^{k-1}[k][j]$</li>
-</ol>
-</li>
-<li>要记录最短路径，同样需要一个矩阵$Path[i][j]$储存从$i$到$j$的路径。假如我们给矩阵赋值为$Path[i][j] = k$，这表明从$i$到$j$的路径等于从$i$到$k$的路径加上从$k$到$j$的路径。因此，路径的取出可以使用一个递归过程实现。</li>
-</ul>
-<p><code>Floyd</code>算法的程序过程如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Dist[MaxSize][MaxSize];</span><br><span class="line"><span class="keyword">int</span> Path[MaxSize][MaxSize];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">floyd</span><span class="params">(Vertex **<span class="built_in">map</span>, <span class="keyword">int</span> mapSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//初始化</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mapSize; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; mapSize; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            Dist[i][j] = <span class="built_in">map</span>[i][j];</span><br><span class="line">            Path[i][j] = <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; mapSize; ++k)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mapSize; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; mapSize; ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (Dist[i][k] + Dist[k][j] &lt; Dist[i][j])</span><br><span class="line">                &#123; <span class="comment">//这里判断k是否影响最短路径</span></span><br><span class="line">                    <span class="comment">//若无连接的两点未被初始化为无穷大，会影响这里的判断</span></span><br><span class="line">                    Dist[i][j] = Dist[i][k] + Dist[k][j]; <span class="comment">//更新最短路径长度</span></span><br><span class="line">                    Path[i][j] = k;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>二维路径如何取出还没搞明白</p>
-
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>打开高德地图，查找从A地点到B地点的地铁线路图时，结果页面会有“时间最短”，“价格最低”，“步行最少”等选项。如果把地铁站点看作图的顶点，地铁站之间的连接看作边并且边的权重是地铁经过这条边时需要的时间或者票价的话，就可以把地铁线路的查找抽象为一个图的最短路径问题。<br>即：在网络（带权图）中，求两个不同顶点之间的所有路径中，边的权值和最小的那条路径。这条路径就叫<strong>最短路径<code>(Shortest Path)</code></strong>，这条路径的起点叫做<strong>源点<code>(Source)</code></strong>，路径的最后一个顶点叫做<strong>终点<code>(Destination)</code></strong>。<br>最短路径问题不是一个孤立的问题，它是一系列问题的集合，可以分为<strong>单源最短路径问题</strong>和<strong>多源最短路径问题</strong>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -352,10 +298,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-09 20:41:08 / 修改时间：22:24:57" itemprop="dateCreated datePublished" datetime="2020-04-09T20:41:08+08:00">2020-04-09</time>
+              <time title="创建时间：2020-04-09 20:41:08" itemprop="dateCreated datePublished" datetime="2020-04-09T20:41:08+08:00">2020-04-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-11 13:34:30" itemprop="dateModified" datetime="2020-04-11T13:34:30+08:00">2020-04-11</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数">
@@ -390,14 +342,14 @@
 
       
           <p><img src="/2020/04/09/%E8%BF%94%E6%A0%A1%E5%89%8D%E7%9A%84%E7%AC%AC29%E5%A4%A9/2020-04-09.jpg" alt="巴芬岛附近的一群独角鲸，加拿大努纳武特 (© Eric Baccega/Minden Pictures)"></p>
-<p>八点四十一分，刚看了浙大数据结构慕课的第八讲，讲的是图的最短路径算法。曾经我无比好奇无比向往这样稍有深度的东西，今天却完全静不下心看不下去。</p>
-<p>前几天在知乎上看到一首小诗，大概内容是：</p>
-<blockquote>
-<p>五岁的我面对一切未知都很快乐<br>八岁的我有一块钱就很快乐<br>十三岁的我得到一本小说就很快乐<br>十五岁的我看到她的裙摆就很快乐<br>十七岁的我每天备考也很快乐<br>二十一岁的我不快乐</p>
-</blockquote>
-<p>二十一岁，现代的二十一岁青年很多都跟我一样大三在读。大学，一不小心就会挂科。我虽然没有挂科，有时也会因挂科而害怕，我很不喜欢在读的专业，很大程度上来说，上课其实是浪费时间。浪费时间这样的说法很不公允，但是没办法，人总是喜欢接受自己想接受的看法。<br>时代是被资本推动的，有人可能会说科学技术是时代的车轮，但是我认为稍有点观察的人都会发现一个规律：资本走到哪里，哪里的科学就会迎来大发展。所以追根溯源地说，时代还是资本推动的。这本应是个无关紧要的事情，但当一个年轻人十八岁填写大学志愿的那天他没有深刻地认识这一点时，情况就稍微有了点变化。谁都知道，时代不会为个人意志转移，个人在时代的风中只能被顺风刮起，没有第二种情况，无非是刮起时的姿态好不好看罢了。接受这样的说法的话，我被刮起的姿态一定不太好看。<br>实际上我从没有认识过光学，曾经的志愿很大程度上填的很随意，现在也谈不上后悔，只是有点害怕。大学的三年我一直想着读研，似乎读研就是人生的康庄大道一样。其实一定程度上确实是，至少读研三年毕业了生活压力很大程度上可以减少一些。突然想起一件有点可悲的事情，小时候甚至中学时代，提起读大学我还一直以为自己会从事科学研究，在科研领域做出很牛的突破，然后被嘉奖一大笔钱。到了现在，我却只想搞钱，单纯的搞钱，不掺杂个人感情的搞钱。<br>社会上很多信息说：互联网行业来钱快。于是我开始想着怎么进入互联网行业，我开始计划着考研到一个计算机的专业，在研究生期间多多实习，毕业进入一家福报公司开启我的福报人生。有时候我会畅想很美丽的未来，顺利又美丽，似乎人生本就是那样的。更多的时候我会想起这些曾经做过的白日梦，然后一阵后怕：对形势的误判是十分危险的。</p>
-<p>今年十分不平常，新冠疫情死了很多人，也有很多怀揣着梦想的人经不住时代的大风梦断2020的春天。不过比起万恶的资本主义世界，在中国事业上的失败往往没有十分悲情。疫情不仅杀死了很多人的生命，同时也制造了经济的低迷，以前我觉得考研计算机不过是提供了一个去往大厂的门票，现在可能还有暂避风头的意义了。如果按照原计划，至少我现在应该已经正式开始复习，现在被困在家里，按照初中以来的常年经历，我是无论如何无法在家中学习的，即使不得不放弃考研。在家里也只能看看视频安慰自己这也是一种学习来缓解焦虑。<br>焦虑真是一种很坏的情绪，它对于学习的效率是百分之百的影响，似乎他还会加剧人的孤独感。看完了四十几部电影，库斯图里卡的几部最令我挥之不去，他的电影总是有温暖的色调，轻快的音乐，紧凑的节奏，鲜明的冲突，人物总是近乎癫狂的释放情绪。有时我觉得，人类的情绪即使在这种癫狂的节奏下，也无法表现出七八。鲁迅曾说：人类的悲欢并不相通，我只觉得他们吵闹。吵闹是好的，至少悲欢都溢于言表，人们能看到你的悲欢，这便有了共情的第一步，虽然第二部更为主要，但有了第一步总是进步。我觉得现代人有很多做不到吵闹，没有人能够听到，他们就无法吵闹。人封闭久了，情绪就会出现问题，有时会失去耐心，变得焦虑，有时会觉得孤独，甚至失去娱乐的能力，我常常会点燃一支烟，静待吸入烟雾的十几秒之后，尼古丁麻痹脑部神经的感觉。<br>情绪会表现在很多方面，最为不起眼的就是在睡眠方面。很多时候人失去睡眠尚不自知，因为都把原因归结于过度娱乐上了，在我看来，过度的娱乐正是人娱乐的能力下降的表现，至少是从娱乐中获取快乐的能力的下降。《搏击俱乐部》中说的<code>Sleep like a babe</code>有时是一种很困难的事情，最近即使吃了两片褪黑素，还是无法在合适的时间入睡。有时刷着无聊的各种软件，只能麻木地点开一个一个的内容，即使眼睛看到的东西根本没有进到脑子里去。<br>也许坏的情绪不该怪罪于开学还有29天之久，但是确是在此时，我觉得把这个杂乱无章的碎碎念写下来是不错的。既然写了一千来字，那就让它挂着吧，点支烟提交关电脑，希望今晚睡个好觉。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/09/%E8%BF%94%E6%A0%A1%E5%89%8D%E7%9A%84%E7%AC%AC29%E5%A4%A9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -447,7 +399,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-09 22:06:48" itemprop="dateModified" datetime="2020-04-09T22:06:48+08:00">2020-04-09</time>
+                <time title="修改时间：2020-04-11 13:37:57" itemprop="dateModified" datetime="2020-04-11T13:37:57+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -492,75 +444,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>距离开学还有漫长的一个月，曾经构想的考研复习计划在“时代的一粒尘”面前比不过一个夸克大。面对这样无奈的情况，再考虑到近几年我本身的学习状态（上课也就图一乐），最后很有可能不得不放弃考研，接受悲惨的命运。可能读物理的唯一好处就是就业市场上不会有其他专业的同学过来抢饭碗吧，物理专业的饭碗都要抢，那还是人吗。<br>随意扯扯之后，我主要想说的是，最近准备看哈工大的算法设计与分析慕课课程，课程链接在<a href="https://www.icourse163.org/course/HIT-356006">这里</a>，学习过程中会以博客的形式记一些笔记。</p>
-<h1 id="计算复杂性函数的阶"><a href="#计算复杂性函数的阶" class="headerlink" title="计算复杂性函数的阶"></a>计算复杂性函数的阶</h1><p>描述算法的运行效率时，通常会使用复杂度函数，复杂性函数的<strong>增长率</strong>，通常用<code>阶</code>来描述。<br>通常对一个算法使用阶来描述效率时，会：</p>
-<ul>
-<li>忽略低阶项，只保留最高阶的项</li>
-<li>忽略常系数</li>
-</ul>
-<p>常用<strong>增长函数</strong>表示阶，如$\Theta(1)$,$\Theta(n)$,$\Theta(n^2)$,$\Theta(\log n)$等。除$\Theta$外，常用的增长函数记号还有$O$,$\Omega$,$\omega$,$o$。</p>
-<h2 id="同阶函数集合"><a href="#同阶函数集合" class="headerlink" title="同阶函数集合"></a>同阶函数集合</h2><p>对于给定的函数$g(n)$，<script type="math/tex">\Theta(g(n)) = \{f(n)|\exists c_1,c_2>0,n_0,\forall n>n_0,c_1g(n)\leqslant f(n)\leqslant c_2g(n)\}</script>,称为与$g(n)$同阶的函数集合。<br>即：如果存在常数$c_1$，$c_2$，对于函数$f(n)$和任意足够大的$n$，始终满足关系：$c_1g(n)\leqslant f(n) \leqslant c_2g(n)$（这三个函数增长率大致相同），则称函数$f(n)$是函数$g(n)$的同阶函数，所有的函数$f(n)$的集合称为函数$g(n)$的同阶函数集。</p>
-<p><img src="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/1.png" alt></p>
-<p>若函数$f(n)$是函数$g(n)$的同阶函数，可记作$f(n)=\Theta(g(n))$。</p>
-<p>因此对于复杂性函数为$f(n) = an^2+bn+c$的算法，可以说它的复杂性是$\Theta(n^2)$的（只保留高阶项，忽略常系数）。</p>
-<h2 id="低阶函数集合"><a href="#低阶函数集合" class="headerlink" title="低阶函数集合"></a>低阶函数集合</h2><p>对于给定的函数$g(n)$，<script type="math/tex">O(g(n)) = \{f(n)|\exists c,n_0>0,\forall n\leqslant n_0,0\leqslant f(n)\leqslant cg(n)\}</script>，称为函数$g(n)$的低阶函数集合。即当$n$足够大时，函数$f(n)$始终小于函数$g(n)$的常数倍。记作$f(n)=O(g(n))$。</p>
-<p><img src="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/2.png" alt></p>
-<p>明显的：$O(g(n))\subseteq \Theta(g(n))$（$\Theta$标记强于$O$标记）</p>
-<h2 id="高阶函数集合"><a href="#高阶函数集合" class="headerlink" title="高阶函数集合"></a>高阶函数集合</h2><p>对于给定的函数$g(n)$，<script type="math/tex">\Omega(g(n)) = \{f(n)|\exists c>0,n_0>0,\forall n\geqslant n_0,0\leqslant cg(n) \leqslant f(n)\}</script>，称为函数$g(n)$的高阶函数结合。即$f(n)$增长率比$g(n)$大。记作$f(n)=\Omega(g(n))$</p>
-<p><img src="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/3.png" alt></p>
-<p>函数$f(n) = an^2+bn+c = \Theta(n^2)\&amp;\&amp;=O(n^2)$<br>同时，函数$f(n) = an+b$也可以$=O(n^2)$<br>这是因为$O$标记表示函数的<strong>上界</strong>，而$\Theta$标记表示函数的<strong>紧界</strong>。通常用$O$标记表示算法的<strong>最坏</strong>运行效率，而用$\Theta$标记表示算法的<strong>精确</strong>运行效率。<br>标记$\Omega$表示函数的<strong>下界</strong>，它用来描述算法的<strong>最好</strong>运行效率。当且仅当$f(n)=O(g(n))\&amp;\&amp;f(n)=\Omega(g(n))$时，$f(n)=\Theta(g(n))$。</p>
-<h2 id="严格低阶函数集"><a href="#严格低阶函数集" class="headerlink" title="严格低阶函数集"></a>严格低阶函数集</h2><p>对于给定的函数$g(n)$，<script type="math/tex">o(g(n))=\{f(n)|\forall c>0,\exists n_0>0,\forall n\geqslant n_0,0\leqslant f(n)<cg(n)\}</script>。即对任意正数$c$，存在正数$n_0$，使得任意$n\geqslant n_0$，有$0\leqslant f(n)&lt;cg(n)$。<br>比如函数$f(n) = n$，对于足够大的$n$时，对于任意的常数$c$，都有$n&lt;cn^2$，因此$n = o(n^2)$。</p>
-<p><img src="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/4.png" alt></p>
-<p>$o$标记表示上界但<strong>不是紧的</strong>情况。易知存在：<script type="math/tex">f(n)=o(g(n))\Longrightarrow \lim_{n\rightarrow\infty}\frac{f(n)}{g(n)}=0</script><br>上界情况下，若常数$c$存在，则是$O$标记，若常数$c$任意，则是$o$标记。</p>
-<h2 id="严格高阶函数集"><a href="#严格高阶函数集" class="headerlink" title="严格高阶函数集"></a>严格高阶函数集</h2><p>对于给定的函数$g(n)$，<script type="math/tex">\omega(g(n))=\{f(n)|\forall c>0,\exists n_0>0,\forall n\geqslant n_0,0\leqslant cg(n)<f(n)\}</script>，即对于任意正数 <script type="math/tex">c ，存在正数 n_0 ，使得任意n\geqslant n_0 ，有 0 \leqslant cg(n)<f(n)</script>。与严格低阶函数集类似，它表示下界但不紧的情况。有<script type="math/tex">\lim_{n\rightarrow \infty}\frac{f(n)}{g(n)} = \infty。记作f(n)=\omega(g(n))</script></p>
-<h2 id="渐进符号性质"><a href="#渐进符号性质" class="headerlink" title="渐进符号性质"></a>渐进符号性质</h2><ul>
-<li>传递性：（所有5个符号）<br>若$f(n)=O(g(n))\&amp;\&amp;g(n)=O(h(n))$,则$f(n)=O(h(n))$</li>
-<li>自反性：（对于$O$，$\Theta$，$\Omega$）<br>$f(n)=O(f(n))$</li>
-<li>对称性：（仅对于$\Theta$）<br>$f(n)=\Theta(g(n))\Longleftrightarrow g(n)=\Theta(f(n))$</li>
-<li><p>反对称性：</p>
-<p>$f(n)=O(g(n))\Longleftrightarrow g(n)=\Omega(f(n))$</p>
-<p>$f(n)=o(g(n))\Longleftrightarrow g(n)=\omega(f(n))$</p>
-</li>
-</ul>
-<h1 id="和式的估计与界限"><a href="#和式的估计与界限" class="headerlink" title="和式的估计与界限"></a>和式的估计与界限</h1><p>一个算法的过程通常由数个复杂度不同的子过程组成，通过各个子过程时间复杂性函数的加和，可以得到整个算法的时间复杂性。有时子过程复杂性函数的和式不容易计算，往往可以通过和式的界限来粗略的估计算法的时间复杂性。</p>
-<p>（这部分应该滚去高数里学🙄）</p>
-<h1 id="递归方程"><a href="#递归方程" class="headerlink" title="递归方程"></a>递归方程</h1><p>递归方程是使用小的输入来描述一个函数的方程或不等式。<br>例如<strong>归并排序<code>(MergeSort)</code></strong> 的递归方程：</p>
-<p>$T(n)=\Theta(1) when\space \space \space \space  n=1$</p>
-<p>$T(n)=T(n/2)+\Theta(n)when\space \space \space \space n&gt;1$</p>
-<h2 id="求解递归方程"><a href="#求解递归方程" class="headerlink" title="求解递归方程"></a>求解递归方程</h2><ol>
-<li><p>替换法</p>
-<ul>
-<li>先猜想一个（蒙一个，好听点叫<strong>大胆假设，小心求证</strong>）</li>
-<li>数学归纳法证明</li>
-</ul>
-</li>
-<li><p>迭代方法</p>
-<ul>
-<li>把方程转化为和式（一直迭代到1）</li>
-<li>和式估计</li>
-</ul>
-</li>
-<li><p><code>Master</code>定理</p>
-<ul>
-<li>只能求解形如$T(n)=aT(n/b)+f(n)$类型的递归方程</li>
-</ul>
-</li>
-</ol>
-<p>这部分最好还是在纸上学习，这里还是不展开了<del>（👴学不会）</del>。只记录一个<code>Master</code>定理：<br>设$a\geqslant 1$和$b&gt;1$是常数，$f(n)$是一个函数，$T(n)$是定义在非负整数集上的函数$T(n)=aT(n/b)+f(n)$，$T(n)$可以如下求解：</p>
-<ol>
-<li>若<script type="math/tex">f(n)=O(n^{\log_{b}{a-\epsilon}}),\epsilon>0</script>是常数，则<script type="math/tex">T(n) = \Theta(n^{\log_{b}a})</script></li>
-<li>若<script type="math/tex">f(n) = \Theta(n^{\log_{b}a})</script>，则<script type="math/tex">T(n)=\Theta(n^{\log_{b}a\lg n})</script></li>
-<li>若<script type="math/tex">f(n)=\Omega(n^{\log_{b}{a}+\epsilon})</script>，<script type="math/tex">\epsilon>0</script>是常数，且对于所有充分大的$n$，<script type="math/tex">af(n/b)\leqslant cf(n)</script>，$c&gt;1$是常数，则<script type="math/tex">T(n)=\Theta(f(n))</script></li>
-</ol>
-<p>直观地叙述，拿$f(n)$与<script type="math/tex">n^{\log_{b}a}</script>相比：</p>
-<ol>
-<li>若$f(n)$大：则<script type="math/tex">T(n)=\Theta(f(n))</script></li>
-<li>若<script type="math/tex">n^{\log_{b}{a}}大：则T(n)=\Theta(n^{\log_{b}{a}})</script></li>
-<li>若$f(n)$与<script type="math/tex">n^{\log_{b}{a}}同阶，则T(n)=\Theta(n^{\log_{b}{a}}\lg n)=\Theta(f(n)\lg n)</script></li>
-</ol>
-<p><img src="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/5.png" alt></p>
-<p>图中的红色部分（不包括$f(n)=n^{\log_{b}a}$这一点）<code>Master</code>定理不适用</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>👴听得迷迷糊糊，啥也没整明白。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/08/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -610,7 +501,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-10 20:00:42" itemprop="dateModified" datetime="2020-04-10T20:00:42+08:00">2020-04-10</time>
+                <time title="修改时间：2020-04-11 13:37:46" itemprop="dateModified" datetime="2020-04-11T13:37:46+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -655,38 +546,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>图的遍历就是把图中的每个顶点不重复地访问一遍，它可以用来解决很多图的问题。</p>
-<h2 id="两种遍历"><a href="#两种遍历" class="headerlink" title="两种遍历"></a>两种遍历</h2><h3 id="深度优先搜索-Depth-First-Search-DFS"><a href="#深度优先搜索-Depth-First-Search-DFS" class="headerlink" title="深度优先搜索(Depth First Search,DFS)"></a>深度优先搜索<code>(Depth First Search,DFS)</code></h3><p>深度优先搜索顾名思义就是在搜索过程中瞅准某条路径一直向下访问，直到访问到了这条路径的终点才切换到其他路径。问题是，在某条路径上一路向下访问时，需要保存住来时的路径信息，否则在到达终点的时候将无法返回到起点切换其他路径。<br>这种一路向下直到某个条件（终点）再原路返回的过程很像程序设计中的递归思想，因此，深度优先搜索可以方便的使用 <strong>堆栈<code>(Stack)</code></strong> 实现。</p>
-<p>如下面所示的图：</p>
-<p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/1.png" alt></p>
-<p>假设使用深度优先搜索从节点<code>0</code>开始遍历，则首先对节点<code>0</code>的所有邻居节点（与<code>0</code>直接相连的节点）中的一个访问，假设访问到了节点<code>2</code>，则对节点<code>2</code>的邻居节点进行访问。首先访问邻居节点<code>0</code>，<code>0</code>已经被访问，因此切换到节点<code>1</code>。接着对节点<code>1</code>的邻居节点<code>2</code>访问，<code>2</code>已被访问，因此切换到<code>3</code>。接着访问<code>3</code>的邻居节点<code>4</code>。访问到节点<code>4</code>之后，对节点<code>4</code>的所有邻居节点访问，发现均被访问过。然后开始回溯，查找是否有尚未访问到的分支。比如此例中回溯到节点<code>3</code>，发现所有邻居节点都被访问过，继续回溯亦然，当回溯到起始节点<code>0</code>时，便知道所有节点都被访问过，遍历完成。</p>
-<p>实际的程序过程可以描述为：首先建立一个空栈，访问起始顶点<code>0</code>，并把<code>0</code>压栈，然后访问节点<code>0</code>的邻居节点<code>2</code>，把<code>2</code>压栈。访问节点<code>2</code>的未访问节点<code>1</code>，把<code>1</code>压栈，访问节点<code>3</code>,<code>4</code>，把<code>3</code>,<code>4</code>压栈。遍历节点<code>4</code>的邻居节点之后，前方无路可走，开始出栈。首先出栈节点<code>3</code>，访问节点<code>3</code>的未访问邻居节点并压栈，一直访问并压栈到尽头。之后对每个出栈的顶点做同样的操作，直到堆栈为空（顶点全部弹出）。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="comment">//深度优先搜索</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Stack *<span class="built_in">stack</span> = createStack();</span><br><span class="line">    Vertex *nextNode = vertex;</span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">stack</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        visit(nextNode);                                <span class="comment">//visit vertex</span></span><br><span class="line">        push(<span class="built_in">stack</span>, nextNode);                          <span class="comment">//push vertex to stack</span></span><br><span class="line">        Visited[nextNode-&gt;id] = <span class="number">1</span>;                      <span class="comment">//shows that this vertex was visted</span></span><br><span class="line">        <span class="keyword">int</span> end = <span class="number">1</span>;                                    <span class="comment">//flag that shows if route comes to end</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nextNode-&gt;neighborNum; ++i) <span class="comment">//neighbor of vertex</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = nextNode-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visited</span></span><br><span class="line">            &#123;</span><br><span class="line">                nextNode = neighbor; <span class="comment">//set nextNode neighbor not visited</span></span><br><span class="line">                end = <span class="number">-1</span>;            <span class="comment">//shows that end is not coming</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (end)</span><br><span class="line">        &#123;</span><br><span class="line">            nextNode = pop(<span class="built_in">stack</span>); <span class="comment">//if end comes,pop a vertex from stack</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个实现首先构造了一个顶点个数长度的数组来标识顶点是否被访问，然后利用循环和堆栈实现遍历过程。这是一个并不优雅的实现，甚至不知道是否正确。<br>如果直接用递归程序会非常清晰：(两段代码实际上都是伪代码，因为节点的邻居节点信息的取出是不规范的，不正确的)</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Visited[Size] = <span class="number">-1</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">    visit(vertex);</span><br><span class="line">    Visted[vertex-&gt;id] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; vertex-&gt;neighborNum;++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!Visited[vertex-&gt;neighbor[i]])&#123;</span><br><span class="line">            depthFirstSearch(graph,vertex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="广度优先搜索-Breadth-First-Search-BFS"><a href="#广度优先搜索-Breadth-First-Search-BFS" class="headerlink" title="广度优先搜索(Breadth First Search,BFS)"></a>广度优先搜索<code>(Breadth First Search,BFS)</code></h3><p>广度优先搜索过程类似于二叉树的<strong>层序遍历</strong>，都是先访问某节点，然后把该节点的相邻节点挨个访问，同样类似的是，广度优先遍历的实现也可以使用 <strong>队列<code>(Queue)</code></strong> 实现。实际上，树就是一种特殊的图（有顶点，有边。当有一个东西各方面都像鸭子，那他就是一个鸭子🦢）</p>
-<p>同一个图：</p>
-<p><img src="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/2.png" alt></p>
-<p>使用广度优先遍历的过程大致是，首先从起始顶点<code>0</code>出发，挨个访问它的邻居顶点<code>2</code>,<code>4</code>。然后访问节点<code>2</code>和它的邻居节点<code>0</code>(已被访问),<code>1</code>,<code>3</code>，然后访问节点<code>4</code>和它的邻居节点<code>0</code>,<code>1</code>,<code>3</code>。最后对节点<code>0</code>,<code>1</code>,<code>3</code>挨个进行上述的动作。</p>
-<p>使用队列实现的程序过程为：首先建立空的队列，将节点<code>0</code>入队，然后弹出节点<code>0</code>进行访问，同时把节点<code>0</code>的所有 <strong>未被访问过的</strong> 邻居节点<code>2</code>,<code>4</code>加入队列。然后从队列弹出一个顶点，对其进行访问并把它的所有 <strong>未被访问过的</strong> 邻居顶点加入队列。直到队列为空，说明遍历完成。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    visit(vertex);           <span class="comment">//visite vertex first</span></span><br><span class="line">    Visited[vertex-&gt;id] = <span class="number">1</span>; <span class="comment">//set visited true</span></span><br><span class="line">    Queue *<span class="built_in">queue</span> = createQueue();</span><br><span class="line">    add(<span class="built_in">queue</span>, vertex); <span class="comment">//add to queue to find its neighbors</span></span><br><span class="line">    <span class="keyword">while</span> (!isEmpty(<span class="built_in">queue</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        Vertex *v = <span class="keyword">delete</span> (<span class="built_in">queue</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; v-&gt;neighborNum; ++i) <span class="comment">//find all neighbors</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vertex *neighbor = v-&gt;neighbors[i];</span><br><span class="line">            <span class="keyword">if</span> (!Visited[neighbor-&gt;id]) <span class="comment">//if not visted,visit and add to queue</span></span><br><span class="line">            &#123;</span><br><span class="line">                visit(neighbor);</span><br><span class="line">                Visited[neighbor-&gt;id] = <span class="number">1</span>;</span><br><span class="line">                add(<span class="built_in">queue</span>, neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个实现仍然是伪代码，需要更加合理的查找顶点邻居信息的方法才能工作。</p>
-<p>两种遍历的时间复杂度实际上是相同的（全部遍历时），但是对于遍历的中途退出的问题，需要认真思考选择更合适的遍历方式。如寻路问题中需要根据地图的样式选择遍历方式。</p>
-<h2 id="图的一些术语"><a href="#图的一些术语" class="headerlink" title="图的一些术语"></a>图的一些术语</h2><ul>
-<li>连通：如果从顶点<code>v</code>到顶点<code>w</code>之间存在一条（无向）路径，则称顶点<code>v</code>和顶点<code>w</code>之间是连通的。</li>
-<li>强连通：有向图中顶点<code>v</code>和<code>w</code>之间的路径是双向路径，则<code>v</code>和<code>w</code>之间是强连通的。</li>
-<li>路径：顶点<code>v</code>到顶点<code>w</code>之间的路径是一系列顶点的序列，其中任意一对相邻的顶点之间在图中都有 <strong>边<code>(Edge)</code></strong> 。路径的长度是路径中的边数（对于带权图，路径长度是边的权值之和）。如果路径序列中所有的顶点都不相同（路径是无环的），则称路径为 <strong>简单路径</strong> 。</li>
-<li>回路：起点等于终点的路径</li>
-<li>连通图：图的 <strong>任意两点</strong> 均连通</li>
-<li>强连通图：<strong>有向图</strong> 的 <strong>任意两点</strong> 均强连通</li>
-<li>连通分量：无向图的极大连通子图：<ul>
-<li>极大顶点数：子图中再加任意一个点就不是连通图了</li>
-<li>极大边数：子图中所有顶点之间的边数</li>
-</ul>
-</li>
-<li>强连通分量：<strong>有向图</strong> 的极大强连通分量</li>
-</ul>
-<p>对于不连通的图，可以对图的每个连通分量调用上面两个遍历函数实现整个图的遍历。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -736,7 +603,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-08 16:22:23" itemprop="dateModified" datetime="2020-04-08T16:22:23+08:00">2020-04-08</time>
+                <time title="修改时间：2020-04-11 13:37:38" itemprop="dateModified" datetime="2020-04-11T13:37:38+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -781,245 +648,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了<strong>图<code>(Graph)</code></strong>这种数据结构。</p>
-<h1 id="什么是图"><a href="#什么是图" class="headerlink" title="什么是图"></a>什么是图</h1><p>图是一种表示多对多关系的数据结构，它包含一组<strong>顶点<code>(Vertex)</code></strong>和顶点之间的连接关系（称为<strong>边<code>(Edge)</code></strong>）。<br>对于节点$v_i$和$v_j$，一般用&lt;$v_i$,$v_j$&gt;表示由$v_i$指向$v_j$的边。<br>图中的相同节点对一般只考虑一条边，不考虑重复的边和指向自己的边，根据边的单向双向，带权不带权，图可以分为<code>无向无权图，无向带权图，有向无权图，有向带权图</code></p>
-<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt="无向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png" alt="无向带权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png" alt="有向无权图"><br><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt="有向带权图"></p>
-<h2 id="图的操作集"><a href="#图的操作集" class="headerlink" title="图的操作集"></a>图的操作集</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">(<span class="keyword">int</span> vertexCnt)</span></span>;                                             <span class="comment">//创建空图返回</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertVertex</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;           <span class="comment">//将节点插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span>;                 <span class="comment">//将边插入图</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">depthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;         <span class="comment">//从顶点vertex出发深度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">breadthFirstSearch</span><span class="params">(Graph *graph, Vertex *vertex)</span></span>;       <span class="comment">//从顶点vertex出发宽度优先遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shortestPath</span><span class="params">(Graph *graph, Vertex *vertex, <span class="keyword">int</span> dist[])</span></span>; <span class="comment">//计算从节点vertex到任意节点的最短路径</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">minSpanningTree</span><span class="params">(Graph *graph)</span></span>;                          <span class="comment">//计算图的最小生成树</span></span><br></pre></td></tr></table></figure>
-<p>图的建立实现在后文给出</p>
-<h2 id="如何表示一个图"><a href="#如何表示一个图" class="headerlink" title="如何表示一个图"></a>如何表示一个图</h2><h3 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>使用一个二维矩阵可以描述一个图。对于有<code>n</code>个顶点的图，可以用一个<code>n*n</code>大小的矩阵<code>G[n][n]</code>来表示。<br>首先给顶点编号<code>0---n-1</code>，矩阵的值 <script type="math/tex">G[i][j] = 1(若<v_i,v_j>存在)</script> ， <script type="math/tex">G[i][j] = 0(若<v_i,v_j>不存在)</script> 。对于带权图，矩阵的值一般是边的权重。</p>
-<p>如下面的有向带权图：</p>
-<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png" alt></p>
-<p>其邻接矩阵为：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th></th>
-<th><script type="math/tex">v_0</script></th>
-<th><script type="math/tex">v_1</script></th>
-<th><script type="math/tex">v_2</script></th>
-<th><script type="math/tex">v_3</script></th>
-<th><script type="math/tex">v_4</script></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><script type="math/tex">v_0</script></td>
-<td>0</td>
-<td><strong>2</strong></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_1</script></td>
-<td>0</td>
-<td>0</td>
-<td><strong>2</strong></td>
-<td><strong>2</strong></td>
-<td><strong>3</strong></td>
-</tr>
-<tr>
-<td><script type="math/tex">v_2</script></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_3</script></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_4</script></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>对于无向图，他们的邻接矩阵一般是对称的：</p>
-<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
-<p>邻接矩阵为：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th></th>
-<th><script type="math/tex">v_0</script></th>
-<th><script type="math/tex">v_1</script></th>
-<th><script type="math/tex">v_2</script></th>
-<th><script type="math/tex">v_3</script></th>
-<th><script type="math/tex">v_4</script></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><script type="math/tex">v_0</script></td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_1</script></td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td><strong>1</strong></td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_2</script></td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-<td><strong>1</strong></td>
-</tr>
-<tr>
-<td><script type="math/tex">v_3</script></td>
-<td><strong>1</strong></td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_4</script></td>
-<td>0</td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>因此，对于无向图，可以使用一个长度为$N(N+1)/2$的序列储存，这样可以节省一半的空间。<br>例如取上述矩阵的下半部分：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th></th>
-<th><script type="math/tex">v_0</script></th>
-<th><script type="math/tex">v_1</script></th>
-<th><script type="math/tex">v_2</script></th>
-<th><script type="math/tex">v_3</script></th>
-<th><script type="math/tex">v_4</script></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><script type="math/tex">v_0</script></td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_1</script></td>
-<td><strong>1</strong></td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_2</script></td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_3</script></td>
-<td><strong>1</strong></td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_4</script></td>
-<td>0</td>
-<td>0</td>
-<td><strong>1</strong></td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>将上述数据按行优先顺序储存在一个数组里，数组的长度为$N(N+1)/2$。<br>要访问节点<code>i,j(i行，j列)</code>之间的连接，可以访问数组的<code>i*(i+1)/2+j</code>位置。</p>
-<p>邻接矩阵是一种较为直观的表示方法，它的好处有：</p>
-<ol>
-<li>方便检查任意一对节点之间是否存在边</li>
-<li>方便查找所有与某一结点直接相连的节点</li>
-<li>方便计算节点的度（指向节点的边个数叫入度，从节点指向别的节点的边个数叫出度）。</li>
-</ol>
-<p>它的缺点也很明显：对较为稀疏的图（点多边少）而言，空间利用效率不高，计算图的总边数是时间效率不高。</p>
-<h3 id="邻接表"><a href="#邻接表" class="headerlink" title="邻接表"></a>邻接表</h3><p>使用一个长度为<code>n(节点个数)</code>的链表数组<code>G[n]</code>储存图。数组的元素<code>G[i]</code>表示编号为<code>i</code>的节点，<code>G[i]</code>后接它指向的所有节点指针。</p>
-<p>如：</p>
-<p><img src="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png" alt></p>
-<p>上图的邻接表为：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th><script type="math/tex">v_0</script></th>
-<th>3</th>
-<th>1</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><script type="math/tex">v_1</script></td>
-<td>0</td>
-<td>2</td>
-<td>3</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_2</script></td>
-<td>1</td>
-<td>4</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_3</script></td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr>
-<td><script type="math/tex">v_4</script></td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>这样的表示方法不会储存没有连接的无效信息，但是它把每条边都储存了两遍。对于稀疏的图而言，它的空间利用率较高，但是较为稠密的图会浪费较多空间。<br>邻接表可以方便的查找一个节点的所有直接相连节点，如果储存的图是无向图，它也可以方便的计算出节点的度。但是如果储存的是有向图，邻接表将无法方便的计算出节点的<strong>入度</strong>，同时它也无法方便地判断出给定节点对之间是否存在边。</p>
-<h2 id="图的建立"><a href="#图的建立" class="headerlink" title="图的建立"></a>图的建立</h2><p>上面写了图的两种表示，下面给出两种表示下图的建立。</p>
-<h3 id="邻接矩阵-1"><a href="#邻接矩阵-1" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h3><p>首先给出图的原型：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">graph</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexCount;                       <span class="comment">//顶点数</span></span><br><span class="line">    <span class="keyword">int</span> edgeCount;                         <span class="comment">//边数</span></span><br><span class="line">    WeightType graphMat[MaxSize][MaxSize]; <span class="comment">//邻接矩阵，元素表示边的权重</span></span><br><span class="line">    DataType data[MaxSize];                <span class="comment">//节点数据</span></span><br><span class="line">&#125; Graph;</span><br></pre></td></tr></table></figure>
-<p>图的建立首先需要建立一个只有节点没有边的图：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Graph *<span class="title">create</span><span class="params">(<span class="keyword">int</span> vertexCnt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Graph *graph = (Graph *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Graph));</span><br><span class="line">    graph-&gt;vertexCount = vertexCnt; <span class="comment">//初始化顶点数</span></span><br><span class="line">    graph-&gt;edgeCount = <span class="number">0</span>;           <span class="comment">//初始化边数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;vertexCount; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        graph-&gt;data[i] = <span class="number">0</span>; <span class="comment">//数据初始化，应该初始化为用户给定的数据</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; graph-&gt;vertexCount; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            graph-&gt;graphMat[i][j] = <span class="number">0</span>; <span class="comment">//连接初始化</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后把边插入到图中，边应该保存起点和终点以及权重数据：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Vertex;<span class="comment">//邻接矩阵中，节点可用坐标表示</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">edge</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    Vertex start;      <span class="comment">//起点</span></span><br><span class="line">    Vertex end;        <span class="comment">//终点</span></span><br><span class="line">    WeightType weight; <span class="comment">//权重</span></span><br><span class="line">&#125; Edge;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertEdge</span><span class="params">(Graph *graph, Edge *edge)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (graph == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (edge-&gt;start &gt;= graph-&gt;vertexCount || edge-&gt;end &gt;= graph-&gt;vertexCount)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    graph-&gt;graphMat[edge-&gt;start][edge-&gt;end] = edge-&gt;weight;</span><br><span class="line">    <span class="comment">//对于无向图，还需要下面一句</span></span><br><span class="line">    graph-&gt;graphMat[edge-&gt;end][edge-&gt;start] = edge-&gt;weight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>对于给定的边的集合<code>Edge edges[someNumber]</code>只要对其中每个边调用插入函数就可以了</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Edge edges[cnt];</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; cnt;++i)</span><br><span class="line">&#123;</span><br><span class="line">    insertEdge(graph,edges[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="邻接表-1"><a href="#邻接表-1" class="headerlink" title="邻接表"></a>邻接表</h3><p>邻接表表示的图原型有所不同，首先建立节点的原型，根据邻接表的结构，节点应该是一个链表。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">lnode</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexPosition; <span class="comment">//邻接点下标，即顶点编号</span></span><br><span class="line">    WeightType weight;  <span class="comment">//边权重</span></span><br><span class="line">    LVertex *next;</span><br><span class="line">&#125; LVertex;</span><br></pre></td></tr></table></figure>
-<p>邻接表应该是一个指针数组，数组元素是链表指针：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">table</span></span></span><br><span class="line"><span class="class">&#123;</span>                         <span class="comment">//忽略顶点数据</span></span><br><span class="line">    LVertex *firstVertex; <span class="comment">//第一个顶点</span></span><br><span class="line">&#125; LTable;</span><br></pre></td></tr></table></figure>
-<p>根据上面两个结构实现图的结构原型：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">lgraph</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> vertexCount;            <span class="comment">//顶点数</span></span><br><span class="line">    <span class="keyword">int</span> edgeCount;              <span class="comment">//边数</span></span><br><span class="line">    LTable graphTable[MaxSize]; <span class="comment">//邻接表</span></span><br><span class="line">&#125; LGraph;</span><br></pre></td></tr></table></figure>
-<p>邻接表实现的图建立第一步仍然是建立一个一定数量节点的空图：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LGraph *<span class="title">createGraph</span><span class="params">(<span class="keyword">int</span> vertexCount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LGraph *graph = (LGraph *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(LGraph));</span><br><span class="line">    graph-&gt;edgeCount = <span class="number">0</span>;</span><br><span class="line">    graph-&gt;vertexCount = vertexCount;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;vertexCount; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        graph-&gt;graphTable[i].firstVertex = <span class="literal">NULL</span>; <span class="comment">//邻接表链表初始化为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后将边插入，由于邻接表中只保存了头节点，因此插入方式采用头插法。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertLEdge</span><span class="params">(LGraph *graph, Edge *edge)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//建立要插入的节点</span></span><br><span class="line">    LVertex *vertex = (LVertex *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(LVertex));</span><br><span class="line">    vertex-&gt;vertexPosition = edge-&gt;end;</span><br><span class="line">    vertex-&gt;weight = edge-&gt;weight;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//插入邻接表</span></span><br><span class="line">    vertex-&gt;next = graph-&gt;graphTable[edge-&gt;start].firstVertex;</span><br><span class="line">    graph-&gt;graphTable[edge-&gt;start].firstVertex = vertex;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//对于无向图，还需要插入边&lt;end,start&gt;</span></span><br><span class="line">    LVertex *sVertex = (Vertex *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Vertex));</span><br><span class="line">    sVertex-&gt;vertexPosition = edge-&gt;start;</span><br><span class="line">    sVertex-&gt;weight = edge-&gt;weight;</span><br><span class="line"></span><br><span class="line">    sVertex-&gt;next = graph-&gt;graphTable[edge-&gt;end].firstVertex;</span><br><span class="line">    graph-&gt;graphTable[edge-&gt;end].firstVertex = sVertex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>通过给定边数据建立完整图的过程与邻接矩阵无异。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>图是复杂的数据结构，上面提到的邻接矩阵，邻接表只是两种常见的，较为直观的表示方法。同时也容易发现，它们两个都对特定问题存在一定的缺陷，对于特定的关于图的问题，往往需要选择其他更适合问题本身的图的表达方式。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1069,7 +705,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-08 16:04:13" itemprop="dateModified" datetime="2020-04-08T16:04:13+08:00">2020-04-08</time>
+                <time title="修改时间：2020-04-11 13:36:40" itemprop="dateModified" datetime="2020-04-11T13:36:40+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1146,23 +782,14 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(num&lt;<span class="number">80</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">70</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(num&lt;<span class="number">60</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(num&lt;<span class="number">90</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>则平均判断次数为：<script type="math/tex">0.05*3+0.15*3+0.4*2+0，3*2+0.1*2=2.2</script>次，优化了不少。这就是哈夫曼树的思想：根据元素出现的频率构造搜索树。</p>
 <h2 id="带权路径长度-WPL"><a href="#带权路径长度-WPL" class="headerlink" title="带权路径长度(WPL)"></a>带权路径长度<code>(WPL)</code></h2><p>假设二叉树有<code>n</code>个<strong>叶子节点</strong>，每个叶子节点的权值为<script type="math/tex">W_k</script>，从根节点到每个叶子节点的长度为<script type="math/tex">L_k</script>，则每个叶子节点的带权路径和就是<script type="math/tex">WPL = \sum W_kL_k</script>。<br><strong>哈夫曼树就是WPL最小的二叉树</strong>，又叫最优二叉树。</p>
-<h1 id="哈夫曼树的构造"><a href="#哈夫曼树的构造" class="headerlink" title="哈夫曼树的构造"></a>哈夫曼树的构造</h1><p>哈夫曼树的构造过程很简单，从一个带权节点的序列中取出权值最小的两个节点<code>a</code>和<code>b</code>，将<code>a</code>和<code>b</code>合并，并且构造一个新节点作为<code>a</code>和<code>b</code>的父节点，父节点的权值为<code>a,b</code>权值之和。然后把父节点放回到序列中，再取出权值最小的两个节点合并。一直做到序列为空，哈夫曼树就形成了。</p>
-<p>哈弗曼数结构上就是普通的二叉树，因此它的原型为：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">hafman</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    WeightType weight;</span><br><span class="line">    HuffmanTree *left;</span><br><span class="line">    HuffmanTree *right;</span><br><span class="line">&#125; HuffmanTree;</span><br></pre></td></tr></table></figure>
-<p>构造的过程需要取出权值最小的元素，不妨用<strong>最小堆<code>(MinHeap)</code></strong>储存节点，最小堆的实现与最大堆类似，可见<a href="http://blog.zhuwenq.icu:7010/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/">这篇博客</a>。如果使用排好序的序列也可以实现。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HuffmanTree *<span class="title">constructHuffmanTree</span><span class="params">(MinHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HuffmanTree *huffman;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; heap-&gt;size; ++i) <span class="comment">//size nodes need size-1 times insert</span></span><br><span class="line">    &#123;</span><br><span class="line">        huffman = (HuffmanTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(HuffmanTree));</span><br><span class="line">        huffman-&gt;left = deleteMin(heap);</span><br><span class="line">        huffman-&gt;right = deleteMin(heap);</span><br><span class="line">        huffman-&gt;weight = huffman-&gt;left-&gt;weight +</span><br><span class="line">                          huffman-&gt;right-&gt;weight;</span><br><span class="line">        insert(heap, huffman);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> deleteMin(heap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="哈夫曼树的特点"><a href="#哈夫曼树的特点" class="headerlink" title="哈夫曼树的特点"></a>哈夫曼树的特点</h2><p>根据哈夫曼树构造的过程，可以看出哈夫曼树具有以下特点：</p>
-<ol>
-<li>没有度为1的节点<br>哈夫曼树构造时总是两两合一，因此它的所有节点要么度为2，要么度为0</li>
-<li><code>n</code>个<strong>叶节点</strong>的哈夫曼树总结点数为<code>2n-1</code><br>二叉树的节点分为三类：度为0，1，2的三类节点。设度为<code>i</code>的节点数量为<script type="math/tex">n_i</script>，同时满足关系：<script type="math/tex">n_2=n_0-1</script>。因此在哈夫曼树中：叶节点数量<code>n</code>即为<script type="math/tex">n_0</script>，由于没有度为1的点，所以节点总数是<script type="math/tex">n_0+n_2=2n-1</script>。</li>
-<li>哈夫曼树交换左右子树仍然是哈夫曼树</li>
-<li>对于同一组带权节点序列，可能存在不同构的两颗哈夫曼树，但是他们的<code>WPL</code>相同。</li>
-</ol>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>接着最前面提到的编码问题。</p>
-<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><p>是一种字符串的不等长编码方式，可以使字符串占用的空间最小。使用不等长编码有一个问题：给定一串编码，无法准确的把每个字符分割出来，不同的分割方式有不同的含义，即二义性问题。针对这个问题，又有聪明人提出了解决的方法：使用<strong>前缀码<code>(Prefix Code)</code></strong>。<br>所谓前缀码，即满足：任何字符的编码都不是其他字符编码的前缀。例如给出下面的三个字母的非前缀编码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a:  <span class="number">1</span></span><br><span class="line">b:  <span class="number">0</span></span><br><span class="line">c:  <span class="number">10</span></span><br></pre></td></tr></table></figure><br>则字符<code>a</code>的编码<code>1</code>是字符<code>c</code>的编码<code>10</code>的前缀，当给出编码<code>10</code>时，无法分辨究竟是<code>ab</code>还是<code>c</code>。</p>
-<p>哈夫曼编码是在一棵二叉树上进行的，规定<code>0</code>代表左子树，<code>1</code>代表右子树，同时字符只储存在叶节点上。这样每个字符的编码实际上描述了从根节点到该字符所在叶节点的路径，同时任何一个字符的编码都不可能是其他字符编码的前缀。</p>
-<p>解决了二义性问题，哈夫曼编码下一个要解决的问题就是效率。结合哈夫曼树的思想，把字符串中每个字符的出现次数作为该字符的权值建立哈夫曼树，这样出现次数多的节点将位于较浅位置处的叶节点，其路径编码（<code>0</code>代表左，<code>1</code>代表右）长度也较短。这样就实现了对一个字符串或者一篇文章的字符不等长编码，也就实现了对字符串的压缩。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1204,10 +831,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-03-30 19:49:39 / 修改时间：22:38:43" itemprop="dateCreated datePublished" datetime="2020-03-30T19:49:39+08:00">2020-03-30</time>
+              <time title="创建时间：2020-03-30 19:49:39" itemprop="dateCreated datePublished" datetime="2020-03-30T19:49:39+08:00">2020-03-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-11 13:35:44" itemprop="dateModified" datetime="2020-04-11T13:35:44+08:00">2020-04-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -1251,58 +884,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>操作系统是用户与计算机沟通的桥梁，人只能通过操作系统的抽象才能实现对计算机的操作和控制。在操作系统里有一个很重要的内容叫任务管理，一般是把各个任务放进一个容器中，操作系统从容器里取出任务进行处理。如果使用队列储存任务，那么该操作系统的任务调度将具有队列的特点—先入先出<code>(First In First Out)</code>。<br>而多数情况下操作系统的任务都是有优先级的，比如有的任务负责监控操作系统抛出的异常，有的任务只负责打印一个<code>Hello World!</code>，那么显然的，异常监控的任务将拥有更高的优先级。<br>因此我们不能使用队列<code>(Queue)</code>来作为操作系统的任务容器，我们需要一个更加高级的，能够以优先级顺序取出元素的数据结构，这一数据结构就是 <strong>堆<code>(Heap)</code></strong> 或者也叫 <strong>优先队列<code>(Priority Queue)</code></strong>。</p>
-<h1 id="堆-Heap-or-优先队列-Priority-Queue"><a href="#堆-Heap-or-优先队列-Priority-Queue" class="headerlink" title="堆(Heap) or 优先队列(Priority Queue)"></a>堆<code>(Heap)</code> or 优先队列<code>(Priority Queue)</code></h1><p>优先队列是一种特殊的队列，它的元素取出顺序是元素的优先级大小，而不是元素的放入顺序。</p>
-<h2 id="几种实现方式"><a href="#几种实现方式" class="headerlink" title="几种实现方式"></a>几种实现方式</h2><ul>
-<li>一般数组（无序）：<ul>
-<li>插入：对于一般数组，可以总是把元素插入到数组的头部或尾部，因此它的时间复杂度是<code>O(1)</code></li>
-<li>删除：首先要在数组中找到最大(或最小)元素，查找的时间复杂度是<code>O(n)</code>的。然后将元素删除，被删除元素的后方元素需要前挪一位，时间复杂度也是<code>O(n)</code></li>
-</ul>
-</li>
-<li>有序数组：<ul>
-<li>插入：对于有序数组，插入时需要找到合适的位置，这一操作的时间复杂度一般是<code>O(n)</code>或者<code>O(log n)</code>的</li>
-<li>删除：由于数组是有序的，删除的位置总是在数组的头部或尾部，它的时间复杂度是<code>O(1)</code>的</li>
-</ul>
-</li>
-<li>一般链表（无序）：<ul>
-<li>插入：插入可以简单的插入在链表头部，时间复杂度是<code>O(1)</code>的</li>
-<li>删除：首先找到最大（或最小）元素，时间复杂度是<code>O(n)</code>，然后删除掉该节点，删除操作对链表而言是<code>O(1)</code>的</li>
-</ul>
-</li>
-<li>有序链表：<ul>
-<li>插入：首先找到合适的位置，时间复杂度是<code>O(n)</code>，然后插入，操作是<code>O(1)</code>的</li>
-<li>删除：删除总是在两端进行，时间复杂度是<code>O(1)</code></li>
-</ul>
-</li>
-<li>二叉树：<ul>
-<li>二叉搜索树：二叉搜索树的最大值在最右侧，最小值在最左侧。对于优先队列这个使用场景，经过若干次删除操作之后二叉搜索树将退化为一颗斜二叉树，时间效率会迅速下降。</li>
-</ul>
-</li>
-</ul>
-<h3 id="最大堆"><a href="#最大堆" class="headerlink" title="最大堆"></a>最大堆</h3><p>注意到优先队列只有两个主要操作： <strong>插入<code>(Insert)</code></strong> 和 <strong>删除<code>(Delete)</code></strong><br>如果我们使用一颗二叉树储存优先队列的数据，应该着重优化更加困难的删除操作。考虑这样一种结构：二叉树的最大节点始终在它的根节点处，对每一棵子树而言亦如此，那么删除操作将始终在根节点进行。为了避免二叉树变斜，我们使用完全二叉树储存数据，这样就形成了一个 <strong>最大堆<code>(MaxHeap)</code></strong></p>
-<p>最大堆是一颗 <a href="http://blog.zhuwenq.icu:7010/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/"><strong>完全二叉树<code>(Complete Binary Tree)</code></strong></a>，同时它的每个节点比它的左右子树中每个节点大（比子树小称为最小树）。<br>如下图就是一个最大堆：</p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/1.png" alt></p>
-<h1 id="最大堆的实现"><a href="#最大堆的实现" class="headerlink" title="最大堆的实现"></a>最大堆的实现</h1><p><a href="http://blog.zhuwenq.icu:7010/2020/03/24/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%82%A8%E5%AD%98%E7%BB%93%E6%9E%84/">数据结构—二叉树和二叉树的储存结构</a>中说过，对于完全二叉树，它具有父节点序号是子节点序号的二分之一这一性质，因此完全二叉树内部可以使用数组实现，同时数组实现的完全二叉树具有很高的效率也很方便操作，只是容量一般是固定的，空间效率较低。数据结构原型如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">maxheap</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    KeyType *data; <span class="comment">//堆的数据</span></span><br><span class="line">    <span class="keyword">int</span> size;      <span class="comment">//当前元素个数</span></span><br><span class="line">    <span class="keyword">int</span> capacity;  <span class="comment">//堆的最大容量</span></span><br><span class="line">&#125; MaxHeap;</span><br></pre></td></tr></table></figure></p>
-<p>主要操作有：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> maxSize)</span></span>;  <span class="comment">//创建空堆，最大空间为maxSize</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isFull</span><span class="params">(MaxHeap *heap)</span></span>;               <span class="comment">//判断堆是否已满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isEmpty</span><span class="params">(MaxHeap *heap)</span></span>;              <span class="comment">//判断堆是否为空</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(MaxHeap *heap, KeyType key)</span></span>; <span class="comment">//把元素key插入堆</span></span><br><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span>;        <span class="comment">//删除并返回堆中的最大值</span></span><br></pre></td></tr></table></figure><br>下面只讨论插入和删除操作 <del>（今天就不水其他操作了）</del></p>
-<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>一般的数组实现的完全二叉树可以很方便的插入。我们在原型中维护有表示二叉树当前元素个数的<code>tag</code>，并且完全二叉树的节点下标有简单的层序规律（自上而下，自左而右）。因此可以直接把元素插入到数组的<code>size + 1</code>处。<br>然而作为一个最大堆，这样的插入可能会破坏最大堆的另一个原则：根节点总是大于左右子树节点。因此，在插入到<code>size + 1</code>位置后，还需要判断该原则是否被破坏，如果被破坏则需要修复这一原则。</p>
-<p>例如上面图片中的堆如果插入元素<code>2</code>，被插入的位置下标为<code>10</code>，是下标为<code>5</code>的节点<code>3</code>的左子树位置。同时<code>2</code>小于<code>3</code>，这个插入不会破坏根最大原则。</p>
-<p>假如插入的元素是<code>5</code>，则会因为<code>5</code>大于<code>3</code>而需要对最大堆进行修复。修复的过程也很简单，只要把节点<code>5</code>与节点<code>3</code>交换位置就行了（插入的节点与父节点交换位置）。假如插入的元素是<code>91</code>，则需要一直交换到整棵树的根节点处。</p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/2.png" alt></p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/3.png" alt></p>
-<p>这个实现采用了另一个方案，插入时先根据根最大原则判断合适的位置在哪里，在判断的同时把不合适的节点统统后移，为新插入的节点腾出位置。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(MaxHeap *heap, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">//if heap is NULL,do nothing</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isFull(heap))</span><br><span class="line">        <span class="keyword">return</span>;                  <span class="comment">//if heap is full,do nothing</span></span><br><span class="line">    <span class="keyword">int</span> position = ++heap-&gt;size; <span class="comment">//insert position should be 1 after size</span></span><br><span class="line">    <span class="comment">//when break out loop,heap-&gt;data[position]&gt;key &amp;&amp; position is the right position</span></span><br><span class="line">    <span class="keyword">for</span> (; heap-&gt;data[position] &lt; key; position /= <span class="number">2</span>)</span><br><span class="line">    &#123; <span class="comment">//in loop,heap-&gt;data[position]&gt;key,move data down</span></span><br><span class="line">        heap-&gt;data[position] = heap-&gt;data[position / <span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    heap-&gt;data[position] = key; <span class="comment">//insert key to the right pos</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>最大堆删除的位置是确定的：总是二叉树的根节点位置。然而不能直接地就把根节点删除掉，因为一方面根节点在数组中的下标是<code>0</code>，把它删除了以后后面所有的元素都要前移，时间复杂度是<code>O(n)</code>（如果不移迟早空间会被全部丢失）；另一方面是因为我们有更好的选择：删掉数组尾部位置的节点，然后把尾部节点的元素拿到根节点替换原来的根节点。这样删除过程可以简述为：删掉尾部节点，替换根节点。</p>
-<p>与插入过程类似，根节点被尾节点替换之后最大堆的根最大原则无法得到保证。<br>如下图最大堆：</p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/4.png" alt></p>
-<p>删掉最大值之后，使用尾部节点<code>3</code>代替根节点，大小顺序被破坏：</p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/5.png" alt></p>
-<p>大小顺序恢复的过程为：找到根节点左右子节点中较大的一个，让他与根节点交换位置，然后在被交换的子节点位置对它的子树重复前述操作。<br>例如上面的最大堆恢复之后如下：</p>
-<p><img src="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/6.png" alt></p>
-<p>下面的实现采用了与插入类似的方案：先不做替换，而是先让不合适的节点移位，腾出合适的节点把被删掉的尾部节点插入。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isEmpty(heap))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    KeyType target = heap-&gt;data[<span class="number">1</span>];</span><br><span class="line">    KeyType temp = heap-&gt;data[heap-&gt;size--];</span><br><span class="line">    <span class="keyword">int</span> child = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> parent = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (; parent * <span class="number">2</span> &lt;= heap-&gt;size; parent = child)</span><br><span class="line">    &#123;</span><br><span class="line">        child = parent * <span class="number">2</span>; <span class="comment">//left child index,may overflow</span></span><br><span class="line">        <span class="keyword">if</span> (child &lt;= heap-&gt;size &amp;&amp; heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>])</span><br><span class="line">        &#123; <span class="comment">//if right child is bigger,turn to right child</span></span><br><span class="line">            child++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[child] &lt;= temp)</span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">//if order is corrict,break</span></span><br><span class="line">        <span class="keyword">else</span>       <span class="comment">//replace nodes</span></span><br><span class="line">            heap-&gt;data[parent] = heap-&gt;data[child];</span><br><span class="line">    &#125;</span><br><span class="line">    heap-&gt;data[parent] = temp; <span class="comment">//put temp to right position</span></span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>或者也可以直接把尾部节点放在根节点，然后从上到下判断顺序是否正确，不正确就交换位置。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">KeyType <span class="title">deleteMax</span><span class="params">(MaxHeap *heap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (isEmpty(heap))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    KeyType target = heap-&gt;data[<span class="number">1</span>];</span><br><span class="line">    heap-&gt;data[<span class="number">1</span>] = heap-&gt;data[heap-&gt;size--];</span><br><span class="line">    <span class="keyword">int</span> child = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i * <span class="number">2</span> &lt; heap-&gt;size; i = child)</span><br><span class="line">    &#123;</span><br><span class="line">        child = i * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>])</span><br><span class="line">            child++;</span><br><span class="line">        <span class="keyword">if</span> (heap-&gt;data[i] &lt; heap-&gt;data[child])</span><br><span class="line">            swap(&amp;heap-&gt;data[i], &amp;heap-&gt;data[child]);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>最后水一水从一个已知序列建堆的操作：假如给定一个序列（无序），使用它的数据建立一个非空堆。<br>类似如下的操作：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType * <span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span>;</span><br></pre></td></tr></table></figure><br>有两种思路，一种是先建立一个空堆，然后把元素一个一个插入到空堆中，这种方法的时间复杂度是<code>O(nlog n)</code>。另一种是将序列中的元素直接放在一个数组里，按照完全二叉树的构造，这个数组就是一个完全二叉树。然后对完全二叉树中的每个父节点进行修正，最终得到一个最大堆，这个操作是线性的复杂度<code>O(n)</code>(不包括数组拷贝的时间)。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function">MaxHeap *<span class="title">createHeap</span><span class="params">(KeyType *<span class="built_in">list</span>,<span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    MaxHeap *heap = (MaxHeap*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MaxHeap));</span><br><span class="line">    heap-&gt;data = (KeyType*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(KeyType) * (size + <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>;i&lt;size;++i)&#123;</span><br><span class="line">        heap-&gt;data[i] = <span class="built_in">list</span>[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> parent = heap-&gt;size / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">for</span>(;parent &gt; <span class="number">0</span>;parent--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> child = parent * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(child + <span class="number">1</span> &lt;= heap-&gt;size)</span><br><span class="line">        &#123;</span><br><span class="line">            child += heap-&gt;data[child] &lt; heap-&gt;data[child + <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(heap-&gt;data[parent] &lt; heap-&gt;data[child])</span><br><span class="line">            swap(&amp;heap-&gt;data[parent],&amp;heap-&gt;data[child]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%A0%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1352,7 +941,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-08 16:05:18" itemprop="dateModified" datetime="2020-04-08T16:05:18+08:00">2020-04-08</time>
+                <time title="修改时间：2020-04-11 13:37:26" itemprop="dateModified" datetime="2020-04-11T13:37:26+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1398,54 +987,14 @@
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>假如搜索一颗<a href="http://blog.zhuwenq.icu:7010/2020/03/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/">二叉搜索树<code>(Binary Search Tree)</code></a>中的某个节点，那么搜索的最坏次数将是该二叉搜索树的高度。再假如被搜索的二叉树是一颗斜二叉树，那么搜索的最坏情况将需要树的节点个数<code>n</code>次。如果二叉搜索树的高度尽可能小，将大大降低搜索的时间复杂度，相比斜二叉树的最坏时间复杂度为<code>O(n)</code>，较为平衡的二叉树将把时间复杂度降低为<code>O(log n)</code>。<br>按照高度尽可能低或者左右尽可能平衡来排列节点的<strong>二叉搜索树</strong>就是<strong>平衡二叉树<code>(Balance Binary Tree) or (AVL Tree)</code></strong>(AVL是以发明这一数据结构的科学家命名的)。</p>
 <h2 id="平衡因子"><a href="#平衡因子" class="headerlink" title="平衡因子"></a>平衡因子</h2><p><strong>平衡因子<code>(Balance Factor)</code></strong>表示一个树节点的平衡程度，它的值<code>BF(T)</code>由节点<code>T</code>的左右子树高度差决定：<code>BF(T) = Hl(T) - Hr(T)</code></p>
-<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树的任一节点它的左右子树高度差即平衡因子的绝对值不超过1，即<code>|BF(T)|&lt;=1</code></p>
-<h2 id="平衡二叉树的高度"><a href="#平衡二叉树的高度" class="headerlink" title="平衡二叉树的高度"></a>平衡二叉树的高度</h2><p>设<script type="math/tex">n_h</script>为高度为<script type="math/tex">h</script>的平衡二叉树最小节点数，则对于该二叉树的任一节点，其左右子树的高度分别为<script type="math/tex">h-1</script>和<script type="math/tex">h-2</script>，其节点数分别为<script type="math/tex">n_{h-1}</script>和<script type="math/tex">n_{h-2}</script>，则该二叉树的节点总数为<script type="math/tex">n_h = n_{h-1}+n_{h-2}+1</script>。该递推公式推广到该二叉树的任一子树都成立，因此，高度为<code>h</code>的平衡二叉树节点数满足<strong>类斐波那契数列的递推公式</strong>。<br>设斐波那契数列的第<code>h</code>项值为<script type="math/tex">F_h = F_{h-1}+F_{h-2}</script>，则<script type="math/tex">n_h=F_h-1</script>。<br>又因为<script type="math/tex">F_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h</script>，<br>所以：<script type="math/tex">n_h \approx \frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^h-1</script><br>所以，对于节点数为<code>n</code>的平衡二叉树，它的高度是<script type="math/tex">\log_2 n</script>数量级的，搜索的最坏时间复杂度是<code>O(log n)</code></p>
-<p>由此可见，平衡二叉树是性能很高的二叉搜索树。</p>
-<h2 id="平衡二叉树的自平衡"><a href="#平衡二叉树的自平衡" class="headerlink" title="平衡二叉树的自平衡"></a>平衡二叉树的自平衡</h2><p>由于平衡二叉树也是一颗二叉搜索树，它在节点插入时仍需满足二叉搜索树左小右大的规则。这种情况下难免会破坏原有的平衡（平衡因子会改变）。如：</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/1.png" alt></p>
-<p>对这颗树而言，它是平衡的，除最倒数第二层节点外其他节点的平衡因数都是<code>0</code>。此时如果要插入元素<code>8</code>，根据二叉搜索树的插入规则，节点将被插入到节点<code>7</code>的右子节点位置，不会破坏树的平衡。<br>如果被插入的元素是<code>79</code>，则会被插入到节点<code>78</code>的右子节点位置，此时节点<code>71</code>的平衡因数将变为<code>-2</code>，节点<code>50</code>的平衡因数也会变为<code>-2</code>，平衡性被破坏。<br>我们称平衡性被破坏的节点为<strong>发现者</strong>，破坏平衡性的节点为<strong>破坏者</strong>。根据<strong>破坏者</strong>与<strong>发现者</strong>的相对位置，把破坏平衡的插入分为4种情况：</p>
-<ol>
-<li><code>RR插入</code>—破坏者位于发现者的<strong>右子树</strong>的<strong>右边</strong></li>
-<li><code>LL插入</code>—破坏者位于发现者的<strong>左子树</strong>的<strong>左边</strong></li>
-<li><code>RL插入</code>—破坏者位于发现者的<strong>右子树</strong>的<strong>左边</strong></li>
-<li><code>LR插入</code>—破坏者位于发现者的<strong>左子树</strong>的<strong>右边</strong></li>
-</ol>
-<p>对这四种情况分别进行处理，把被破坏的平衡树重新构造成平衡二叉树，就是平衡二叉树的自平衡。四种处理方式分别为：<code>RR旋转</code>，<code>LL旋转</code>，<code>RL旋转</code>，<code>LR旋转</code>，旋转的结果需要满足二叉查找树的规则。</p>
-<h3 id="RR旋转"><a href="#RR旋转" class="headerlink" title="RR旋转"></a><code>RR旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/2.png" alt></p>
-<p>如图所示的平衡二叉树，假设插入元素<code>80</code></p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/3.png" alt></p>
-<p>此时发现者是<code>50</code>，破坏者是<code>80</code>。<br>根据二叉搜索树的性质不难知道，发现者<code>50</code>的右子树所有节点均大于<code>50</code>。因此，可以用<code>50</code>的右子节点替换<code>50</code>的位置，同时把<code>50</code>右子节点<code>78</code>的左子树（一定小于78）挂在<code>50</code>的右子节点处（一定大于50），最后把<code>50</code>这一节点连同它的子树挂在节点<code>78</code>的左子节点位置。</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/4.png" alt></p>
-<p>过程可以简述为：使用发现者<code>F</code>的右子节点<code>r</code>代替发现者，然后把发现者<code>F</code>挂到<code>r</code>的左子节点处，同时把<code>r</code>的左子节点（可以为空）重新挂在<code>F</code>的右子节点处。新插入的节点保持不动。最后返回占据原<code>F</code>节点位置的节点（应该为<code>r</code>）。（有顺口溜内味了）</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注意：此函数不应单独使用，它应该配合插入操作使用</span></span><br><span class="line"><span class="comment">//      因为单单将finder的子树旋转是不够的，还需要把返回的节点挂载到原树上</span></span><br><span class="line"><span class="function">AVLTree *<span class="title">singleRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;                                    <span class="comment">//tree is the finder</span></span><br><span class="line">    AVLTree *replacer = tree-&gt;right; <span class="comment">//right child of finder</span></span><br><span class="line">    tree-&gt;right = replacer-&gt;left;    <span class="comment">//right child's left child to finder's right child</span></span><br><span class="line">    replacer-&gt;left = tree;           <span class="comment">//finder to right child's left child</span></span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="LL旋转"><a href="#LL旋转" class="headerlink" title="LL旋转"></a><code>LL旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/5.png" alt></p>
-<p>类似的，假设上图所示的平衡二叉树要插入元素<code>2</code></p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/6.png" alt></p>
-<p>则新插入的元素位于最左侧节点<code>1</code>的右子节点位置。此时发现者是<code>6</code>，破坏者是<code>1</code>，破坏者位于发现者的左子树的左子树的右子节点处（注意：虽然位于右子节点，但仍然是发现者的左子树的左子树上）,因此是<code>LL插入</code>。</p>
-<p>与<code>RR插入</code>类似，发现者的左子树所有节点都小于发现者，因此可以用发现者的左子节点代替发现者的位置，然后把发现者挂在其左子节点的右子节点处（发现者一定大于它的左子节点），同时把发现者的左子节点的右子树挂在发现者的左子节点位置。</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/7.png" alt></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">singleLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AVLTree *replacer = tree-&gt;left;</span><br><span class="line">    tree-&gt;left = replacer-&gt;right;</span><br><span class="line">    replacer-&gt;right = tree;</span><br><span class="line">    <span class="comment">//update heights of changed nodes</span></span><br><span class="line">    replacer-&gt;<span class="built_in">height</span> = maxOfTwo(replacer-&gt;left-&gt;<span class="built_in">height</span>, replacer-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(tree-&gt;left-&gt;<span class="built_in">height</span>, tree-&gt;right-&gt;<span class="built_in">height</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> replacer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="RL旋转"><a href="#RL旋转" class="headerlink" title="RL旋转"></a><code>RL旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/10.png" alt></p>
-<p>如上平衡二叉树，插入元素<code>49</code></p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/11.png" alt></p>
-<p><code>49</code>插入到节点<code>47</code>的右子节点处，此时发现者是<code>46</code>，破坏者是<code>49</code>。破坏者位于发现者的右子树的左子树上，因此是<code>RL插入</code>。</p>
-<p>此时，发现者<code>F</code>必有一个右子节点<code>R</code>，节点<code>R</code>必有一个左子节点<code>L</code>。<br>所谓<code>RL旋转</code>就是先对节点<code>R</code>做右旋，</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/12.png" alt></p>
-<p>然后对节点<code>F</code>做左旋。</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/13.png" alt></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">rightLeftRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;right = singleRightRotation(tree-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> singleLeftRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="LR旋转"><a href="#LR旋转" class="headerlink" title="LR旋转"></a><code>LR旋转</code></h3><p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/14.png" alt></p>
-<p>上图所示树插入元素<code>25</code></p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/15.png" alt></p>
-<p>发现者是<code>30</code>，破坏者是<code>25</code>。先对节点<code>20</code>做左旋</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/16.png" alt></p>
-<p>再对节点<code>30</code>做右旋</p>
-<p><img src="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/17.png" alt></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">leftRightRotation</span><span class="params">(AVLTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    tree-&gt;left = singleLeftRotation(tree-&gt;left);</span><br><span class="line">    <span class="keyword">return</span> singleRightRotation(tree);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h3><p>在上述四种旋转的基础上，可以实现新的具有自平衡特点的插入操作。插入之后判断其父节点的平衡因子，如果平衡被破坏，使用对应的旋转操作恢复平衡。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AVLTree *<span class="title">insert</span><span class="params">(AVLTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="comment">//插入完成后该程序的递归过程会从下而上检查父节点的平衡性</span></span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tree = (AVLTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(AVLTree));</span><br><span class="line">        tree-&gt;key = key;</span><br><span class="line">        tree-&gt;left = tree-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">    &#123; <span class="comment">//insert left sub tree</span></span><br><span class="line">        tree-&gt;left = insert(tree-&gt;left, key);</span><br><span class="line">        <span class="keyword">if</span> (getHeight(tree-&gt;left) - getHeight(tree-&gt;right) == <span class="number">2</span>)</span><br><span class="line">        &#123; <span class="comment">//balance broken</span></span><br><span class="line">            <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">            &#123; <span class="comment">//single left rotation</span></span><br><span class="line">                tree = singleLeftRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123; <span class="comment">//signle left right rotation</span></span><br><span class="line">                tree = leftRightRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        tree-&gt;right = insert(tree-&gt;right, key);</span><br><span class="line">        <span class="keyword">if</span> (getHeight(tree-&gt;right) - getHeight(tree-&gt;left) == <span class="number">2</span>)</span><br><span class="line">        &#123; <span class="comment">//balance broken</span></span><br><span class="line">            <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">            &#123; <span class="comment">//single right rotation</span></span><br><span class="line">                tree = singleRightRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123; <span class="comment">//right left rotation</span></span><br><span class="line">                tree = rightLeftRotation(tree);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tree-&gt;<span class="built_in">height</span> = maxOfTwo(getHeight(tree-&gt;left), getHeight(tree-&gt;right)) + <span class="number">1</span>; <span class="comment">//update height</span></span><br><span class="line">    <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>👴怀疑删除操作也可能破坏平衡性，但是👴困了。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1495,7 +1044,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 00:33:10" itemprop="dateModified" datetime="2020-03-28T00:33:10+08:00">2020-03-28</time>
+                <time title="修改时间：2020-04-11 13:36:25" itemprop="dateModified" datetime="2020-04-11T13:36:25+08:00">2020-04-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1540,51 +1089,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>前面介绍树的博文<a href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">树和树的表示</a>提到了一种序列搜索算法—二分查找<code>(Binary Search)</code>算法，并且提到了其搜索过程实际上是一种树状结构。二分查找法是一种对静态数据的查找算法，它的搜索对象是一个长度一定的序列（需要在算法的入参中指定搜索的起始位置）。对于动态的序列，经常需要对其进行插入和删除的操作。如果事先把数据组织成树状的结构，它的动态插入删除查找等操作将十分便利。并且对于一个较为平衡的二叉树而言,各项操作也有很好的效率</p>
-<h1 id="二叉搜索树"><a href="#二叉搜索树" class="headerlink" title="二叉搜索树"></a>二叉搜索树</h1><p>二叉搜索树<code>(Binary Search Tree)</code>又称为二叉查找树。二叉搜索树本质上是一颗二叉树，在非空时它具有以下性质：</p>
-<ol>
-<li>左子树的所有键值<code>key</code>小于根节点键值</li>
-<li>右子树的所有键值<code>key</code>大于根节点键值</li>
-<li>左子树和右子树也是二叉搜索树<br>（每个节点的键值是唯一的）</li>
-</ol>
-<h2 id="特别操作"><a href="#特别操作" class="headerlink" title="特别操作"></a>特别操作</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从二叉搜索树中找出键值为key的节点地址</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最小键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//找出二叉搜索树的最大键值节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMax</span><span class="params">(BinarySearchTree *tree)</span></span>;</span><br><span class="line"><span class="comment">//向二叉搜索树插入键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br><span class="line"><span class="comment">//从二叉搜索树删除键值为key的节点</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType key)</span></span>;</span><br></pre></td></tr></table></figure>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ul>
-<li><p><code>find</code><br>查找的操作较为简单<br>若树为空，返回<code>NULL</code><br>若树非空，将<code>key</code>与根节点的<code>key</code>进行比较：</p>
-<ul>
-<li>若大于根节点的<code>key</code>，说明待查找节点在根节点的右侧，在右子树中继续查找</li>
-<li>若小于根节点的<code>key</code>，说明待查找节点在根节点的左侧，在左子树中继续查找</li>
-<li>若等于根节点的<code>key</code>，说明待查找节点已找到，直接返回跟节点<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">find</span>(tree-&gt;right, key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">find</span>(tree-&gt;left, key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> tree;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-上述尾递归实现效率不高而且有爆栈的风险，下面是将尾递归展开为循环的实现。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//循环实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">find</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (key &gt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;right;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p><code>findMin</code><br>观察二叉查找树的结构特点，容易知道其最小的元素一定在树的最左侧。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp-&gt;left)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = temp-&gt;left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">findMin</span><span class="params">(BinarySearchTree *tree)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">NULL</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(tree-&gt;left) <span class="keyword">return</span> findMin(tree-&gt;left);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>findMax</code><br>同理，最大元素一定在二叉搜索树的最右侧。</p>
-</li>
-<li><p><code>insert</code><br>插入操作较为复杂，先找到要插入的位置，然后构造节点将节点插入合适的位置。<br>首先看简单的递归实现</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tree == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tree = (BinarySearchTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BinarySearchTree));</span><br><span class="line">        tree-&gt;key = key;</span><br><span class="line">        tree-&gt;left = tree-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">return</span> tree;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (key &gt; tree-&gt;key)</span><br><span class="line">        <span class="keyword">return</span> insert(tree-&gt;right, key);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; tree-&gt;key)</span><br><span class="line">        <span class="keyword">return</span> insert(tree-&gt;left, key);</span><br><span class="line">    <span class="comment">//else key==tree-&gt;key; do nothing</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>循环实现：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//循环实现</span></span><br><span class="line"><span class="function">BinarySearchTree *<span class="title">insert</span><span class="params">(BinarySearchTree *tree, KeyType key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinarySearchTree *temp = tree;</span><br><span class="line">    <span class="keyword">while</span> (temp)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (key &gt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;right;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (key &lt; temp-&gt;key)</span><br><span class="line">            temp = temp-&gt;left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">//if equals,I dont know what's right,lets just rewrite it.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//when break out while loop,temp must be NULL</span></span><br><span class="line">    temp = (BinarySearchTree *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(BinarySearchTree));</span><br><span class="line">    temp-&gt;key = key;</span><br><span class="line">    temp-&gt;left = temp-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>delete</code><br>删除操作是最为复杂的，因为被删除的节点处在不同位置时，操作的行为也是不同的。首先找到要删除的节点</p>
-<ol>
-<li>若删除的节点是叶节点，可以直接将其置为<code>NULL</code></li>
-<li>若删除的节点有一个子节点，可以使用它的孩子节点代替被删除的节点</li>
-<li><p>若删除的节点有两个子节点，则有两种选择：</p>
-<ol>
-<li>使用被删除节点的左子树的最大值节点代替被删除节点</li>
-<li>使用被删除节点的右子树的最小值节点代替被删除节点</li>
-</ol>
-<p>然后还需要删除左子树/右子树中那个拿去代替被删除节点的节点，过程较为复杂，删除子树节点的操作需要递归完成<del>（其他的实现不会😁）</del></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BinarySearchTree *<span class="title">delete</span> <span class="params">(BinarySearchTree *tree, KeyType *key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BinarySearchTree *target = <span class="built_in">find</span>(tree, key);</span><br><span class="line">    <span class="keyword">if</span> (target == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> (target-&gt;left &amp;&amp; target-&gt;right)</span><br><span class="line">    &#123;                                              <span class="comment">//both left child and right child are valid</span></span><br><span class="line">        KeyType <span class="built_in">min</span> = findMin(target-&gt;right)-&gt;key; <span class="comment">//or findMax(target-&gt;left)</span></span><br><span class="line">        target-&gt;key = <span class="built_in">min</span>;</span><br><span class="line">        <span class="keyword">delete</span> (target-&gt;right, <span class="built_in">min</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        BinarySearchTree *temp = target; <span class="comment">//copy target address,it need to be freed</span></span><br><span class="line">        <span class="keyword">if</span> (target-&gt;left != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only left child</span></span><br><span class="line">            target = target-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (target-&gt;right != <span class="literal">NULL</span>)</span><br><span class="line">        &#123; <span class="comment">//only right child</span></span><br><span class="line">            target = target-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//else no child,just free the node will be fine</span></span><br><span class="line">        <span class="built_in">free</span>(temp);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tree;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ul>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>注意到根据二叉搜索树的插入规则，假如要插入的元素一个比一个大，则树的右侧将形成一个长链，高度会迅速增加。为了解决这个问题，应该在插入时引入一种尽量平衡的插入规则，这就是<strong>平衡二叉树</strong>。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1634,7 +1146,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-28 02:22:41" itemprop="dateModified" datetime="2020-03-28T02:22:41+08:00">2020-03-28</time>
+                <time title="修改时间：2020-04-11 13:38:33" itemprop="dateModified" datetime="2020-04-11T13:38:33+08:00">2020-04-11</time>
               </span>
 
           
@@ -1670,33 +1182,14 @@
 
       
           <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>经常使用命令行进行一些操作，碍于<code>Windows cmd</code>丑陋的黑框再加上有高可定制化高颜值的<code>Window Terminal</code>的存在，导致我一度手动点开然后<code>cd xxx/xxx</code>到想打开的路径，而不是在<code>Windows</code>的资源管理器导航栏里输入<code>cmd</code>了事。可能这就是倔强吧😁<br>假如可以在文件夹里面快捷打开<code>Terminal</code>并进入路径的方法就好了。</p>
-<h1 id="把Windows-Terminal快捷方式添加到右键菜单"><a href="#把Windows-Terminal快捷方式添加到右键菜单" class="headerlink" title="把Windows Terminal快捷方式添加到右键菜单"></a>把<code>Windows Terminal</code>快捷方式添加到右键菜单</h1><p>可以通过添加注册表的方式实现。</p>
-<ol>
-<li><p>首先，检查常量<code>%USERPROFILE%</code>和<code>%LOCALAPPDATA%</code>的值，可以通过在命令行输入<code>echo %USERPROFILE%</code>和<code>echo %LOCALAPPDATA%</code>来检查。如果没有报错的话说明正常。(正常不会有问题)</p>
-<p> <img src="/2020/03/25/Windows-Terminal%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/1.png" alt></p>
-</li>
-<li><p>在命令行输入命令 <code>mkdir &quot;%USERPROFILE%\AppData\Local\terminal&quot;</code>创建文件夹，然后找个好看的图标(<code>ico</code>)文件放进去，它将出现在右键菜单的头部作为图标。如果找不到好康的，也可以到<a href="https://github.com/microsoft/terminal/blob/master/res/terminal.ico">这里</a>下载<code>Windows Terminal</code>默认的图标。</p>
-</li>
-<li><p>新建文件<code>wt.reg</code>，把下面的代码写入保存：</p>
-<pre><code class="lang-Bash"> Windows Registry Editor Version 5.00
-
- [HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
- @=&quot;Open terminal here&quot;
- &quot;Icon&quot;=&quot;%USERPROFILE%\\AppData\\Local\\terminal\\terminal.ico&quot;
- [HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
- @=&quot;C:\\Users\\{your user name}\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe&quot;
-</code></pre>
-<p> 其中第一个<code>@</code>处是将要出现在右键菜单的提示语<br> 它的下一句是图标的路径<br> 最后一句是<code>Windows Terminal</code>的程序路径，他需要是绝对路径，因此请把<code>{your user name}</code>换成你的<code>Windows</code>用户名。</p>
-<p> 双击运行，添加注册表。</p>
-</li>
-<li><p>在任意文件夹点击右键，可以发现<code>Open Terminal here</code>已经出现在右键菜单。<br> <img src="/2020/03/25/Windows-Terminal%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/2.png" alt></p>
-</li>
-<li><p>点击该右键菜单，如果<code>cmd</code>当前目录仍然是<code>C:/Users/{your user name}</code>，请打开<code>Windows Terminal</code>的配置文件<code>profile.json</code>，把第一个<code>CMD</code>的<code>startingDirectory</code>字段删除。<br><img src="/2020/03/25/Windows-Terminal%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/3.png" alt></p>
-</li>
-</ol>
-<h1 id="Windows-Terminal的图标路径"><a href="#Windows-Terminal的图标路径" class="headerlink" title="Windows Terminal的图标路径"></a><code>Windows Terminal</code>的图标路径</h1><p><img src="/2020/03/25/Windows-Terminal%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/4.png" alt></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>以后有关<code>Windows Termianl</code>的相关备忘也会发布在这片文章。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/25/Windows-Terminal%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
