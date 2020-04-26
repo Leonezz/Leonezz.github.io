@@ -9,13 +9,13 @@ struct Stack
     Stack *next;
 };
 
-Stack *createEmpty();                      //生成空栈
+Stack *createEmptyStack();                      //生成空栈
 int isFull(Stack *stack);                  //查询是否满栈
 int isEmpty(Stack *stack);                 //查询是否空栈
 void push(Stack *stack, ElementType item); //在栈顶插入元素
 ElementType pop(Stack *stack);             //删除并返回栈顶元素
 
-Stack *createEmpty()
+Stack *createEmptyStack()
 {
     Stack *top = (Stack *)malloc(sizeof(Stack));
     top->next = NULL;
@@ -66,7 +66,7 @@ int main()
     std::cout << "sdas" << std::endl;
     Vertex **path = (Vertex **)malloc(25 * sizeof(Vertex));
     path = {};
-    Stack *stack = createEmpty();
+    Stack *stack = createEmptyStack();
     getPath(stack, path, 1, 5);
     while (!isEmpty(stack))
     {
