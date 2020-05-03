@@ -20,24 +20,24 @@
     var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="写在前面之前的博客是放在Github Pages上的，虽然足够稳定，但是一直苦于加载速度太慢。买了ECS之后，可以把hexo博客部署到ECS上，访问会快很多。 由于网站并没有备案，因此我没有启用80端口作为网站监听端口。">
+  <meta name="description" content="写在前面莫里斯遍历(Morris Traversal)是一种时间复杂度为O(n)，空间复杂度为O(1)，且不改变树的结构的二叉树遍历算法。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="把hexo博客部署到阿里云ECS">
-<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/index.html">
+<meta property="og:title" content="莫里斯遍历">
+<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/index.html">
 <meta property="og:site_name" content="zhuwenq">
-<meta property="og:description" content="写在前面之前的博客是放在Github Pages上的，虽然足够稳定，但是一直苦于加载速度太慢。买了ECS之后，可以把hexo博客部署到ECS上，访问会快很多。 由于网站并没有备案，因此我没有启用80端口作为网站监听端口。">
+<meta property="og:description" content="写在前面莫里斯遍历(Morris Traversal)是一种时间复杂度为O(n)，空间复杂度为O(1)，且不改变树的结构的二叉树遍历算法。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png">
-<meta property="article:published_time" content="2020-03-17T12:04:26.000Z">
-<meta property="article:modified_time" content="2020-04-11T05:33:56.641Z">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/1.png">
+<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/2.jpg">
+<meta property="article:published_time" content="2020-05-03T13:16:49.000Z">
+<meta property="article:modified_time" content="2020-05-03T14:15:16.619Z">
 <meta property="article:author" content="zhuwenq">
-<meta property="article:tag" content="阿里云">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="树">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png">
+<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/1.png">
 
-<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/">
+<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/">
 
 
 <script id="page-configurations">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>把hexo博客部署到阿里云ECS | zhuwenq</title>
+  <title>莫里斯遍历 | zhuwenq</title>
   
 
 
@@ -176,7 +176,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/">
+    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -189,7 +189,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          把hexo博客部署到阿里云ECS
+          莫里斯遍历
         </h1>
 
         <div class="post-meta">
@@ -198,27 +198,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-17 20:04:26" itemprop="dateCreated datePublished" datetime="2020-03-17T20:04:26+08:00">2020-03-17</time>
+              <time title="创建时间：2020-05-03 21:16:49 / 修改时间：22:15:16" itemprop="dateCreated datePublished" datetime="2020-05-03T21:16:49+08:00">2020-05-03</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-11 13:33:56" itemprop="dateModified" datetime="2020-04-11T13:33:56+08:00">2020-04-11</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/" itemprop="url" rel="index"><span itemprop="name">阿里云</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
                 </span>
             </span>
 
@@ -242,14 +232,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.5k</span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -261,59 +251,51 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>之前的博客是放在<code>Github Pages</code>上的，虽然足够稳定，但是一直苦于加载速度太慢。买了ECS之后，可以把hexo博客部署到ECS上，访问会快很多。</p>
-<p>由于网站并没有备案，因此我没有启用80端口作为网站监听端口。</p>
-<a id="more"></a>
-<h1 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h1><h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装<code>nginx</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y nginx    <span class="comment">#安装nginx</span></span><br><span class="line">systemctl start nginx   <span class="comment">#启动nginx</span></span><br><span class="line">systemctl <span class="built_in">enable</span> nginx.service   <span class="comment">#设置nginx开机启动</span></span><br></pre></td></tr></table></figure>
-<h2 id="配置nginx路由"><a href="#配置nginx路由" class="headerlink" title="配置nginx路由"></a>配置<code>nginx</code>路由</h2><p>想要让地址指向博客网页，还需要配置<code>nginx</code>的配置文件。</p>
-<p><code>nginx</code>的主配置文件是位于<code>/etc/nginx</code>文件夹的<code>nginx.conf</code>文件，因为我计划在这台服务器上不止部署一个网站，因此这里用<code>include</code>的方式而不是直接修改主配置文件的方式修改配置。步骤如下</p>
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>莫里斯遍历<code>(Morris Traversal)</code>是一种时间复杂度为<code>O(n)</code>，空间复杂度为<code>O(1)</code>，且不改变树的结构的二叉树遍历算法。<br><a id="more"></a></p>
+<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>做力扣的时候做到了这一题：</p>
+<p><strong>173. 二叉搜索树迭代器</strong></p>
+<p>实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。</p>
+<p>调用 <code>next()</code> 将返回二叉搜索树中的下一个最小的数。</p>
+<p>示例：</p>
+<p><img src="/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/1.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BSTIterator iterator &#x3D; new BSTIterator(root);</span><br><span class="line">iterator.next();    &#x2F;&#x2F; 返回 3</span><br><span class="line">iterator.next();    &#x2F;&#x2F; 返回 7</span><br><span class="line">iterator.hasNext(); &#x2F;&#x2F; 返回 true</span><br><span class="line">iterator.next();    &#x2F;&#x2F; 返回 9</span><br><span class="line">iterator.hasNext(); &#x2F;&#x2F; 返回 true</span><br><span class="line">iterator.next();    &#x2F;&#x2F; 返回 15</span><br><span class="line">iterator.hasNext(); &#x2F;&#x2F; 返回 true</span><br><span class="line">iterator.next();    &#x2F;&#x2F; 返回 20</span><br><span class="line">iterator.hasNext(); &#x2F;&#x2F; 返回 false</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>next()</code> 和 <code>hasNext()</code> 操作的时间复杂度是 <code>O(1)</code>，并使用 <code>O(h)</code> 内存，其中 <code>h</code> 是树的高度。</li>
+<li>你可以假设 <code>next()</code> 调用总是有效的，也就是说，当调用 <code>next()</code> 时，<code>BST</code> 中至少存在一个下一个最小的数。</li>
+</ul>
+<p>题目要求使用<code>O(h)</code>空间，我第一遍做了个<code>O(n)</code>空间的，打开讨论区看到一个叫莫里斯遍历的有趣遍历，它可以实现<code>O(1)</code>的时间复杂度。</p>
+<h1 id="莫里斯遍历"><a href="#莫里斯遍历" class="headerlink" title="莫里斯遍历"></a>莫里斯遍历</h1><p>通常的二叉树遍历算法使用堆栈或者递归完成，它们的空间复杂度通常是<code>O(n)</code>的。<br>要使用<code>O(1)</code>的空间实现遍历，最主要的难点是如何在指针到达叶节点的时候回到父节点，在不能使用堆栈的情况下，莫里斯遍历使用<strong>线索二叉树<code>(Threaded Binary Tree)</code></strong>的思想，莫里斯方法中不需要额外的空间来保存叶子节点的<strong>前驱<code>(predecessor)</code>节点</strong>和<strong>后继<code>(successor)</code>节点</strong>，只需要利用叶子节点的空闲左右子节点按照一定的顺序指向前驱或后继节点就可以。</p>
+<p>首先看莫里斯方法的中序遍历，通过中序遍历可以推出其他顺序的遍历。</p>
+<p>首先实现一个<code>LeetCode</code>风格的二叉树节点原型：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> _val):val(_val),left(<span class="literal">NULL</span>),right(<span class="literal">NULL</span>)&#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>算法流程：</p>
 <ol>
-<li><p>首先在<code>/etc/nginx/</code>文件夹下新建文件夹<code>vhost</code>：<code>cd /etc/nginx &amp;&amp; mkdir vhost</code>，然后在<code>vhost</code>文件夹下新建文件<code>blog.conf</code>，最后编辑<code>blog.conf</code>：</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/nginx/vhost/blog.conf</span></span><br><span class="line">server&#123;</span><br><span class="line">    listen 7010;     <span class="comment">#没有备案的网站无法访问80端口</span></span><br><span class="line">    root /home/www/blog;<span class="comment">#这里是网站的根目录，目前还没有建立</span></span><br><span class="line">    server_name youdomain;<span class="comment">#这里是你的域名，也可以填服务器公网IP</span></span><br><span class="line">    location /&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>打开<code>/etc/nginx/nginx.conf</code>文件，把刚刚新建的<code>blog.conf</code>文件<code>include</code>进去：<br><img src="/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/1.png" alt><br> 如图添加<code>include /etc/nginx/vhost/*.conf;</code>，把文件夹<code>vhost</code>下所有的<code>.conf</code>文件都包含进配置文件。这样，如果以后建立其他网站，直接在<code>vhost</code>文件夹中添加<code>.conf</code>文件就行了。</li>
-</ol>
-<h2 id="建立网站目录"><a href="#建立网站目录" class="headerlink" title="建立网站目录"></a>建立网站目录</h2><p>刚刚在<code>/etc/nginx/nginx.conf</code>文件中添加的<code>root /home/www/blog;</code>语句，实际上是把网站的根目录声明为<code>/home/www/blog</code>。首先建立该文件夹：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir www</span><br><span class="line"><span class="built_in">cd</span> www</span><br><span class="line">mkdir blog</span><br></pre></td></tr></table></figure><br>现在网站的根目录是空的，下面配置提交与自动部署相关。</p>
-<h2 id="安装Git和Node-js"><a href="#安装Git和Node-js" class="headerlink" title="安装Git和Node.js"></a>安装<code>Git</code>和<code>Node.js</code></h2><ol>
-<li><p>安装<code>Node.js</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -sL https://rpm.nodesource.com/setup_10.x | bash -</span><br><span class="line">yum install -y nodejs</span><br></pre></td></tr></table></figure>
-<p>安装好之后输入<code>node -v&amp;&amp;npm -v</code>检查<code>node 和 npm</code>是否安装成功。</p>
-</li>
-<li><p>安装<code>Git</code>和配置git repo<br>hexo支持git部署网站，因此我们在服务器上配置一个远程git仓库<br>地址，就可以实现本地机器的博客自动部署到服务端。</p>
-<ol>
-<li><p>安装<code>Git</code></p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install git  <span class="comment">#安装Git</span></span><br><span class="line">adduser git      <span class="comment">#添加一个名为git的用户</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>配置git用户权限：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 740 /etc/sudoers  <span class="comment">#提权</span></span><br><span class="line">vi /etc/sudoers         <span class="comment">#打开sudoers文件</span></span><br></pre></td></tr></table></figure>
-<p><img src="/2020/03/17/%E6%8A%8Ahexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91ECS/2.png" alt><br>如图添加<code>git    ALL=(ALL)   ALL</code>。<code>:wq</code>保存退出后，<code>chmod 400 /etc/sudoers</code>把文件<code>sudoers</code>的权限改回原样。</p>
-<p>然后需要设置git用户的密码：<code>sudo passwd git</code>。</p>
-</li>
-<li><p>切换到git用户，配置ssh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su git              <span class="comment">#切换git用户</span></span><br><span class="line"><span class="built_in">cd</span> ~&amp;&amp;mkdir .ssh    <span class="comment">#创建.ssh文件夹</span></span><br></pre></td></tr></table></figure>
-<p>然后把本地机器的ssh公钥复制到服务器的.ssh文件夹：<code>scp -P 端口号 本地公钥文件地址 用户名@远程地址:.ssh/authorized_keys</code>。</p>
-<p>最后修改公钥文件的权限：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">      chmod 600 ~/.ssh/authorized_keys</span><br><span class="line">chmod 700 ~/.ssh</span><br></pre></td></tr></table></figure></li>
-<li>配置 <code>git repo</code><br>首先新建一个空的仓库：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">      <span class="built_in">cd</span> ~</span><br><span class="line">git init --bare blog.git</span><br></pre></td></tr></table></figure>
-然后在仓库的<code>hooks</code>文件夹新建一个<code>post-receive</code>钩子。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi ~/blog.git/hooks/post-receive</span><br></pre></td></tr></table></figure>
-添加以下代码：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">git --work-tree=/home/www/blog --git-dir=/home/git/blog.git checkout -f</span><br></pre></td></tr></table></figure>
-这段代码可以自动把git repo里的文件复制到网站的根目录。<br>保存退出之后使用命令<code>chmod +x ~/blog.git/hooks/post-receive</code>赋予脚本执行权限。</li>
+<li>如果当前节点的左子节点为空，则访问当前节点并以当前节点的右子节点作为当前节点（与普通遍历无异）</li>
+<li>如果当前节点的左子节点不为空，则在当前节点的左子树中寻找当前节点在中序遍历下的前驱节点<ol>
+<li>如果前驱节点的右子节点为空，则将它的右子节点设置为当前节点（设置线索）。更新当前节点为当前节点的左子节点</li>
+<li>如果前驱节点的右子节点为当前节点，则将其重设为空（断开线索，恢复树的形状）。访问当前节点并更新当前节点为当前节点的右子节点。</li>
 </ol>
 </li>
+<li>重复以上两点直到当前节点为空。</li>
+</ol>
+<p>线索设置和遍历过程图示；</p>
+<p><img src="/2020/05/03/%E8%8E%AB%E9%87%8C%E6%96%AF%E9%81%8D%E5%8E%86/2.jpg" alt></p>
+<p>代码过程如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(TreeNode *root)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrderTraversal</span><span class="params">(TreeNode *root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TreeNode *cur = root;</span><br><span class="line">    TreeNode *prev = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur-&gt;left == <span class="literal">NULL</span>) &#123; <span class="comment">//最左侧</span></span><br><span class="line">            visit(cur);</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            prev = cur-&gt;left;</span><br><span class="line">            <span class="keyword">while</span> (prev-&gt;right != <span class="literal">NULL</span> &amp;&amp; prev-&gt;right != cur) <span class="comment">//find the predecessor</span></span><br><span class="line">                prev = prev-&gt;right;</span><br><span class="line">            <span class="keyword">if</span> (prev-&gt;right == <span class="literal">NULL</span>) &#123;</span><br><span class="line">                prev-&gt;right = cur;</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (prev-&gt;right == cur) &#123; <span class="comment">//recover</span></span><br><span class="line">                prev-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">                visit(cur);</span><br><span class="line">                cur = cur-&gt;right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>算法的空间复杂度是<code>O(1)</code>的，时间复杂度主要体现在寻找前驱节点的操作上：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (prev != <span class="literal">NULL</span> &amp;&amp; prev-&gt;right != <span class="literal">NULL</span>) <span class="comment">//find the predecessor</span></span><br><span class="line">    prev = prev-&gt;right;</span><br></pre></td></tr></table></figure><br>这段代码的时间复杂度直观上是<code>O(log n)</code>的，但是由于要对每个左子节点非空的节点都要做一次，因此总体上是<code>O(n)</code>的。</p>
+<h2 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h2><p>前序遍历与中序遍历总体上是相同的，只是访问节点的时机略有不同</p>
+<p>算法流程：</p>
+<ol>
+<li>如果当前节点的左子节点为空，则访问当前节点并以当前节点的右子节点作为当前节点（与普通遍历无异）</li>
+<li>如果当前节点的左子节点不为空，则在当前节点的左子树中寻找当前节点在中序遍历下的前驱节点<ol>
+<li>如果前驱节点的右子节点为空，则将它的右子节点设置为当前节点（设置线索）<strong>之后访问当前节点</strong>。更新当前节点为当前节点的左子节点</li>
+<li>如果前驱节点的右子节点为当前节点，则将其重设为空（断开线索，恢复树的形状）。更新当前节点为当前节点的右子节点。</li>
 </ol>
 </li>
+<li>重复以上两点直到当前节点为空。</li>
 </ol>
-<p>至此服务端就配置完了。</p>
-<h1 id="本地博客配置"><a href="#本地博客配置" class="headerlink" title="本地博客配置"></a>本地博客配置</h1><p>打开博客文件夹下的<code>_config.yml</code>文件，修改代码端<code>deploy</code><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> </span><br><span class="line">    <span class="attr">github:</span> <span class="string">https://github.com/Leonezz/Leonezz.github.io.git</span></span><br><span class="line">    <span class="attr">AliCloud:</span> <span class="string">git@远程服务器IP:/home/git/blog.git</span>   <span class="comment">#添加这个远程repo</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure><br>完成后使用命令<code>hexo clean&amp;&amp;hexo g&amp;&amp;hexo d</code>就可以把本地的博客同时部署到<code>Github Pages</code>和阿里云ECS了。</p>
-<p>如果访问域名发现<code>403 forbidden</code>错误，很可能是因为运行nginx的用户权限不够导致的。打开<code>/etc/nginx/nginx.conf</code>把首行的:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User nginx</span><br><span class="line">``` </span><br><span class="line">修改为:</span><br><span class="line">```Bash</span><br><span class="line">User root</span><br></pre></td></tr></table></figure><br>即可。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>同时<code>nginx</code>也可以代理一些静态页面。</p>
-<ol>
-<li>在<code>/etc/nginx/vhost</code>文件夹新建<code>.conf</code>文件，大致内容与上文<code>blog.conf</code>文件相同，只有端口<code>listen</code>，网站根目录<code>root</code>和域名<code>server_name</code>不同。</li>
-<li>在上步填写的网站目录中放入<code>index.html</code>文件以及相关的静态资源等文件，使用命令<code>nginx -s reload</code>重新加载配置就可以访问了。</li>
-</ol>
-<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ol>
-<li><a href="https://juejin.im/post/5d54f29af265da03cc08b45a">从零搭建Hexo博客并部署阿里云服务器(奶妈级教学)</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/58654392">Hexo 从 GitHub 到阿里云</a></li>
-</ol>
+<p>代码过程：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderTraversal</span><span class="params">(TreeNode *root)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TreeNode *cur = root;</span><br><span class="line">    TreeNode *prev = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            visit(cur);</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            prev = cur-&gt;left;</span><br><span class="line">            <span class="keyword">while</span> (prev-&gt;right != <span class="literal">NULL</span> &amp;&amp; prev-&gt;right != cur)</span><br><span class="line">                prev = prev-&gt;right;</span><br><span class="line">            <span class="keyword">if</span> (prev-&gt;right == <span class="literal">NULL</span>) &#123;</span><br><span class="line">                prev-&gt;right = cur;</span><br><span class="line">                visit(cur);</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                prev-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">                cur = cur-&gt;right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>复杂度与中序相同。</p>
+<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>后序遍历较为复杂，我写的有点脖子疼，今天就不写了🤸‍♀️</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>好久不提交，<code>GitHub</code>贡献栏都不好看了，赶紧水一篇。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://www.cnblogs.com/anniekim/archive/2013/06/15/morristraversal.html">Morris Traversal方法遍历二叉树（非递归，不用栈，O(1)空间）</a></p>
 
     </div>
 
@@ -362,8 +344,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag"># 阿里云</a>
-              <a href="/tags/nginx/" rel="tag"># nginx</a>
+              <a href="/tags/%E6%A0%91/" rel="tag"># 树</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
           </div>
 
         
@@ -372,13 +354,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/16/CentOS%E5%90%AF%E5%8A%A8xrdp%E6%9C%8D%E5%8A%A1/" rel="prev" title="CentOS启动xrdp服务">
-      <i class="fa fa-chevron-left"></i> CentOS启动xrdp服务
+    <a href="/2020/04/29/LeetCode-Day-3/" rel="prev" title="LeetCode Day 3">
+      <i class="fa fa-chevron-left"></i> LeetCode Day 3
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/03/19/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84--%E7%BA%BF%E6%80%A7%E8%A1%A8/" rel="next" title="数据结构--线性表">
-      数据结构--线性表 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -438,7 +417,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务器配置"><span class="nav-number">2.</span> <span class="nav-text">服务器配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装nginx"><span class="nav-number">2.1.</span> <span class="nav-text">安装nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置nginx路由"><span class="nav-number">2.2.</span> <span class="nav-text">配置nginx路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立网站目录"><span class="nav-number">2.3.</span> <span class="nav-text">建立网站目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Git和Node-js"><span class="nav-number">2.4.</span> <span class="nav-text">安装Git和Node.js</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本地博客配置"><span class="nav-number">3.</span> <span class="nav-text">本地博客配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-number">5.</span> <span class="nav-text">references</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#起因"><span class="nav-number">2.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#莫里斯遍历"><span class="nav-number">3.</span> <span class="nav-text">莫里斯遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#中序遍历"><span class="nav-number">3.1.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前序遍历"><span class="nav-number">3.2.</span> <span class="nav-text">前序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后序遍历"><span class="nav-number">3.3.</span> <span class="nav-text">后序遍历</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
