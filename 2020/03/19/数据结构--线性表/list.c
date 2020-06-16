@@ -10,7 +10,7 @@ int length(List *list);                                        //返回线性表
 
 typedef struct list
 {
-    ElementType data;
+    ElementType val;
     List *next;
 } List;
 
@@ -35,7 +35,7 @@ List *findKth(const int K, List *list)
 int find(const ElementType ele, List *list)
 {
     List *listCopy = list;
-    while (listCopy && listCopy->data != ele)
+    while (listCopy && listCopy->val != ele)
     {
         listCopy = listCopy->next;
     }
@@ -47,7 +47,7 @@ List *insert(ElementType ele, const int position, List *list)
     if (position == 1)
     {
         List *n = makeEmptyList();
-        n->data = ele;
+        n->val = ele;
         n->next = list;
         return n;
     }
@@ -57,7 +57,7 @@ List *insert(ElementType ele, const int position, List *list)
         return NULL; //error
     }
     List *n = makeEmptyList();
-    n->data = ele;
+    n->val = ele;
     n->next = target->next;
     target->next = n;
     return list;
