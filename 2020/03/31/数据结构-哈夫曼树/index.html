@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="写在前面编码计算机能够直接读取的数据是一串二进制数，人类能够直接读取的数据是各种字符。为了能够在计算机中储存字符，聪明的科学家发明了各种编码(encode)方式将字符编码到二进制数。比如众所周知的ASCII编码，就是一套基于拉丁语字母的编码方式。它的每个字符由8 bits二进制编数码而成，因此也是一种等长码。考虑这样一种情形：在一篇若干字符组成的文章中，各个字符出现的频率一般是不同的。假如我们可以">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构--哈夫曼树">
-<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/index.html">
+<meta property="og:url" content="http://zhuwenq.icu/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/index.html">
 <meta property="og:site_name" content="zhuwenq">
 <meta property="og:description" content="写在前面编码计算机能够直接读取的数据是一串二进制数，人类能够直接读取的数据是各种字符。为了能够在计算机中储存字符，聪明的科学家发明了各种编码(encode)方式将字符编码到二进制数。比如众所周知的ASCII编码，就是一套基于拉丁语字母的编码方式。它的每个字符由8 bits二进制编数码而成，因此也是一种等长码。考虑这样一种情形：在一篇若干字符组成的文章中，各个字符出现的频率一般是不同的。假如我们可以">
 <meta property="og:locale" content="zh_CN">
@@ -35,7 +35,7 @@
 <meta property="article:tag" content="哈夫曼树">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/">
+<link rel="canonical" href="http://zhuwenq.icu/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/">
 
 
 <script id="page-configurations">
@@ -174,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/">
+    <link itemprop="mainEntityOfPage" href="http://zhuwenq.icu/2020/03/31/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

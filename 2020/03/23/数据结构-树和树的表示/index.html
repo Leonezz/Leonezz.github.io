@@ -17,21 +17,21 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="写在前面客观世界中许多事物存在层次关系，如人类的族谱，社会组织的结构等。这些分层次的结构在管理方面具有一定的效率优势，树就是类似的一种具有层次结构关系的数据结构。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构--树和树的表示">
-<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/index.html">
+<meta property="og:url" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/index.html">
 <meta property="og:site_name" content="zhuwenq">
 <meta property="og:description" content="写在前面客观世界中许多事物存在层次关系，如人类的族谱，社会组织的结构等。这些分层次的结构在管理方面具有一定的效率优势，树就是类似的一种具有层次结构关系的数据结构。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/2.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/3.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/4.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/5.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/2.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/3.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/4.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/5.png">
 <meta property="article:published_time" content="2020-03-23T09:40:53.000Z">
 <meta property="article:modified_time" content="2020-04-11T05:37:33.077Z">
 <meta property="article:author" content="zhuwenq">
@@ -39,9 +39,9 @@
 <meta property="article:tag" content="笔记">
 <meta property="article:tag" content="树">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png">
+<meta name="twitter:image" content="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/1.png">
 
-<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">
+<link rel="canonical" href="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">
 
 
 <script id="page-configurations">
@@ -180,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">
+    <link itemprop="mainEntityOfPage" href="http://zhuwenq.icu/2020/03/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E6%A0%91%E5%92%8C%E6%A0%91%E7%9A%84%E8%A1%A8%E7%A4%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

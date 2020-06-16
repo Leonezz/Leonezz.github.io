@@ -17,23 +17,23 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zhuwenq.icu","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构--图">
-<meta property="og:url" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/index.html">
+<meta property="og:url" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/index.html">
 <meta property="og:site_name" content="zhuwenq">
 <meta property="og:description" content="写在前面现实世界中很多事物往往不是线性的一对一关系，还有许多问题是多对多的关系。如地图，互联网等等，为了抽象表示这些关系以便于处理这些网状拓扑的问题，聪明的科学家发明了图(Graph)这种数据结构。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
-<meta property="og:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/2.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/3.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/4.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta property="og:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
 <meta property="article:published_time" content="2020-04-01T14:15:17.000Z">
 <meta property="article:modified_time" content="2020-04-11T05:37:38.092Z">
 <meta property="article:author" content="zhuwenq">
@@ -41,9 +41,9 @@
 <meta property="article:tag" content="笔记">
 <meta property="article:tag" content="图">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
+<meta name="twitter:image" content="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/1.png">
 
-<link rel="canonical" href="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
+<link rel="canonical" href="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
 
 
 <script id="page-configurations">
@@ -182,7 +182,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.zhuwenq.icu:7010/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
+    <link itemprop="mainEntityOfPage" href="http://zhuwenq.icu/2020/04/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%BE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
